@@ -1,7 +1,8 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { validateRecipes } from "./recipes";
 import { buildSampleCatalog } from "./sample-catalog";
-import { buildRecipesSql } from "./seed-sql";
+import { buildCatalogSeedSql } from "./seed-sql";
 import { RECIPES_FILE, type CanonicalProductSpec, type ColloquialUnitSpec } from "./specs";
 
 const scraping = { search: "", require: [], exclude: [] };
@@ -116,22 +117,27 @@ describe("validateRecipes", () => {
   });
 });
 
-describe("buildRecipesSql", () => {
-  it("genera SQL idempotente, con arreglos de Postgres y comillas escapadas", () => {
-    // Productos reales del catalogo: el SQL tambien siembra los canonicos que usan las recetas
-    const { recipes } = validateRecipes({
-      recipes: [recipe({ name: "Ensalada de la 'abuela'", tags: ["rápida", "alta en proteína"] })],
-    });
-    const sql = buildRecipesSql(recipes);
+describe("buildCatalogSeedSql", () => {
+  const catalog = buildSampleCatalog();
+  const sql = buildCatalogSeedSql(catalog);
 
-    expect(sql).toContain("'Ensalada de la ''abuela'''");
-    expect(sql).toContain(`'{"rápida","alta en proteína"}'`);
-    expect(sql).toContain(`'{"comida"}'`);
-    expect(sql.match(/insert into recipe_step/g)).toHaveLength(2);
-    expect(sql.match(/insert into recipe_ingredient/g)).toHaveLength(4);
-    // Cada insert trae su guarda para no duplicar al correrlo dos veces
-    const inserts = sql.split("\n").filter((l) => l.startsWith("insert"));
-    expect(inserts.every((l) => l.includes("where not exists"))).toBe(true);
+  it("inserta con los mismos ids que usa la app y es idempotente", () => {
+    expect(sql).toContain("'rec-tacos-de-pollo'");
+    expect(sql).toContain("'cp-pechuga-de-pollo'");
+    const inserts = sql.split(";").filter((part) => part.includes("insert into"));
+    expect(inserts.length).toBe(8);
+    expect(inserts.every((part) => part.trimEnd().endsWith("on conflict do nothing"))).toBe(true);
+  });
+
+  it("convierte arreglos a literales de Postgres y escapa comillas", () => {
+    expect(sql).toContain(`'{"comida","cena"}'`);
+    expect(sql).toContain(`'{"gluten","lácteos"}'`);
+    expect(sql).toContain("'Pechuga Pilgrim''s 900 g'");
+  });
+
+  it("supabase/seed.sql esta al dia con catalog-data (correr pnpm seed si falla)", () => {
+    const file = new URL("../../../supabase/seed.sql", import.meta.url);
+    expect(readFileSync(file, "utf8")).toBe(sql);
   });
 });
 

@@ -5,7 +5,7 @@ Script **desechable** de la Fase 5: se corre **una sola vez**, con una persona s
 ```
 Playwright → extractor (JSON de la página) → out/raw/*.json
           → pnpm review → out/review.csv  ← revisión humana
-          → pnpm seed   → out/seed-products.sql → supabase/seed.sql
+          → pnpm seed   → out/seed-products.sql → supabase/seed-precios.sql
 ```
 
 ## Antes de empezar
@@ -74,7 +74,12 @@ Descarga el archivo revisado como CSV y guárdalo de nuevo en `out/review.csv`.
 pnpm seed                     # o: pnpm seed --file ruta/al/review.csv
 ```
 
-Si alguna fila con `si` tiene datos inválidos (precio no entero, unidad incorrecta, tienda desconocida), el script **no genera nada** y lista los errores. Si todo está bien, crea `out/seed-products.sql`: pásalo a quien lleva Supabase (Fase 2) para incluirlo en `supabase/seed.sql`. El SQL es idempotente, así que correrlo dos veces no duplica filas.
+Si alguna fila con `si` tiene datos inválidos (precio no entero, unidad incorrecta, tienda desconocida), el script **no genera nada** y lista los errores. Si todo está bien, crea `out/seed-products.sql`. Para cargarlo en la base:
+
+1. Cópialo como `supabase/seed-precios.sql`.
+2. En `supabase/config.toml`, sección `[db.seed]`, deja `sql_paths = ["./seed.sql", "./seed-precios.sql"]`: primero el catálogo (generado por `packages/catalog-data`) y después los precios reales.
+
+No se pega dentro de `supabase/seed.sql`, porque ese archivo se regenera. El SQL es idempotente, así que correrlo dos veces no duplica filas.
 
 ## Agregar productos
 

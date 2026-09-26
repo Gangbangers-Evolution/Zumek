@@ -1,0 +1,11 @@
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+
+# Secrets locales de las Edge Functions (plantilla: functions/.env.example)
+functions/.env

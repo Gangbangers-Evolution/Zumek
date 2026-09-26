@@ -8,7 +8,7 @@ export {
   type ValidationResult,
 } from "./recipes";
 export { buildSampleCatalog } from "./sample-catalog";
-export { buildRecipesSql } from "./seed-sql";
+export { buildCatalogSeedSql } from "./seed-sql";
 export {
   CANONICAL_PRODUCTS,
   COLLOQUIAL_UNITS,

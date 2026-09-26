@@ -1,16 +1,9 @@
-import { mkdirSync, writeFileSync } from "node:fs";
-import { validateRecipes } from "../recipes";
-import { buildRecipesSql } from "../seed-sql";
-import { RECIPES_FILE } from "../specs";
+// Regenera supabase/seed.sql a partir del catalogo curado (recetas validadas + precios de ejemplo).
+import { writeFileSync } from "node:fs";
+import { buildSampleCatalog } from "../sample-catalog";
+import { buildCatalogSeedSql } from "../seed-sql";
 
-const { recipes, errors } = validateRecipes(RECIPES_FILE);
-
-if (errors.length > 0) {
-  console.error(`El catalogo tiene ${errors.length} error(es); corre "pnpm validate" para verlos. No se genero SQL.`);
-  process.exit(1);
-}
-const dir = new URL("../../out/", import.meta.url).pathname;
-mkdirSync(dir, { recursive: true });
-writeFileSync(`${dir}seed-recipes.sql`, buildRecipesSql(recipes));
-console.log(`SQL listo: ${dir}seed-recipes.sql (${recipes.length} recetas).`);
-console.log("Pasalo a quien lleva Supabase para incluirlo en supabase/seed.sql.");
+const file = new URL("../../../../supabase/seed.sql", import.meta.url).pathname;
+const catalog = buildSampleCatalog(); // truena si alguna receta o precio no es valido
+writeFileSync(file, buildCatalogSeedSql(catalog));
+console.log(`supabase/seed.sql regenerado: ${catalog.recipes.length} recetas, ${catalog.canonical_products.length} productos, ${catalog.latest_prices.length} precios de ejemplo.`);

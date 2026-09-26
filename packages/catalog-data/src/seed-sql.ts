@@ -1,58 +1,83 @@
-// SQL idempotente para el seed de recetas. Usa llaves naturales (nombre de receta,
-// nombre de producto, termino coloquial) para no depender de como se generen los ids.
-import type { RecipeSpec } from "./recipes";
-import { CANONICAL_PRODUCTS, COLLOQUIAL_UNITS } from "./specs";
+// Convierte un Catalog del dominio en el SQL de supabase/seed.sql, con los mismos ids que
+// usa la app: la base y buildSampleCatalog() quedan identicas. Idempotente (on conflict).
+import type { Catalog } from "@zumek/domain";
 import { pgArray, sqlLiteral as sql } from "./sql";
 
-export function buildRecipesSql(recipes: RecipeSpec[]): string {
-  const products = new Map(CANONICAL_PRODUCTS.map((p) => [p.name, p]));
-  const used = [...new Set(recipes.flatMap((r) => r.ingredients.map((i) => i.product)))].sort();
-  const out: string[] = [
-    "-- Generado por packages/catalog-data (pnpm seed) a partir de data/recipes.json.",
-    "-- No editar a mano: corregir recipes.json, validar y volver a generar.",
-    "begin;",
+type Value = string | number | null;
+
+/** Un INSERT de varias filas; los arreglos de Postgres llegan ya convertidos con pgArray. */
+function insert(table: string, columns: string[], rows: string[][]): string {
+  if (rows.length === 0) return `-- ${table}: sin filas`;
+  return (
+    `insert into public.${table} (${columns.join(", ")}) values\n` +
+    rows.map((values) => `  (${values.join(", ")})`).join(",\n") +
+    `\non conflict do nothing;`
+  );
+}
+
+const v = (value: Value) => sql(value);
+
+export function buildCatalogSeedSql(catalog: Catalog): string {
+  return [
+    [
+      "-- GENERADO por packages/catalog-data (pnpm seed). No editar a mano:",
+      "-- corregir los JSON de packages/catalog-data/data, validar y volver a generar.",
+      "-- Incluye los precios DE EJEMPLO (sample-prices.json); los reales llegan con el seed del scraper.",
+    ].join("\n"),
+    insert("store", ["id", "name", "slug", "active"], catalog.stores.map((s) => [v(s.id), v(s.name), v(s.slug), String(s.active)])),
+    insert(
+      "canonical_product",
+      ["id", "name", "unit_type", "category"],
+      catalog.canonical_products.map((p) => [v(p.id), v(p.name), v(p.unit_type), v(p.category)]),
+    ),
+    insert(
+      "colloquial_unit",
+      ["term", "base_quantity", "base_unit"],
+      catalog.colloquial_units.map((u) => [v(u.term), v(u.base_quantity), v(u.base_unit)]),
+    ),
+    insert(
+      "recipe",
+      ["id", "name", "cuisine", "meal_type", "tags", "prep_time_minutes", "servings_base", "allergens"],
+      catalog.recipes.map((r) => [
+        v(r.id),
+        v(r.name),
+        v(r.cuisine),
+        pgArray(r.meal_type),
+        pgArray(r.tags),
+        v(r.prep_time_minutes),
+        v(r.servings_base),
+        pgArray(r.allergens),
+      ]),
+    ),
+    insert(
+      "recipe_step",
+      ["id", "recipe_id", "step_order", "title", "content", "timer_seconds"],
+      catalog.recipe_steps.map((s) => [v(s.id), v(s.recipe_id), v(s.step_order), v(s.title), v(s.content), v(s.timer_seconds)]),
+    ),
+    insert(
+      "recipe_ingredient",
+      ["id", "recipe_id", "canonical_product_id", "quantity", "unit"],
+      catalog.recipe_ingredients.map((i) => [v(i.id), v(i.recipe_id), v(i.canonical_product_id), v(i.quantity), v(i.unit)]),
+    ),
+    insert(
+      "commercial_product",
+      ["id", "canonical_product_id", "store_id", "brand", "package_label", "package_quantity", "package_unit"],
+      catalog.commercial_products.map((c) => [
+        v(c.id),
+        v(c.canonical_product_id),
+        v(c.store_id),
+        v(c.brand),
+        v(c.package_label),
+        v(c.package_quantity),
+        v(c.package_unit),
+      ]),
+    ),
+    // price_observation es INSERT-only: el seed solo agrega la observacion inicial.
+    insert(
+      "price_observation",
+      ["id", "commercial_product_id", "price_cents", "observed_at"],
+      catalog.latest_prices.map((p) => [v(p.id), v(p.commercial_product_id), v(p.price_cents), v(p.observed_at)]),
+    ),
     "",
-    "-- Unidades coloquiales",
-  ];
-  for (const u of COLLOQUIAL_UNITS) {
-    out.push(
-      `insert into colloquial_unit (term, base_quantity, base_unit) select ${sql(u.term)}, ${u.base_quantity}, ${sql(u.base_unit)} where not exists (select 1 from colloquial_unit where term = ${sql(u.term)});`,
-    );
-  }
-
-  out.push("", "-- Productos canonicos que usan las recetas (si el seed de precios ya los creo, no se duplican)");
-  for (const name of used) {
-    const p = products.get(name)!;
-    out.push(
-      `insert into canonical_product (name, unit_type, category) select ${sql(p.name)}, ${sql(p.unit_type)}, ${sql(p.category)} where not exists (select 1 from canonical_product where name = ${sql(p.name)});`,
-    );
-  }
-
-  for (const r of recipes) {
-    const recipeId = `(select id from recipe where name = ${sql(r.name)})`;
-    out.push(
-      "",
-      `-- ${r.name}`,
-      `insert into recipe (name, cuisine, meal_type, tags, prep_time_minutes, servings_base, allergens) ` +
-        `select ${sql(r.name)}, ${sql(r.cuisine)}, ${pgArray(r.meal_type)}, ${pgArray(r.tags)}, ${r.prep_time_minutes}, ${r.servings_base}, ${pgArray(r.allergens)} ` +
-        `where not exists (select 1 from recipe where name = ${sql(r.name)});`,
-    );
-    for (const s of r.steps) {
-      out.push(
-        `insert into recipe_step (recipe_id, step_order, title, content, timer_seconds) ` +
-          `select ${recipeId}, ${s.step_order}, ${sql(s.title)}, ${sql(s.content)}, ${sql(s.timer_seconds)} ` +
-          `where not exists (select 1 from recipe_step where recipe_id = ${recipeId} and step_order = ${s.step_order});`,
-      );
-    }
-    for (const ing of r.ingredients) {
-      const productId = `(select id from canonical_product where name = ${sql(ing.product)})`;
-      out.push(
-        `insert into recipe_ingredient (recipe_id, canonical_product_id, quantity, unit) ` +
-          `select ${recipeId}, ${productId}, ${ing.quantity}, ${sql(ing.unit)} ` +
-          `where not exists (select 1 from recipe_ingredient where recipe_id = ${recipeId} and canonical_product_id = ${productId});`,
-      );
-    }
-  }
-  out.push("", "commit;", "");
-  return out.join("\n");
+  ].join("\n\n");
 }

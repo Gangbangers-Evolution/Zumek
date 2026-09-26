@@ -20,11 +20,11 @@ Si una receta necesita un ingrediente nuevo, primero se agrega a `canonical-prod
 cd packages/catalog-data
 # 1. agregar o editar recetas en data/recipes.json
 pnpm validate      # 2. corregir hasta que no haya ERRORES
-pnpm seed          # 3. genera out/seed-recipes.sql
+pnpm seed          # 3. regenera supabase/seed.sql
 pnpm test          # los tests también validan los JSON reales
 ```
 
-`out/seed-recipes.sql` se le pasa a quien lleva Supabase (Fase 2). Es idempotente: correrlo dos veces no duplica recetas, pasos ni ingredientes.
+`supabase/seed.sql` sale **generado** de estos JSON, con los mismos ids que usa la app: no se edita a mano. Es idempotente (correrlo dos veces no duplica nada) e incluye los precios de ejemplo; los precios reales se agregan después con el SQL del scraper. Un test falla si alguien cambia los JSON y olvida correr `pnpm seed`.
 
 ## Formato de una receta
 
