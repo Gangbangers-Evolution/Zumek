@@ -1,23 +1,21 @@
-// Fase 1: no se llama al planner. Se espera un momento y se regresa un fixture
-// cuyo status corresponde al presupuesto capturado. En Fase 3 se conecta packages/planner.
-import type { PlanBundle } from "@zumek/domain";
-import {
-  planInfeasibleFixture,
-  planOkFixture,
-  planOverBudgetCloseFixture,
-} from "@zumek/domain/fixtures";
+// Fase 3: el plan lo arma el planner real (packages/planner) en el dispositivo.
+// En Fase 2 el catalogo vendra de Supabase y el userId de Anonymous Auth.
+import type { Catalog, PlanBundle } from "@zumek/domain";
+import { generatePlan as runPlanner } from "@zumek/planner";
 import type { OnboardingState } from "../state/onboarding";
 import { delay } from "./fake";
 
-function withBudget(bundle: PlanBundle, budgetCents: number): PlanBundle {
-  return { ...bundle, plan: { ...bundle.plan, budget_cents: budgetCents } };
-}
+const LOCAL_USER_ID = "local-user";
 
-export async function generatePlan(input: OnboardingState): Promise<PlanBundle> {
-  await delay(1800);
-  const budget = input.budgetCents ?? 0;
-  const cost = planOkFixture.plan.total_cost_cents;
-  if (budget >= cost) return withBudget(planOkFixture, budget);
-  if (budget * 1.1 >= cost) return withBudget(planOverBudgetCloseFixture, budget);
-  return withBudget(planInfeasibleFixture, budget);
+export async function generatePlan(input: OnboardingState, catalog: Catalog): Promise<PlanBundle> {
+  // Cede un tick para que la pantalla "Generando" se pinte antes del calculo.
+  await delay(0);
+  const now = new Date();
+  return runPlanner({
+    catalog,
+    planId: `plan-${now.getTime()}`,
+    userId: LOCAL_USER_ID,
+    createdAt: now.toISOString(),
+    preferences: { ...input, budgetCents: input.budgetCents ?? 0 },
+  });
 }

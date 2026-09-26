@@ -2,11 +2,13 @@ import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ErrorState, LoadingState } from "../components/AsyncStates";
 import { generatePlan } from "../data/plan-source";
+import { useCatalog } from "../state/catalog";
 import { useOnboarding } from "../state/onboarding";
 import { usePlan } from "../state/plan";
 
 export default function Generating() {
   const { state } = useOnboarding();
+  const catalog = useCatalog();
   const { setBundle } = usePlan();
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -18,7 +20,7 @@ export default function Generating() {
 
   useEffect(() => {
     let cancelled = false;
-    generatePlan(state)
+    generatePlan(state, catalog)
       .then((bundle) => {
         if (cancelled) return;
         setBundle(bundle);

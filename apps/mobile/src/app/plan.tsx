@@ -45,7 +45,7 @@ export default function PlanScreen() {
       <StatusBanner status={plan.status}>
         {plan.status === "over_budget_close" ? (
           <AppText variant="label" tone="warning">
-            Te pasas por {formatCents(overBy)} ({Math.round((overBy / plan.budget_cents) * 100)}%)
+            Te pasas por {formatCents(overBy)} ({((overBy / plan.budget_cents) * 100).toFixed(1)}%)
           </AppText>
         ) : null}
         {plan.status === "over_budget_close" ? (

@@ -23,27 +23,6 @@ export default function CookScreen() {
     .sort((a, b) => a.step_order - b.step_order);
   const [index, setIndex] = useState(0);
   const step = steps[index];
-  const [remaining, setRemaining] = useState<number | null>(step?.timer_seconds ?? null);
-  const [running, setRunning] = useState(false);
-
-  useEffect(() => {
-    setRemaining(step?.timer_seconds ?? null);
-    setRunning(false);
-  }, [step]);
-
-  useEffect(() => {
-    if (!running) return;
-    const handle = setInterval(() => {
-      setRemaining((r) => {
-        if (r === null || r <= 1) {
-          setRunning(false);
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(handle);
-  }, [running]);
 
   if (!recipe || !step) {
     return (
@@ -86,41 +65,61 @@ export default function CookScreen() {
       </AppText>
       <AppText style={styles.content}>{step.content}</AppText>
 
-      {step.timer_seconds !== null && remaining !== null ? (
-        <View style={styles.timer}>
-          <AppText
-            variant="title"
-            tone={remaining === 0 ? "success" : "primary"}
-            accessibilityLabel={`Temporizador: ${formatTimer(remaining)}`}
-            accessibilityLiveRegion="polite"
-          >
-            {remaining === 0 ? "¡Listo!" : formatTimer(remaining)}
-          </AppText>
-          <View style={styles.row}>
-            <View style={styles.flex}>
-              <Button
-                label={running ? "Pausar" : "Iniciar"}
-                variant="secondary"
-                disabled={remaining === 0}
-                onPress={() => setRunning((r) => !r)}
-                accessibilityLabel={running ? "Pausar temporizador" : "Iniciar temporizador"}
-              />
-            </View>
-            <View style={styles.flex}>
-              <Button
-                label="Reiniciar"
-                variant="ghost"
-                onPress={() => {
-                  setRunning(false);
-                  setRemaining(step.timer_seconds);
-                }}
-                accessibilityLabel="Reiniciar temporizador"
-              />
-            </View>
-          </View>
-        </View>
+      {step.timer_seconds !== null ? (
+        // key: cada paso arranca con su propio temporizador desde el primer render
+        <StepTimer key={step.id} seconds={step.timer_seconds} />
       ) : null}
     </Screen>
+  );
+}
+
+function StepTimer({ seconds }: { seconds: number }) {
+  const [remaining, setRemaining] = useState(seconds);
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    if (!running) return;
+    const handle = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000);
+    return () => clearInterval(handle);
+  }, [running]);
+
+  useEffect(() => {
+    if (remaining === 0) setRunning(false);
+  }, [remaining]);
+
+  return (
+    <View style={styles.timer}>
+      <AppText
+        variant="title"
+        tone={remaining === 0 ? "success" : "primary"}
+        accessibilityLabel={`Temporizador: ${formatTimer(remaining)}`}
+        accessibilityLiveRegion="polite"
+      >
+        {remaining === 0 ? "¡Listo!" : formatTimer(remaining)}
+      </AppText>
+      <View style={styles.row}>
+        <View style={styles.flex}>
+          <Button
+            label={running ? "Pausar" : "Iniciar"}
+            variant="secondary"
+            disabled={remaining === 0}
+            onPress={() => setRunning((r) => !r)}
+            accessibilityLabel={running ? "Pausar temporizador" : "Iniciar temporizador"}
+          />
+        </View>
+        <View style={styles.flex}>
+          <Button
+            label="Reiniciar"
+            variant="ghost"
+            onPress={() => {
+              setRunning(false);
+              setRemaining(seconds);
+            }}
+            accessibilityLabel="Reiniciar temporizador"
+          />
+        </View>
+      </View>
+    </View>
   );
 }
 
