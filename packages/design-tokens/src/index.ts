@@ -106,9 +106,10 @@ export const layout = {
   maxContentWidth: 480,
 } as const;
 
+// boxShadow funciona igual en iOS, Android y web (las props shadow* estan obsoletas en web).
 export const elevation = {
-  card: { shadowColor: "#202020", shadowOpacity: 0.04, shadowRadius: 3, shadowOffset: { width: 0, height: 1 }, elevation: 1 },
-  floating: { shadowColor: "#202020", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
+  card: { boxShadow: "0 1px 3px rgba(32, 32, 32, 0.04)" },
+  floating: { boxShadow: "0 4px 14px -2px rgba(32, 32, 32, 0.08)" },
 } as const;
 
 export const motion = {

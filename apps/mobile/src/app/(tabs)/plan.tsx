@@ -19,7 +19,7 @@ import { useCatalog } from "../../state/catalog";
 import { useWeek } from "../../state/week";
 
 export default function PlanScreen() {
-  const { bundle, finishWeek } = useWeek();
+  const { bundle, finishWeek, syncError } = useWeek();
   const catalog = useCatalog();
   if (!bundle) return <NoActivePlan />;
 
@@ -43,6 +43,11 @@ export default function PlanScreen() {
         <Button label="Ver lista de compras" icon="shoppingCart" onPress={() => router.navigate("/shopping")} />
       }
     >
+      {syncError ? (
+        <Card tone="danger">
+          <AppText style={{ color: colors.onErrorContainer }}>{syncError}</AppText>
+        </Card>
+      ) : null}
       <StatusBanner status={plan.status}>
         {plan.status === "over_budget_close" ? (
           <>

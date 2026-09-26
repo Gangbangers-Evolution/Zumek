@@ -15,13 +15,14 @@ import { ProgressBar } from "../components/ProgressBar";
 import { generatePlan } from "../data/plan-source";
 import { EXAMPLES } from "../features/examples";
 import { formatCents } from "../lib/money";
-import { useCatalog } from "../state/catalog";
+import { useCatalog, useSession } from "../state/catalog";
 import { useOnboarding } from "../state/onboarding";
 import { useWeek } from "../state/week";
 
 export default function Generating() {
   const { state } = useOnboarding();
   const catalog = useCatalog();
+  const { userId } = useSession();
   const { planGenerated } = useWeek();
   const [result, setResult] = useState<{ attempt: number; outcome: "done" | "failed" } | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -30,7 +31,7 @@ export default function Generating() {
 
   useEffect(() => {
     let cancelled = false;
-    generatePlan(state, catalog)
+    generatePlan(state, catalog, userId)
       .then((bundle: PlanBundle) => {
         if (cancelled) return;
         planGenerated(bundle, state.pantry);

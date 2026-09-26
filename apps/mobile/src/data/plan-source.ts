@@ -1,10 +1,7 @@
-// Fase 3: el plan lo arma el planner real (packages/planner) en el dispositivo.
-// En Fase 2 el catalogo vendra de Supabase y el userId de Anonymous Auth.
+// El plan lo arma el planner (packages/planner) en el dispositivo, sin red.
 import type { IndexedCatalog, PlanBundle } from "@zumek/domain";
 import { generatePlan as runPlanner, type PlannerPreferences } from "@zumek/planner";
 import type { OnboardingState } from "../state/onboarding";
-import { delay } from "./fake";
-import { LOCAL_USER_ID } from "./session";
 
 /**
  * Respuestas del onboarding -> preferencias del planner, campo por campo. El presupuesto
@@ -27,14 +24,15 @@ function toPlannerPreferences(state: OnboardingState): PlannerPreferences {
   };
 }
 
-export async function generatePlan(input: OnboardingState, catalog: IndexedCatalog): Promise<PlanBundle> {
+export async function generatePlan(input: OnboardingState, catalog: IndexedCatalog, userId: string): Promise<PlanBundle> {
   // Cede un tick para que la pantalla "Generando" se pinte antes del calculo.
-  await delay(0);
+  await new Promise((resolve) => setTimeout(resolve, 0));
   const now = new Date();
   return runPlanner({
     catalog,
-    planId: `plan-${now.getTime()}`,
-    userId: LOCAL_USER_ID,
+    // Sufijo aleatorio: dos planes creados en el mismo milisegundo no chocan en la base
+    planId: `plan-${now.getTime()}-${Math.random().toString(36).slice(2, 8)}`,
+    userId,
     createdAt: now.toISOString(),
     preferences: toPlannerPreferences(input),
   });
