@@ -2,10 +2,11 @@ import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon, type IconName } from "./Icon";
 
-type Variant = "primary" | "secondary" | "savings" | "text";
+type Variant = "primary" | "money" | "secondary" | "savings" | "text";
 
 const look: Record<Variant, { bg: string; pressed: string; fg: string; border?: string }> = {
   primary: { bg: colors.primaryContainer, pressed: colors.primaryContainerPressed, fg: colors.onPrimaryContainer },
+  money: { bg: colors.accent, pressed: colors.accentPressed, fg: colors.onAccent },
   secondary: { bg: colors.surfaceContainerLowest, pressed: colors.surfaceContainerLow, fg: colors.onSurface, border: colors.divider },
   savings: { bg: colors.secondary, pressed: colors.onSecondaryContainer, fg: colors.onSecondary },
   text: { bg: "transparent", pressed: colors.surfaceContainer, fg: colors.onSurfaceVariant },

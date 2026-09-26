@@ -34,7 +34,7 @@ export function BudgetStep() {
           PRESUPUESTO SEMANAL (MXN)
         </AppText>
         <View style={styles.amountRow}>
-          <AppText variant="headlineLg" tone="accent">
+          <AppText variant="headlineLg" style={{ color: colors.accent }}>
             $
           </AppText>
           <TextInput
@@ -73,7 +73,7 @@ export function BudgetStep() {
       </AppText>
       <ChipGroup>
         {SUGGESTIONS.map((value) => (
-          <Chip key={value} label={formatCents(value)} selected={state.budgetCents === value} onPress={() => setFromCents(value)} />
+          <Chip key={value} tone="money" label={formatCents(value)} selected={state.budgetCents === value} onPress={() => setFromCents(value)} />
         ))}
       </ChipGroup>
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   amountRow: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   amount: {
     ...typography.currencyHero,
-    color: colors.primary,
+    color: colors.accent,
     minWidth: 120,
     maxWidth: 220,
     textAlign: "center",

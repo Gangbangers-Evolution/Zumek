@@ -13,7 +13,10 @@ export const colors = {
   onPrimaryFixedVariant: "#2c4640", // texto sobre primaryFixed
 
   // Coral y durazno: solo acentos (presupuesto, etiquetas, progreso de ahorro)
-  accent: "#ae2f34",
+  // El coral marca el dinero del usuario (paso de presupuesto), como en el mockup.
+  accent: "#ae2f34", // texto blanco encima: 6.45:1
+  accentPressed: "#8c1520",
+  onAccent: "#ffffff",
   accentFixed: "#fbf0ec", // fondo de etiquetas de acento ("PLANIFICA & AHORRA")
   onAccentFixed: "#a8472c", // texto sobre accentFixed (5.21:1)
   peach: "#e29578", // solo relleno decorativo, nunca texto

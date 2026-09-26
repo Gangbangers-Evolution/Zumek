@@ -32,6 +32,7 @@ export default function OnboardingStepScreen() {
           <Button
             label={isLast ? "Crear mi plan personalizado" : "Continuar"}
             trailingIcon="arrowForward"
+            variant={current.tone === "money" ? "money" : "primary"}
             disabled={!valid}
             onPress={next}
             accessibilityHint={valid ? undefined : "Completa este paso para continuar"}
