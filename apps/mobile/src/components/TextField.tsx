@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderColor: colors.divider,
     backgroundColor: colors.surfaceContainerLowest,
   },
-  // El foco se marca con borde coral y halo suave (el outline nativo de web se ve roto)
+  // El foco se marca con borde verde salvia y halo suave (el outline nativo de web se ve roto)
   fieldFocused: { borderColor: colors.primaryContainer, boxShadow: `0 0 0 3px ${colors.primaryFixed}` },
   fieldError: { borderColor: colors.error },
   input: {

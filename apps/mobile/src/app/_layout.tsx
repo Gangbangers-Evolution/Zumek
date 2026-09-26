@@ -3,21 +3,26 @@ import { colors, typography } from "@zumek/design-tokens";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ErrorState, LoadingState } from "../components/AsyncStates";
+import { LoadErrorCard, StartupScreen, SyncCard } from "../features/welcome/StartupScreen";
 import { CatalogProvider, useCatalogState } from "../state/catalog";
 import { OnboardingProvider } from "../state/onboarding";
 import { WeekProvider } from "../state/week";
 
 function CatalogGate() {
   const { state, retry } = useCatalogState();
-  if (state.status === "loading") return <LoadingState message="Cargando recetas y precios…" />;
+  // Carga y error viven dentro de la misma pantalla de bienvenida, como en el mockup.
+  if (state.status === "loading") {
+    return (
+      <StartupScreen>
+        <SyncCard />
+      </StartupScreen>
+    );
+  }
   if (state.status === "error") {
     return (
-      <ErrorState
-        title="No pudimos cargar los datos"
-        message="Revisa tu conexión a internet e inténtalo de nuevo."
-        onRetry={retry}
-      />
+      <StartupScreen>
+        <LoadErrorCard onRetry={retry} />
+      </StartupScreen>
     );
   }
   return (

@@ -2,7 +2,7 @@ import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon } from "./Icon";
 
-/** Chip seleccionable (checkbox). Seleccionado: fondo coral suave con palomita. */
+/** Chip seleccionable (checkbox). Seleccionado: fondo verde salvia suave con palomita. */
 export function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
   return (
     <Pressable

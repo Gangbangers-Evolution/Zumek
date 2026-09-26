@@ -1,17 +1,23 @@
-// Sistema de diseno "Warm Culinary Thrift" (mockups de Stitch). Los nombres siguen el
-// DESIGN.md para mapear 1:1 las clases de los mockups (bg-primary-container -> primaryContainer).
+// Sistema de diseno "Warm Culinary Thrift" (mockups de Stitch, identidad verde salvia + durazno).
+// Los nombres siguen el DESIGN.md para mapear 1:1 las clases de los mockups (bg-primary-container -> primaryContainer).
 // Cada par texto/fondo que se usa en la app esta verificado con contraste >= 4.5:1.
 
 export const colors = {
-  // Coral: acciones. El boton principal es coral claro con texto rojo oscuro (4.56:1);
-  // con texto blanco no cumple contraste (2.78:1).
-  primaryContainer: "#ff6b6b",
-  onPrimaryContainer: "#6d0010",
-  primaryContainerPressed: "#ff8585", // se aclara al presionar: oscurecerlo baja el contraste
-  primary: "#ae2f34", // coral oscuro para texto y numeros de acento (6.16:1 sobre el fondo)
+  // Verde salvia: acciones (identidad actual de Stitch). Texto blanco sobre #52796f (4.86:1).
+  primaryContainer: "#52796f",
+  onPrimaryContainer: "#ffffff",
+  primaryContainerPressed: "#3d5a52", // mas oscuro al presionar: sube el contraste (7.55:1)
+  primary: "#3f6158", // verde salvia oscuro para texto y numeros de acento
   onPrimary: "#ffffff",
-  primaryFixed: "#ffdad8", // fondo de chips y tarjetas seleccionadas
-  onPrimaryFixedVariant: "#8c1520", // texto sobre primaryFixed (7.25:1)
+  primaryFixed: "#dfe9e5", // fondo de chips y tarjetas seleccionadas
+  onPrimaryFixedVariant: "#2c4640", // texto sobre primaryFixed
+
+  // Coral y durazno: solo acentos (presupuesto, etiquetas, progreso de ahorro)
+  accent: "#ae2f34",
+  accentFixed: "#fbf0ec", // fondo de etiquetas de acento ("PLANIFICA & AHORRA")
+  onAccentFixed: "#a8472c", // texto sobre accentFixed (5.21:1)
+  peach: "#e29578", // solo relleno decorativo, nunca texto
+  onPeachText: "#a34a30", // texto que acompana al durazno (5.31:1)
 
   // Verde: solo ahorro y logros de dinero
   secondary: "#006d3f",
@@ -32,13 +38,14 @@ export const colors = {
   background: "#fcf9f8",
   surfaceContainerLowest: "#ffffff", // tarjetas
   surfaceContainerLow: "#f6f3f2",
+  primarySoft: "#e8f1ee", // halo de la mascota y fondo del riel de progreso
   surfaceContainer: "#f0eded",
   surfaceContainerHigh: "#eae7e7",
 
   onSurface: "#1b1c1c",
-  onSurfaceVariant: "#584140", // texto secundario (8:1 sobre surfaceContainer)
-  outline: "#8c706f", // placeholder e iconos inactivos (4.5:1 sobre blanco)
-  outlineVariant: "#e0bfbd", // bordes
+  onSurfaceVariant: "#4e615d", // texto secundario (5.96:1 sobre surfaceContainerLow)
+  outline: "#5f716c", // placeholder e iconos inactivos (>= 4.5:1 sobre blanco y el fondo)
+  outlineVariant: "#d6e0dc", // bordes
   divider: "#e1e1de",
 } as const;
 

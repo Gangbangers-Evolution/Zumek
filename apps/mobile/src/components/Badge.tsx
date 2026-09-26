@@ -5,7 +5,7 @@ import { Icon, type IconName } from "./Icon";
 type Tone = "accent" | "savings" | "warning" | "neutral";
 
 const look: Record<Tone, { bg: string; fg: string }> = {
-  accent: { bg: colors.primaryFixed, fg: colors.onPrimaryFixedVariant },
+  accent: { bg: colors.accentFixed, fg: colors.onAccentFixed },
   savings: { bg: colors.secondaryContainer, fg: colors.onSecondaryContainer },
   warning: { bg: colors.tertiaryFixed, fg: colors.onTertiaryFixed },
   neutral: { bg: colors.surfaceContainer, fg: colors.onSurfaceVariant },

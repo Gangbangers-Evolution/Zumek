@@ -1,21 +1,10 @@
 import { colors, layout, spacing } from "@zumek/design-tokens";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppText } from "./AppText";
 import { Button } from "./Button";
 import { Card } from "./Card";
 import { Icon } from "./Icon";
 import { IconTile } from "./IconTile";
-
-export function LoadingState({ message }: { message: string }) {
-  return (
-    <View style={styles.center} accessibilityRole="progressbar" accessibilityLabel={message}>
-      <ActivityIndicator size="large" color={colors.primary} />
-      <AppText tone="muted" style={styles.text}>
-        {message}
-      </AppText>
-    </View>
-  );
-}
 
 /** Error con reintentar, como la tarjeta de "No pudimos cargar la información" del mockup. */
 export function ErrorState({
