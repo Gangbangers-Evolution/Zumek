@@ -142,3 +142,5 @@ export interface AiCallLog {
   user_id: Id;
   created_at: Timestamp;
 }
+
+export type { Catalog, PlanBundle } from "./aggregates";
