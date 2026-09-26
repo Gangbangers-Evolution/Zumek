@@ -1,7 +1,9 @@
-import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-tokens";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "./AppText";
+import { Icon } from "./Icon";
 
+/** Contador con botones - y + (personas, dias). */
 export function Stepper({
   label,
   value,
@@ -9,6 +11,7 @@ export function Stepper({
   max,
   onChange,
   format = String,
+  caption,
 }: {
   label: string;
   value: number;
@@ -16,45 +19,32 @@ export function Stepper({
   max: number;
   onChange: (value: number) => void;
   format?: (value: number) => string;
+  caption?: string;
 }) {
   return (
-    <View style={styles.row}>
-      <AppText variant="label" style={styles.label}>
-        {label}
-      </AppText>
-      <View
-        style={styles.controls}
-        accessible
-        accessibilityRole="adjustable"
-        accessibilityLabel={label}
-        accessibilityValue={{ min, max, now: value, text: format(value) }}
-        accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
-        onAccessibilityAction={(e) => {
-          if (e.nativeEvent.actionName === "increment" && value < max) onChange(value + 1);
-          if (e.nativeEvent.actionName === "decrement" && value > min) onChange(value - 1);
-        }}
-      >
-        <StepButton sign="−" label={`Menos ${label.toLowerCase()}`} disabled={value <= min} onPress={() => onChange(value - 1)} />
-        <AppText variant="heading" style={styles.value}>
-          {format(value)}
-        </AppText>
-        <StepButton sign="+" label={`Más ${label.toLowerCase()}`} disabled={value >= max} onPress={() => onChange(value + 1)} />
+    <View
+      style={styles.controls}
+      accessible
+      accessibilityRole="adjustable"
+      accessibilityLabel={label}
+      accessibilityValue={{ min, max, now: value, text: format(value) }}
+      accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
+      onAccessibilityAction={(e) => {
+        if (e.nativeEvent.actionName === "increment" && value < max) onChange(value + 1);
+        if (e.nativeEvent.actionName === "decrement" && value > min) onChange(value - 1);
+      }}
+    >
+      <StepButton icon="remove" label={`Menos ${label.toLowerCase()}`} disabled={value <= min} onPress={() => onChange(value - 1)} />
+      <View style={styles.value}>
+        <AppText variant="headlineMd">{format(value)}</AppText>
+        {caption ? <AppText variant="caption" tone="muted">{caption}</AppText> : null}
       </View>
+      <StepButton icon="add" label={`Más ${label.toLowerCase()}`} disabled={value >= max} onPress={() => onChange(value + 1)} />
     </View>
   );
 }
 
-function StepButton({
-  sign,
-  label,
-  disabled,
-  onPress,
-}: {
-  sign: string;
-  label: string;
-  disabled: boolean;
-  onPress: () => void;
-}) {
+function StepButton({ icon, label, disabled, onPress }: { icon: "add" | "remove"; label: string; disabled: boolean; onPress: () => void }) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -62,28 +52,31 @@ function StepButton({
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={[styles.button, disabled && styles.disabled]}
+      style={({ pressed }) => [styles.button, pressed && styles.pressed, disabled && styles.disabled]}
     >
-      <Text style={styles.sign}>{sign}</Text>
+      <Icon name={icon} size={22} color={colors.onSurface} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: spacing.md },
-  label: { flexShrink: 1 },
-  controls: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
-  value: { minWidth: 32, textAlign: "center" },
+  controls: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    padding: spacing.xs,
+    borderRadius: radius.control,
+    backgroundColor: colors.surfaceContainerLow,
+  },
+  value: { flex: 1, alignItems: "center" },
   button: {
-    width: touchTarget.min,
-    height: touchTarget.min,
-    borderRadius: radius.pill,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
+    width: touchTarget.button,
+    height: touchTarget.button,
+    borderRadius: radius.control,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceContainerLowest,
   },
+  pressed: { backgroundColor: colors.surfaceContainer },
   disabled: { opacity: 0.4 },
-  sign: { fontSize: typography.fontSize.lg, color: colors.primary, fontWeight: typography.fontWeight.bold },
 });

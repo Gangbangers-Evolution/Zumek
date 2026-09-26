@@ -1,17 +1,21 @@
 import { colors, radius, spacing, typography } from "@zumek/design-tokens";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "../../components/AppText";
+import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
+import { Card } from "../../components/Card";
+import { Icon } from "../../components/Icon";
 import { ProgressBar } from "../../components/ProgressBar";
 import { Screen } from "../../components/Screen";
+import { EXAMPLES } from "../../features/examples";
 import { useCatalog } from "../../state/catalog";
 
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return `${m}:${String(s).padStart(2, "0")}`;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 export default function CookScreen() {
@@ -32,6 +36,7 @@ export default function CookScreen() {
   }
 
   const isLast = index === steps.length - 1;
+  const percent = Math.round(((index + 1) / steps.length) * 100);
 
   return (
     <Screen
@@ -41,6 +46,7 @@ export default function CookScreen() {
             <Button
               label="Anterior"
               variant="secondary"
+              icon="arrowBack"
               disabled={index === 0}
               onPress={() => setIndex((i) => i - 1)}
             />
@@ -48,26 +54,50 @@ export default function CookScreen() {
           <View style={styles.flex}>
             <Button
               label={isLast ? "Terminar" : "Siguiente"}
+              trailingIcon={isLast ? "check" : "arrowForward"}
               onPress={() => (isLast ? router.back() : setIndex((i) => i + 1))}
             />
           </View>
         </View>
       }
     >
-      <Stack.Screen options={{ title: recipe.name }} />
-      <ProgressBar current={index + 1} total={steps.length} />
-      <AppText variant="caption" tone="secondary">
-        Paso {index + 1} de {steps.length}
-      </AppText>
-      <AppText variant="title" accessibilityRole="header">
-        {step.title}
-      </AppText>
-      <AppText style={styles.content}>{step.content}</AppText>
+      <Stack.Screen options={{ title: "Modo cocina" }} />
+      <View style={styles.titleRow}>
+        <AppText variant="headlineMd" style={styles.flex}>
+          {recipe.name}
+        </AppText>
+        <AppText variant="caption" tone="muted">
+          {percent}% completado
+        </AppText>
+      </View>
+      <ProgressBar value={index + 1} max={steps.length} label={`Paso ${index + 1} de ${steps.length}`} height={8} />
+
+      <Card>
+        <Badge label={`Paso ${index + 1} de ${steps.length}`} tone="accent" />
+        <AppText variant="headlineSm" tone="muted">
+          {step.title}
+        </AppText>
+        <AppText variant="headlineLg" accessibilityRole="header">
+          {step.content}
+        </AppText>
+      </Card>
 
       {step.timer_seconds !== null ? (
         // key: cada paso arranca con su propio temporizador desde el primer render
         <StepTimer key={step.id} seconds={step.timer_seconds} />
       ) : null}
+
+      <Card tone="warning">
+        <View style={styles.row}>
+          <Icon name="lightbulb" color={colors.onTertiaryFixed} />
+          <View style={styles.flex}>
+            <AppText variant="labelMd" style={{ color: colors.onTertiaryFixed }}>
+              Consejo del chef
+            </AppText>
+            <AppText style={{ color: colors.onTertiaryFixed }}>{EXAMPLES.chefTip}</AppText>
+          </View>
+        </View>
+      </Card>
     </Screen>
   );
 }
@@ -85,52 +115,54 @@ function StepTimer({ seconds }: { seconds: number }) {
   }, [running]);
 
   return (
-    <View style={styles.timer}>
+    <Card style={styles.timer}>
       <AppText
-        variant="title"
-        tone={remaining === 0 ? "success" : "primary"}
+        style={[styles.time, remaining === 0 && { color: colors.secondary }]}
         accessibilityLabel={`Temporizador: ${formatTimer(remaining)}`}
         accessibilityLiveRegion="polite"
       >
         {remaining === 0 ? "¡Listo!" : formatTimer(remaining)}
       </AppText>
+      <ProgressBar value={seconds - remaining} max={seconds} label="Tiempo transcurrido" tone="savings" />
       <View style={styles.row}>
         <View style={styles.flex}>
           <Button
             label={running ? "Pausar" : "Iniciar"}
-            variant="secondary"
+            icon={running ? "pause" : "play"}
+            variant={running ? "secondary" : "primary"}
             disabled={remaining === 0}
             onPress={() => setStarted(!running)}
             accessibilityLabel={running ? "Pausar temporizador" : "Iniciar temporizador"}
           />
         </View>
-        <View style={styles.flex}>
-          <Button
-            label="Reiniciar"
-            variant="ghost"
-            onPress={() => {
-              setStarted(false);
-              setRemaining(seconds);
-            }}
-            accessibilityLabel="Reiniciar temporizador"
-          />
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Reiniciar temporizador"
+          onPress={() => {
+            setStarted(false);
+            setRemaining(seconds);
+          }}
+          style={styles.reset}
+        >
+          <Icon name="refresh" color={colors.onSurface} />
+        </Pressable>
       </View>
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: "row", gap: spacing.sm },
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   flex: { flex: 1 },
-  content: { fontSize: typography.fontSize.lg, lineHeight: typography.fontSize.lg * typography.lineHeight.normal },
-  timer: {
+  titleRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  timer: { alignItems: "stretch", gap: spacing.md },
+  time: { ...typography.currencyHero, fontSize: 48, lineHeight: 56, textAlign: "center", color: colors.onSurface },
+  reset: {
+    width: 48,
+    height: 48,
+    borderRadius: radius.control,
+    backgroundColor: colors.surfaceContainer,
     alignItems: "center",
-    gap: spacing.md,
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
+    justifyContent: "center",
   },
 });

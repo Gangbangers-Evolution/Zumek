@@ -1,3 +1,4 @@
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, useFonts } from "@expo-google-fonts/inter";
 import { colors, typography } from "@zumek/design-tokens";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -23,26 +24,26 @@ function CatalogGate() {
     <WeekProvider>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.primary,
-          headerTitleStyle: { color: colors.textPrimary, fontWeight: typography.fontWeight.semibold },
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.onSurface,
+          headerTitleStyle: { ...typography.labelMd, color: colors.onSurfaceVariant },
+          headerTitleAlign: "center",
           headerShadowVisible: false,
           contentStyle: { backgroundColor: colors.background },
           headerBackButtonDisplayMode: "minimal",
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="generating" options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="plan" options={{ title: "Tu plan" }} />
-        <Stack.Screen name="shopping" options={{ title: "Lista de compras" }} />
-        <Stack.Screen name="pantry" options={{ title: "Mi despensa" }} />
-        <Stack.Screen name="chat" options={{ title: "Pregúntale a Zumek" }} />
       </Stack>
     </WeekProvider>
   );
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold });
+  // Si la fuente falla se sigue con la del sistema: no es motivo para bloquear la app.
+  if (!fontsLoaded && !fontError) return null;
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />

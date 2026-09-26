@@ -1,18 +1,27 @@
-import { colors, radius, spacing } from "@zumek/design-tokens";
+import { colors, elevation, radius, spacing } from "@zumek/design-tokens";
 import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-export function Card({ children, style }: { children: ReactNode; style?: ViewStyle }) {
-  return <View style={[styles.card, style]}>{children}</View>;
+type Tone = "default" | "muted" | "accent" | "savings" | "warning" | "danger";
+
+const look: Record<Tone, { bg: string; border: string }> = {
+  default: { bg: colors.surfaceContainerLowest, border: colors.divider },
+  muted: { bg: colors.surfaceContainerLow, border: colors.surfaceContainerLow },
+  accent: { bg: colors.primaryFixed, border: colors.primaryFixed },
+  savings: { bg: colors.secondaryContainer, border: colors.secondaryContainer },
+  warning: { bg: colors.tertiaryFixed, border: colors.tertiaryFixed },
+  danger: { bg: colors.errorContainer, border: colors.errorContainer },
+};
+
+export function Card({ children, tone = "default", style }: { children: ReactNode; tone?: Tone; style?: ViewStyle }) {
+  const { bg, border } = look[tone];
+  return (
+    <View style={[styles.card, { backgroundColor: bg, borderColor: border }, tone === "default" && elevation.card, style]}>
+      {children}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
+  card: { borderRadius: radius.card, borderWidth: 1, padding: spacing.md, gap: spacing.sm },
 });

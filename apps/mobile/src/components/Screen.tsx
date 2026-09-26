@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   footerBar: {
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.md,
+    backgroundColor: colors.background,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
   },
   footer: { gap: spacing.sm },
 });

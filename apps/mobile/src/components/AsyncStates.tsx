@@ -1,17 +1,23 @@
-import { colors, spacing } from "@zumek/design-tokens";
+import { colors, layout, spacing } from "@zumek/design-tokens";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { AppText } from "./AppText";
 import { Button } from "./Button";
+import { Card } from "./Card";
+import { Icon } from "./Icon";
+import { IconTile } from "./IconTile";
 
 export function LoadingState({ message }: { message: string }) {
   return (
     <View style={styles.center} accessibilityRole="progressbar" accessibilityLabel={message}>
       <ActivityIndicator size="large" color={colors.primary} />
-      <AppText tone="secondary">{message}</AppText>
+      <AppText tone="muted" style={styles.text}>
+        {message}
+      </AppText>
     </View>
   );
 }
 
+/** Error con reintentar, como la tarjeta de "No pudimos cargar la información" del mockup. */
 export function ErrorState({
   title = "Algo salió mal",
   message,
@@ -22,14 +28,19 @@ export function ErrorState({
   onRetry: () => void;
 }) {
   return (
-    <View style={styles.center} accessibilityRole="alert">
-      <AppText variant="heading" style={styles.text}>
-        {title}
-      </AppText>
-      <AppText tone="secondary" style={styles.text}>
-        {message}
-      </AppText>
-      <Button label="Reintentar" onPress={onRetry} />
+    <View style={styles.center}>
+      <Card tone="danger" style={styles.card}>
+        <View style={styles.row} accessibilityRole="alert">
+          <Icon name="wifiOff" size={24} color={colors.onErrorContainer} />
+          <View style={styles.flex}>
+            <AppText variant="labelMd" style={{ color: colors.onErrorContainer }}>
+              {title}
+            </AppText>
+            <AppText style={{ color: colors.onErrorContainer }}>{message}</AppText>
+          </View>
+        </View>
+        <Button label="Reintentar" icon="refresh" onPress={onRetry} />
+      </Card>
     </View>
   );
 }
@@ -48,13 +59,14 @@ export function EmptyState({
 }) {
   return (
     <View style={styles.center}>
-      <AppText variant="heading" style={styles.text}>
+      <IconTile name="kitchen" tone="neutral" size={64} />
+      <AppText variant="headlineSm" style={styles.text}>
         {title}
       </AppText>
-      <AppText tone="secondary" style={styles.text}>
+      <AppText tone="muted" style={styles.text}>
         {message}
       </AppText>
-      <Button label={actionLabel} onPress={onAction} />
+      <Button label={actionLabel} icon="add" onPress={onAction} />
     </View>
   );
 }
@@ -68,5 +80,8 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
+  card: { width: "100%", maxWidth: layout.maxContentWidth, gap: spacing.md },
+  row: { flexDirection: "row", gap: spacing.md },
+  flex: { flex: 1, gap: spacing.xxs },
   text: { textAlign: "center" },
 });

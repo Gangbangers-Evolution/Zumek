@@ -1,64 +1,81 @@
-// Valores PROVISIONALES: se reemplazan cuando el equipo de diseno entregue el mockup.
-// Mientras tanto siguen la identidad conceptual (coral calido, verde ahorro, fondos claros).
+// Sistema de diseno "Warm Culinary Thrift" (mockups de Stitch). Los nombres siguen el
+// DESIGN.md para mapear 1:1 las clases de los mockups (bg-primary-container -> primaryContainer).
+// Cada par texto/fondo que se usa en la app esta verificado con contraste >= 4.5:1.
 
-// Pares texto/fondo verificados con contraste >= 4.5:1 (seccion 5).
 export const colors = {
-  // Coral/naranja calido: color principal de marca
-  brandCoral: "#E8603C", // solo decorativo, no para texto ni fondo de texto blanco
-  primary: "#C24A2B", // botones y texto de acento (4.87:1 con blanco)
-  primaryPressed: "#A33D22",
-  primarySoft: "#FDE6DE",
-  onPrimarySoft: "#A93F24",
-  onPrimary: "#FFFFFF",
+  // Coral: acciones. El boton principal es coral claro con texto rojo oscuro (4.56:1);
+  // con texto blanco no cumple contraste (2.78:1).
+  primaryContainer: "#ff6b6b",
+  onPrimaryContainer: "#6d0010",
+  primaryContainerPressed: "#ff8585", // se aclara al presionar: oscurecerlo baja el contraste
+  primary: "#ae2f34", // coral oscuro para texto y numeros de acento (6.16:1 sobre el fondo)
+  onPrimary: "#ffffff",
+  primaryFixed: "#ffdad8", // fondo de chips y tarjetas seleccionadas
+  onPrimaryFixedVariant: "#8c1520", // texto sobre primaryFixed (7.25:1)
 
-  // Verde: ahorro / exito
-  success: "#23764A",
-  successSoft: "#E3F4EA",
-  onSuccess: "#FFFFFF",
+  // Verde: solo ahorro y logros de dinero
+  secondary: "#006d3f",
+  onSecondary: "#ffffff",
+  secondaryContainer: "#8ff8b6",
+  onSecondaryContainer: "#00522e", // (7.24:1)
 
-  warning: "#8A5A12",
-  warningSoft: "#FDF3DC",
-  danger: "#B42828",
-  dangerSoft: "#FDE2E2",
+  // Ambar: avisos (caducidad, presupuesto cerca del limite)
+  tertiary: "#825500",
+  tertiaryFixed: "#ffddb4",
+  onTertiaryFixed: "#633f00", // (7.25:1)
 
-  // Fondos claros
-  background: "#FFF9F5",
-  surface: "#FFFFFF",
-  surfaceMuted: "#F6EEE8",
-  border: "#EADFD7",
+  error: "#ba1a1a",
+  errorContainer: "#ffdad6",
+  onErrorContainer: "#93000a", // (7.24:1)
 
-  textPrimary: "#2B2320",
-  textSecondary: "#6B5E57",
-  textDisabled: "#A89A92", // solo controles deshabilitados (exentos de contraste)
+  // Superficies
+  background: "#fcf9f8",
+  surfaceContainerLowest: "#ffffff", // tarjetas
+  surfaceContainerLow: "#f6f3f2",
+  surfaceContainer: "#f0eded",
+  surfaceContainerHigh: "#eae7e7",
+
+  onSurface: "#1b1c1c",
+  onSurfaceVariant: "#584140", // texto secundario (8:1 sobre surfaceContainer)
+  outline: "#8c706f", // placeholder e iconos inactivos (4.5:1 sobre blanco)
+  outlineVariant: "#e0bfbd", // bordes
+  divider: "#e1e1de",
 } as const;
 
+// Inter en cuatro pesos; los nombres coinciden con las fuentes cargadas en apps/mobile.
+export const fontFamily = {
+  regular: "Inter_400Regular",
+  medium: "Inter_500Medium",
+  semibold: "Inter_600SemiBold",
+  bold: "Inter_700Bold",
+} as const;
+
+interface TextStyleToken {
+  fontFamily: string;
+  fontSize: number;
+  lineHeight: number;
+  letterSpacing?: number;
+}
+
+/** Escala tipografica del DESIGN.md (letterSpacing en px: em * fontSize). */
 export const typography = {
-  fontFamily: {
-    regular: "System",
-    medium: "System",
-    bold: "System",
-  },
-  fontSize: {
-    xs: 12,
-    sm: 14,
-    md: 16,
-    lg: 20,
-    xl: 24,
-    xxl: 32,
-  },
-  fontWeight: {
-    regular: "400",
-    medium: "500",
-    semibold: "600",
-    bold: "700",
-  },
-  lineHeight: {
-    tight: 1.2,
-    normal: 1.4,
-    relaxed: 1.6,
-  },
-} as const;
+  headlineXl: { fontFamily: fontFamily.bold, fontSize: 28, lineHeight: 36, letterSpacing: -0.56 },
+  headlineLg: { fontFamily: fontFamily.bold, fontSize: 24, lineHeight: 32, letterSpacing: -0.36 },
+  headlineMd: { fontFamily: fontFamily.semibold, fontSize: 20, lineHeight: 28, letterSpacing: -0.2 },
+  headlineSm: { fontFamily: fontFamily.semibold, fontSize: 18, lineHeight: 24, letterSpacing: -0.09 },
+  bodyLg: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 24 },
+  bodyMd: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20 },
+  bodyMdMedium: { fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20 },
+  labelMd: { fontFamily: fontFamily.semibold, fontSize: 14, lineHeight: 18 },
+  labelSm: { fontFamily: fontFamily.semibold, fontSize: 12, lineHeight: 16, letterSpacing: 0.12 },
+  caption: { fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 16 },
+  currencyDisplay: { fontFamily: fontFamily.bold, fontSize: 24, lineHeight: 28, letterSpacing: -0.48 },
+  currencyHero: { fontFamily: fontFamily.bold, fontSize: 40, lineHeight: 48, letterSpacing: -0.8 },
+} as const satisfies Record<string, TextStyleToken>;
 
+export type TypographyVariant = keyof typeof typography;
+
+/** Base de 4px. */
 export const spacing = {
   xxs: 2,
   xs: 4,
@@ -70,20 +87,28 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  sm: 6,
-  md: 12,
-  lg: 20,
-  pill: 999,
+  sm: 4,
+  md: 8,
+  control: 12, // botones, inputs
+  card: 16,
+  sheet: 20, // modales y hojas
+  pill: 999, // chips y badges
 } as const;
 
 // Tamano minimo de elementos tocables (seccion 5, criterios verificables)
 export const touchTarget = {
   min: 44,
+  button: 48,
 } as const;
 
 export const layout = {
   // Ancho maximo del contenido en web (seccion 5)
   maxContentWidth: 480,
+} as const;
+
+export const elevation = {
+  card: { shadowColor: "#202020", shadowOpacity: 0.04, shadowRadius: 3, shadowOffset: { width: 0, height: 1 }, elevation: 1 },
+  floating: { shadowColor: "#202020", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
 } as const;
 
 export const motion = {
@@ -93,5 +118,5 @@ export const motion = {
   durationReduced: 90,
 } as const;
 
-export const tokens = { colors, typography, spacing, radius, touchTarget, layout, motion } as const;
+export const tokens = { colors, fontFamily, typography, spacing, radius, touchTarget, layout, elevation, motion } as const;
 export type Tokens = typeof tokens;

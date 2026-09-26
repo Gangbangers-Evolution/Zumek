@@ -1,15 +1,9 @@
 import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-tokens";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Icon } from "./Icon";
 
-export function Chip({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
+/** Chip seleccionable (checkbox). Seleccionado: fondo coral suave con palomita. */
+export function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -18,10 +12,8 @@ export function Chip({
       onPress={onPress}
       style={[styles.chip, selected && styles.selected]}
     >
-      <Text style={[styles.text, selected && styles.textSelected]}>
-        {selected ? "✓ " : ""}
-        {label}
-      </Text>
+      {selected ? <Icon name="check" size={16} color={colors.onPrimaryFixedVariant} /> : null}
+      <Text style={[styles.text, selected && styles.textSelected]}>{label}</Text>
     </Pressable>
   );
 }
@@ -34,14 +26,16 @@ const styles = StyleSheet.create({
   group: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   chip: {
     minHeight: touchTarget.min,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: colors.divider,
+    backgroundColor: colors.surfaceContainerLowest,
   },
-  selected: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
-  text: { fontSize: typography.fontSize.md, color: colors.textPrimary },
-  textSelected: { color: colors.onPrimarySoft, fontWeight: typography.fontWeight.semibold },
+  selected: { borderColor: colors.primaryContainer, backgroundColor: colors.primaryFixed },
+  text: { ...typography.bodyMdMedium, color: colors.onSurfaceVariant },
+  textSelected: { ...typography.labelMd, color: colors.onPrimaryFixedVariant },
 });

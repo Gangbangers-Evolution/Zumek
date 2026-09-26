@@ -1,12 +1,23 @@
 import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-tokens";
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { Icon, type IconName } from "./Icon";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "savings" | "text";
+
+const look: Record<Variant, { bg: string; pressed: string; fg: string; border?: string }> = {
+  primary: { bg: colors.primaryContainer, pressed: colors.primaryContainerPressed, fg: colors.onPrimaryContainer },
+  secondary: { bg: colors.surfaceContainerLowest, pressed: colors.surfaceContainerLow, fg: colors.onSurface, border: colors.divider },
+  savings: { bg: colors.secondary, pressed: colors.onSecondaryContainer, fg: colors.onSecondary },
+  text: { bg: "transparent", pressed: colors.surfaceContainer, fg: colors.onSurfaceVariant },
+};
 
 interface ButtonProps {
   label: string;
   onPress: () => void;
   variant?: Variant;
+  icon?: IconName;
+  /** Icono despues del texto (flechas de "Continuar"). */
+  trailingIcon?: IconName;
   disabled?: boolean;
   loading?: boolean;
   accessibilityLabel?: string;
@@ -17,12 +28,15 @@ export function Button({
   label,
   onPress,
   variant = "primary",
+  icon,
+  trailingIcon,
   disabled = false,
   loading = false,
   accessibilityLabel,
   accessibilityHint,
 }: ButtonProps) {
   const inactive = disabled || loading;
+  const { bg, pressed, fg, border } = look[variant];
   return (
     <Pressable
       accessibilityRole="button"
@@ -31,18 +45,21 @@ export function Button({
       accessibilityState={{ disabled: inactive, busy: loading }}
       disabled={inactive}
       onPress={onPress}
-      style={({ pressed }) => [
+      style={({ pressed: isPressed }) => [
         styles.base,
-        styles[variant],
-        pressed && variant === "primary" && styles.primaryPressed,
-        pressed && variant !== "primary" && styles.softPressed,
+        { backgroundColor: isPressed ? pressed : bg },
+        border ? { borderWidth: 1, borderColor: border } : null,
         inactive && styles.disabled,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? colors.onPrimary : colors.primary} />
+        <ActivityIndicator color={fg} />
       ) : (
-        <Text style={[styles.text, variant === "primary" ? styles.textPrimary : styles.textSoft]}>{label}</Text>
+        <View style={styles.content}>
+          {icon ? <Icon name={icon} size={18} color={fg} /> : null}
+          <Text style={[styles.label, { color: fg }]}>{label}</Text>
+          {trailingIcon ? <Icon name={trailingIcon} size={18} color={fg} /> : null}
+        </View>
       )}
     </Pressable>
   );
@@ -50,28 +67,14 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: touchTarget.min,
+    minHeight: touchTarget.button,
     minWidth: touchTarget.min,
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.md,
+    borderRadius: radius.control,
     alignItems: "center",
     justifyContent: "center",
   },
-  primary: { backgroundColor: colors.primary },
-  primaryPressed: { backgroundColor: colors.primaryPressed },
-  secondary: {
-    backgroundColor: colors.surface,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-  },
-  ghost: { backgroundColor: "transparent" },
-  softPressed: { backgroundColor: colors.primarySoft },
-  disabled: { opacity: 0.5 },
-  text: {
-    fontSize: typography.fontSize.md,
-    fontWeight: typography.fontWeight.semibold,
-  },
-  textPrimary: { color: colors.onPrimary },
-  textSoft: { color: colors.primary },
+  content: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  label: { ...typography.labelMd, fontSize: 16, textAlign: "center" },
+  disabled: { opacity: 0.45 },
 });

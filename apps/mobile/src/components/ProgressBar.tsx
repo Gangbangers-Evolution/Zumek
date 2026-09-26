@@ -1,20 +1,38 @@
 import { colors, radius } from "@zumek/design-tokens";
 import { StyleSheet, View } from "react-native";
 
-export function ProgressBar({ current, total }: { current: number; total: number }) {
+export function ProgressBar({
+  value,
+  max,
+  label,
+  tone = "accent",
+  height = 6,
+}: {
+  value: number;
+  max: number;
+  label: string;
+  tone?: "accent" | "savings";
+  height?: number;
+}) {
+  const ratio = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
   return (
     <View
-      style={styles.track}
+      style={[styles.track, { height }]}
       accessibilityRole="progressbar"
-      accessibilityLabel={`Paso ${current} de ${total}`}
-      accessibilityValue={{ min: 0, max: total, now: current }}
+      accessibilityLabel={label}
+      accessibilityValue={{ min: 0, max, now: value }}
     >
-      <View style={[styles.fill, { width: `${(current / total) * 100}%` }]} />
+      <View
+        style={[
+          styles.fill,
+          { width: `${ratio * 100}%`, backgroundColor: tone === "savings" ? colors.secondary : colors.primaryContainer },
+        ]}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  track: { height: 6, borderRadius: radius.pill, backgroundColor: colors.surfaceMuted, overflow: "hidden" },
-  fill: { height: "100%", backgroundColor: colors.primary },
+  track: { borderRadius: radius.pill, backgroundColor: colors.surfaceContainerHigh, overflow: "hidden" },
+  fill: { height: "100%", borderRadius: radius.pill },
 });
