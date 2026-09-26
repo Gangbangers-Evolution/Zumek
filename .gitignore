@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+*.tsbuildinfo
+coverage/
+.env*.local
+.idea/
+CLAUDE.md

@@ -1,0 +1,2 @@
+-- Seed de datos curados (productos, precios, recetas).
+-- Se llena en Fase 2 / Fase 5 a partir del JSON/CSV revisado del bootstrap-scraper.
