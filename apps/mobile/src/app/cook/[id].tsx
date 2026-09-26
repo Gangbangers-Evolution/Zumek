@@ -17,10 +17,9 @@ function formatTimer(seconds: number): string {
 export default function CookScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalog = useCatalog();
-  const recipe = catalog.recipes.find((r) => r.id === id);
-  const steps = catalog.recipe_steps
-    .filter((s) => s.recipe_id === id)
-    .sort((a, b) => a.step_order - b.step_order);
+  // El id viene de la URL: puede no existir, por eso get() y no lookup()
+  const recipe = catalog.recipeById.get(id);
+  const steps = catalog.stepsByRecipe.get(id) ?? [];
   const [index, setIndex] = useState(0);
   const step = steps[index];
 

@@ -157,3 +157,4 @@ export interface AiCallLog {
 }
 
 export type { Catalog, PlanBundle } from "./aggregates";
+export { indexCatalog, lookup, type IndexedCatalog } from "./catalog-index";

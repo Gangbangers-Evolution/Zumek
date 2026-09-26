@@ -1,5 +1,5 @@
-import type { Catalog, PantryInventory, PlanBundle, UnitType } from "@zumek/domain";
-import { scaleQuantity } from "./shopping";
+import { lookup, type IndexedCatalog, type PantryInventory, type PlanBundle } from "@zumek/domain";
+import { sumNeeds } from "./shopping";
 
 const EPSILON = 1e-6;
 
@@ -7,35 +7,25 @@ function round(quantity: number): number {
   return Math.round(quantity * 1000) / 1000;
 }
 
-function unitOf(catalog: Catalog, canonicalProductId: string): UnitType {
-  const product = catalog.canonical_products.find((p) => p.id === canonicalProductId);
-  if (!product) throw new Error(`Producto canonico desconocido en la despensa: ${canonicalProductId}`);
-  return product.unit_type;
+function unitOf(catalog: IndexedCatalog, canonicalProductId: string) {
+  return lookup(catalog.productById, canonicalProductId, "Producto canonico").unit_type;
 }
 
 /**
  * Comprado menos usado por ingrediente, en unidad base (invariante 3 de la seccion 3).
  * Negativo = el plan consumio despensa que ya existia.
  */
-export function planPantryDelta(bundle: PlanBundle, catalog: Catalog): Map<string, number> {
-  const delta = new Map<string, number>();
-  const add = (canonicalId: string, quantity: number) =>
-    delta.set(canonicalId, (delta.get(canonicalId) ?? 0) + quantity);
-
-  const commercial = new Map(catalog.commercial_products.map((p) => [p.id, p]));
+export function planPantryDelta(bundle: PlanBundle, catalog: IndexedCatalog): Map<string, number> {
+  const used = sumNeeds(
+    bundle.meals.map((meal) => lookup(catalog.recipeById, meal.recipe_id, "Receta")),
+    catalog,
+    bundle.plan.people_count,
+  );
+  const delta = new Map([...used].map(([canonicalId, quantity]) => [canonicalId, -quantity]));
   for (const item of bundle.shopping_items) {
-    const product = commercial.get(item.commercial_product_id);
-    if (product) add(product.canonical_product_id, item.quantity_packages * product.package_quantity);
-  }
-
-  const recipes = new Map(catalog.recipes.map((r) => [r.id, r]));
-  for (const meal of bundle.meals) {
-    const recipe = recipes.get(meal.recipe_id);
-    if (!recipe) continue;
-    for (const ing of catalog.recipe_ingredients) {
-      if (ing.recipe_id !== recipe.id) continue;
-      add(ing.canonical_product_id, -scaleQuantity(ing.quantity, recipe.servings_base, bundle.plan.people_count));
-    }
+    const product = lookup(catalog.commercialById, item.commercial_product_id, "Producto de tienda");
+    const id = product.canonical_product_id;
+    delta.set(id, (delta.get(id) ?? 0) + item.quantity_packages * product.package_quantity);
   }
   return delta;
 }
@@ -49,7 +39,7 @@ export interface PantryUpdate {
 
 export interface ClosePlanInput {
   bundle: PlanBundle;
-  catalog: Catalog;
+  catalog: IndexedCatalog;
   /** Despensa actual del usuario. */
   existing: PantryInventory[];
   updatedAt: string;
@@ -98,7 +88,7 @@ export interface DeclarePantryInput {
   declared: Record<string, number>;
   existing: PantryInventory[];
   userId: string;
-  catalog: Catalog;
+  catalog: IndexedCatalog;
   updatedAt: string;
   newId: (canonicalProductId: string) => string;
 }

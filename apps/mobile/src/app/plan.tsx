@@ -1,4 +1,4 @@
-import { MEAL_TYPES, type PlanMeal } from "@zumek/domain";
+import { lookup, MEAL_TYPES, type PlanMeal } from "@zumek/domain";
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -87,7 +87,7 @@ export default function PlanScreen() {
             .filter((m) => m.day_index === day)
             .sort((a, b) => MEAL_TYPES.indexOf(a.meal_type) - MEAL_TYPES.indexOf(b.meal_type))
             .map((meal) => (
-              <MealRow key={meal.id} meal={meal} recipeName={catalog.recipes.find((r) => r.id === meal.recipe_id)?.name ?? "Receta"} />
+              <MealRow key={meal.id} meal={meal} recipeName={lookup(catalog.recipeById, meal.recipe_id, "Receta").name} />
             ))}
         </View>
       ))}

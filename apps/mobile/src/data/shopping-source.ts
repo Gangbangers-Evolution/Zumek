@@ -1,6 +1,6 @@
 // Fase 1: arma la lista a partir del plan en memoria con un retraso simulado.
 // Los precios salen de price_cents_snapshot, nunca del precio actual (seccion 2).
-import type { Catalog, CommercialProduct, PlanBundle, Store } from "@zumek/domain";
+import { lookup, type CommercialProduct, type IndexedCatalog, type PlanBundle, type Store } from "@zumek/domain";
 import { delay } from "./fake";
 
 export interface ShoppingRow {
@@ -17,13 +17,12 @@ export interface ShoppingGroup {
   subtotalCents: number;
 }
 
-export async function loadShoppingList(bundle: PlanBundle, catalog: Catalog): Promise<ShoppingGroup[]> {
+export async function loadShoppingList(bundle: PlanBundle, catalog: IndexedCatalog): Promise<ShoppingGroup[]> {
   await delay(500);
   const groups = new Map<string, ShoppingGroup>();
   for (const item of bundle.shopping_items) {
-    const store = catalog.stores.find((s) => s.id === item.store_id);
-    const product = catalog.commercial_products.find((p) => p.id === item.commercial_product_id);
-    if (!store || !product) throw new Error(`item sin tienda o producto: ${item.id}`);
+    const store = lookup(catalog.storeById, item.store_id, "Tienda");
+    const product = lookup(catalog.commercialById, item.commercial_product_id, "Producto de tienda");
     const group = groups.get(store.id) ?? { store, rows: [], subtotalCents: 0 };
     const subtotalCents = item.price_cents_snapshot * item.quantity_packages;
     group.rows.push({

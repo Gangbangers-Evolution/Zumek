@@ -1,7 +1,7 @@
 // La semana del usuario: el plan activo y su despensa cambian juntos, con acciones atomicas.
 // Las reglas viven en packages/planner (funciones puras); aqui solo se orquestan.
 // Hasta la Fase 2 vive en memoria; despues estas mismas acciones escriben en Supabase.
-import type { Catalog, PantryInventory, PlanBundle } from "@zumek/domain";
+import type { IndexedCatalog, PantryInventory, PlanBundle } from "@zumek/domain";
 import { applyPantryUpdate, closePlanIntoPantry, declarePantry } from "@zumek/planner";
 import { createContext, useContext, useMemo, useReducer, type ReactNode } from "react";
 import { useCatalog } from "./catalog";
@@ -17,7 +17,7 @@ type WeekAction =
 
 const pantryRowId = (userId: string) => (canonicalId: string) => `pantry-${userId}-${canonicalId}`;
 
-function weekReducer(catalog: Catalog) {
+function weekReducer(catalog: IndexedCatalog) {
   return (state: WeekState, action: WeekAction): WeekState => {
     switch (action.type) {
       case "planGenerated": {

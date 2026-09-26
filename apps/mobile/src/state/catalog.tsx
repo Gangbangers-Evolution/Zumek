@@ -1,11 +1,11 @@
-import type { Catalog } from "@zumek/domain";
+import { indexCatalog, type IndexedCatalog } from "@zumek/domain";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { loadCatalog } from "../data/catalog-source";
 
 type CatalogState =
   | { status: "loading" }
   | { status: "error" }
-  | { status: "ready"; catalog: Catalog };
+  | { status: "ready"; catalog: IndexedCatalog };
 
 interface CatalogContextValue {
   state: CatalogState;
@@ -21,7 +21,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
   // y el reintento lo vuelve a poner desde el boton (un evento, no un efecto).
   const fetchCatalog = useCallback(() => {
     loadCatalog()
-      .then((catalog) => setState({ status: "ready", catalog }))
+      .then((catalog) => setState({ status: "ready", catalog: indexCatalog(catalog) }))
       .catch(() => setState({ status: "error" }));
   }, []);
 
@@ -44,7 +44,7 @@ export function useCatalogState(): CatalogContextValue {
 }
 
 /** Solo para pantallas detras de la compuerta de carga: el catalogo ya existe. */
-export function useCatalog(): Catalog {
+export function useCatalog(): IndexedCatalog {
   const { state } = useCatalogState();
   if (state.status !== "ready") throw new Error("catalogo no cargado");
   return state.catalog;

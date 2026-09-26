@@ -1,4 +1,4 @@
-import type { Allergen, Catalog, MealType, Recipe, UnitType } from "@zumek/domain";
+import { indexCatalog, type Allergen, type IndexedCatalog, type MealType, type Recipe, type UnitType } from "@zumek/domain";
 import { generatePlan, type PlannerPreferences } from "./index";
 
 // ---------- helpers para armar catalogos chicos a la medida de cada caso ----------
@@ -19,9 +19,9 @@ export interface RecipeSpec {
   ingredients: Array<[productId: string, quantity: number]>;
 }
 
-export function catalog(products: ProductSpec[], recipes: RecipeSpec[]): Catalog {
+export function catalog(products: ProductSpec[], recipes: RecipeSpec[]): IndexedCatalog {
   const unitOf = new Map(products.map((p) => [p.id, p.unit]));
-  return {
+  return indexCatalog({
     stores: [{ id: "s1", name: "Tienda", slug: "tienda", active: true }],
     canonical_products: products.map((p) => ({ id: p.id, name: p.id, unit_type: p.unit, category: "x" })),
     commercial_products: products.map((p) => ({
@@ -62,7 +62,7 @@ export function catalog(products: ProductSpec[], recipes: RecipeSpec[]): Catalog
         unit: unitOf.get(productId)!,
       })),
     ),
-  };
+  });
 }
 
 export function prefs(overrides: Partial<PlannerPreferences> = {}): PlannerPreferences {
@@ -82,6 +82,6 @@ export function prefs(overrides: Partial<PlannerPreferences> = {}): PlannerPrefe
   };
 }
 
-export function plan(cat: Catalog, p: PlannerPreferences) {
+export function plan(cat: IndexedCatalog, p: PlannerPreferences) {
   return generatePlan({ catalog: cat, preferences: p, planId: "p1", userId: "u1", createdAt: "2026-09-26T00:00:00Z" });
 }

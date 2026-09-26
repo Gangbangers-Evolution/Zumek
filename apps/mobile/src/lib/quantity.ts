@@ -20,11 +20,6 @@ export function formatQuantity(quantity: number, unit: UnitType): string {
   return `${round(quantity)} ${UNIT_SUFFIX[unit]}`;
 }
 
-/** Escalado lineal simple (seccion 2): quantity * people / servings_base. */
-export function scaleQuantity(quantity: number, servingsBase: number, peopleCount: number): number {
-  return (quantity * peopleCount) / servingsBase;
-}
-
 /**
  * 'pizca de sal (1 g)': si la cantidad es un multiplo exacto (1-4) de un termino coloquial,
  * lo antepone. Solo presentacion; el planner nunca usa esto.

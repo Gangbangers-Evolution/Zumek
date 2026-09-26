@@ -1,9 +1,10 @@
 import { buildSampleCatalog } from "@zumek/catalog-data";
+import { indexCatalog } from "@zumek/domain";
 import { describe, expect, it } from "vitest";
 import { scaleQuantity } from "./index";
 import { catalog, plan, prefs } from "./test-helpers";
 
-const sampleCatalog = buildSampleCatalog();
+const sampleCatalog = indexCatalog(buildSampleCatalog());
 
 // ---------- casos obligatorios (seccion 9) ----------
 

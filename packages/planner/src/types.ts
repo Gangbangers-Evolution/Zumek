@@ -1,4 +1,4 @@
-import type { Catalog, MealType } from "@zumek/domain";
+import type { IndexedCatalog, MealType } from "@zumek/domain";
 
 /** Respuestas del onboarding que el planner necesita (mismos nombres que en la app). */
 export interface PlannerPreferences {
@@ -23,7 +23,7 @@ export interface PlannerPreferences {
 }
 
 export interface PlannerInput {
-  catalog: Catalog;
+  catalog: IndexedCatalog;
   preferences: PlannerPreferences;
   /** Ids y fecha los decide quien llama: el planner no tiene efectos secundarios. */
   planId: string;

@@ -1,4 +1,5 @@
 import { spacing } from "@zumek/design-tokens";
+import { lookup } from "@zumek/domain";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../components/AppText";
 import { Button } from "../components/Button";
@@ -13,7 +14,7 @@ export default function PantryScreen() {
   const catalog = useCatalog();
   const { inventory, bundle } = useWeek();
   const startPlanning = useStartPlanning();
-  const nameOf = (id: string) => catalog.canonical_products.find((p) => p.id === id)?.name ?? "Ingrediente";
+  const nameOf = (id: string) => lookup(catalog.productById, id, "Producto").name;
   const items = [...inventory].sort((a, b) => nameOf(a.canonical_product_id).localeCompare(nameOf(b.canonical_product_id)));
 
   return (

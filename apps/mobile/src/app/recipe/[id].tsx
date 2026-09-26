@@ -6,7 +6,9 @@ import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { Screen } from "../../components/Screen";
 import { capitalize } from "../../lib/labels";
-import { formatWithColloquial, scaleQuantity } from "../../lib/quantity";
+import { lookup } from "@zumek/domain";
+import { scaleQuantity } from "@zumek/planner";
+import { formatWithColloquial } from "../../lib/quantity";
 import { useCatalog } from "../../state/catalog";
 import { useOnboarding } from "../../state/onboarding";
 import { useWeek } from "../../state/week";
@@ -16,7 +18,8 @@ export default function RecipeScreen() {
   const catalog = useCatalog();
   const { bundle } = useWeek();
   const { state } = useOnboarding();
-  const recipe = catalog.recipes.find((r) => r.id === id);
+  // El id viene de la URL: puede no existir, por eso get() y no lookup()
+  const recipe = catalog.recipeById.get(id);
 
   if (!recipe) {
     return (
@@ -27,10 +30,8 @@ export default function RecipeScreen() {
   }
 
   const people = bundle?.plan.people_count ?? state.peopleCount;
-  const ingredients = catalog.recipe_ingredients.filter((i) => i.recipe_id === recipe.id);
-  const steps = catalog.recipe_steps
-    .filter((s) => s.recipe_id === recipe.id)
-    .sort((a, b) => a.step_order - b.step_order);
+  const ingredients = catalog.ingredientsByRecipe.get(recipe.id) ?? [];
+  const steps = catalog.stepsByRecipe.get(recipe.id) ?? [];
 
   return (
     <Screen
@@ -61,11 +62,11 @@ export default function RecipeScreen() {
           Ingredientes
         </AppText>
         {ingredients.map((ing) => {
-          const product = catalog.canonical_products.find((p) => p.id === ing.canonical_product_id);
+          const product = lookup(catalog.productById, ing.canonical_product_id, "Producto");
           const quantity = scaleQuantity(ing.quantity, recipe.servings_base, people);
           return (
             <View key={ing.id} style={styles.ingredient}>
-              <AppText style={styles.flex}>{product?.name ?? "Ingrediente"}</AppText>
+              <AppText style={styles.flex}>{product.name}</AppText>
               <AppText tone="secondary">{formatWithColloquial(quantity, ing.unit, catalog.colloquial_units)}</AppText>
             </View>
           );
