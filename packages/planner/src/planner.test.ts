@@ -1,7 +1,9 @@
-import { catalogFixture } from "@zumek/domain/fixtures";
+import { buildSampleCatalog } from "@zumek/catalog-data";
 import { describe, expect, it } from "vitest";
 import { scaleQuantity } from "./index";
 import { catalog, plan, prefs } from "./test-helpers";
+
+const sampleCatalog = buildSampleCatalog();
 
 // ---------- casos obligatorios (seccion 9) ----------
 
@@ -55,11 +57,12 @@ describe("generatePlan", () => {
         { id: "pollo", unit: "mass_g", packageQuantity: 1000, priceCents: 12_000 },
       ],
       [
-        { id: "huevos", allergens: ["Huevo"], ingredients: [["huevo", 4]] },
+        { id: "huevos", allergens: ["huevo"], ingredients: [["huevo", 4]] },
         { id: "pollo", ingredients: [["pollo", 300]] },
       ],
     );
-    const result = plan(cat, prefs({ daysCount: 7, allergens: ["huevo"], budgetCents: 200_000 }));
+    // La preferencia del usuario se compara sin importar mayusculas
+    const result = plan(cat, prefs({ daysCount: 7, allergens: ["Huevo"], budgetCents: 200_000 }));
 
     expect(result.meals).toHaveLength(7);
     expect(result.meals.every((m) => m.recipe_id !== "huevos")).toBe(true);
@@ -141,21 +144,21 @@ describe("restricciones duras y reglas de dominio", () => {
 
   it("es determinista: mismos datos, mismo plan", () => {
     const p = prefs({ daysCount: 7, mealTypes: ["comida", "cena"], storeIds: ["store-walmart", "store-soriana", "store-alsuper"] });
-    expect(plan(catalogFixture, p)).toEqual(plan(catalogFixture, p));
+    expect(plan(sampleCatalog, p)).toEqual(plan(sampleCatalog, p));
   });
 
   it("con los fixtures reales arma una semana completa y respeta alergias", () => {
     const result = plan(
-      catalogFixture,
+      sampleCatalog,
       prefs({
         budgetCents: 90_000,
         daysCount: 7,
         mealTypes: ["comida", "cena"],
-        allergens: ["lacteos"],
+        allergens: ["lácteos"],
         storeIds: ["store-walmart", "store-soriana", "store-alsuper"],
       }),
     );
-    const lacteos = new Set(catalogFixture.recipes.filter((r) => r.allergens.includes("lacteos")).map((r) => r.id));
+    const lacteos = new Set(sampleCatalog.recipes.filter((r) => r.allergens.includes("lácteos")).map((r) => r.id));
     expect(result.plan.status).toBe("ok");
     expect(result.meals).toHaveLength(14);
     expect(result.meals.some((m) => lacteos.has(m.recipe_id))).toBe(false);

@@ -3,20 +3,14 @@
 // la migracion genere los ids. Es idempotente: correrlo dos veces no duplica filas.
 import { readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { loadCanonicalProducts } from "./catalog";
+import { CANONICAL_PRODUCTS, STORES, sqlLiteral as sql } from "@zumek/catalog-data";
+import { UNIT_TYPES } from "@zumek/domain";
 import { parseCsv } from "./csv";
-import { STORES } from "./stores";
 
-const UNITS = new Set(["mass_g", "volume_ml", "unit"]);
-
-function sql(value: string | number | null): string {
-  if (value === null || value === "") return "null";
-  if (typeof value === "number") return String(value);
-  return `'${value.replace(/'/g, "''")}'`;
-}
+const UNITS = new Set<string>(UNIT_TYPES);
 
 export function buildSeedSql(rows: Array<Record<string, string>>): { sql: string; errors: string[] } {
-  const canonicals = new Map(loadCanonicalProducts().map((c) => [c.name, c]));
+  const canonicals = new Map(CANONICAL_PRODUCTS.map((c) => [c.name, c]));
   const stores = new Map(STORES.map((s) => [s.slug, s]));
   const errors: string[] = [];
   const included = rows.filter((r) => r.incluir?.trim().toLowerCase() === "si");

@@ -1,7 +1,5 @@
 import type { MealType, PlanStatus } from "@zumek/domain";
 
-export const MEAL_TYPES: MealType[] = ["desayuno", "comida", "cena", "snack"];
-
 export const MEAL_TYPE_LABEL: Record<MealType, string> = {
   desayuno: "Desayuno",
   comida: "Comida",

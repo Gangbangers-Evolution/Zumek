@@ -1,4 +1,4 @@
-import type { Catalog, MealType, Recipe, UnitType } from "@zumek/domain";
+import type { Allergen, Catalog, MealType, Recipe, UnitType } from "@zumek/domain";
 import { generatePlan, type PlannerPreferences } from "./index";
 
 // ---------- helpers para armar catalogos chicos a la medida de cada caso ----------
@@ -15,7 +15,7 @@ export interface RecipeSpec {
   id: string;
   mealTypes?: MealType[];
   servingsBase?: number;
-  allergens?: string[];
+  allergens?: Allergen[];
   ingredients: Array<[productId: string, quantity: number]>;
 }
 

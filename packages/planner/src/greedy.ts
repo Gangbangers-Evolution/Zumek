@@ -1,4 +1,4 @@
-import type { MealType, Recipe, RecipeIngredient } from "@zumek/domain";
+import { MEAL_TYPES, type MealType, type Recipe, type RecipeIngredient } from "@zumek/domain";
 import { buildShopping, sumNeeds, type PurchaseOption, type ShoppingResult } from "./shopping";
 import type { PlannerInput, PlannerPreferences } from "./types";
 
@@ -44,8 +44,6 @@ export interface Attempt {
   quality: number;
 }
 
-const MEAL_ORDER: MealType[] = ["desayuno", "comida", "cena", "snack"];
-
 function normalize(text: string): string {
   return text.trim().toLowerCase();
 }
@@ -88,7 +86,7 @@ export function buildContext(input: PlannerInput): PlannerContext {
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  const mealTypes = MEAL_ORDER.filter((m) => prefs.mealTypes.includes(m));
+  const mealTypes = MEAL_TYPES.filter((m) => prefs.mealTypes.includes(m));
   const slots: Slot[] = [];
   for (let day = 0; day < prefs.daysCount; day++) {
     for (const mealType of mealTypes) slots.push({ dayIndex: day, mealType });

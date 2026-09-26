@@ -1,38 +1,27 @@
 // Validador del catalogo de recetas. Todo lo que aqui es ERROR romperia una regla dura
 // del Master Prompt (alergias, unidades, productos inexistentes); las ADVERTENCIAS son
 // cosas que una persona debe revisar pero no bloquean.
+import { ALLERGENS, MEAL_TYPES, type Allergen, type MealType, type UnitType } from "@zumek/domain";
+import {
+  CANONICAL_PRODUCTS,
+  COLLOQUIAL_UNITS,
+  type CanonicalProductSpec,
+  type ColloquialUnitSpec,
+} from "./specs";
 
-export type UnitType = "mass_g" | "volume_ml" | "unit";
-export type MealType = "desayuno" | "comida" | "cena" | "snack";
-
-export const MEAL_TYPES: MealType[] = ["desayuno", "comida", "cena", "snack"];
-/** Lista fija de alergenos (seccion 3: restriccion DURA). */
-export const ALLERGENS = ["gluten", "lácteos", "huevo", "cacahuate", "nueces", "soya", "pescado", "mariscos", "ajonjolí"];
 export const SUGGESTED_TAGS = ["rápida", "económica", "alta en proteína", "vegetariana", "ligera", "para niños"];
 /** Minimo de recetas por tipo de comida para que una semana no se repita demasiado. */
 export const MIN_RECIPES_PER_MEAL_TYPE = 5;
 
-export interface CanonicalProduct {
-  name: string;
-  unit_type: UnitType;
-  category: string;
-  allergens: string[];
-}
-
-export interface ColloquialUnit {
-  term: string;
-  base_quantity: number;
-  base_unit: "mass_g" | "volume_ml";
-}
-
-export interface ResolvedRecipe {
+/** Receta ya validada, con cantidades en unidad base. */
+export interface RecipeSpec {
   name: string;
   cuisine: string;
   meal_type: MealType[];
   tags: string[];
   prep_time_minutes: number;
   servings_base: number;
-  allergens: string[];
+  allergens: Allergen[];
   ingredients: Array<{ product: string; quantity: number; unit: UnitType }>;
   steps: Array<{ step_order: number; title: string; content: string; timer_seconds: number | null }>;
 }
@@ -43,7 +32,7 @@ export interface Issue {
 }
 
 export interface ValidationResult {
-  recipes: ResolvedRecipe[];
+  recipes: RecipeSpec[];
   errors: Issue[];
   warnings: Issue[];
 }
@@ -62,18 +51,26 @@ function stringList(v: unknown): string[] | null {
   return Array.isArray(v) && v.every((x) => typeof x === "string") ? (v as string[]) : null;
 }
 
+function isMealType(value: string): value is MealType {
+  return (MEAL_TYPES as readonly string[]).includes(value);
+}
+
+function isAllergen(value: string): value is Allergen {
+  return (ALLERGENS as readonly string[]).includes(value);
+}
+
 function key(text: string): string {
   return text.trim().toLowerCase();
 }
 
-export function validateCatalog(
+export function validateRecipes(
   data: unknown,
-  canonicals: CanonicalProduct[],
-  colloquials: ColloquialUnit[],
+  canonicals: CanonicalProductSpec[] = CANONICAL_PRODUCTS,
+  colloquials: ColloquialUnitSpec[] = COLLOQUIAL_UNITS,
 ): ValidationResult {
   const errors: Issue[] = [];
   const warnings: Issue[] = [];
-  const recipes: ResolvedRecipe[] = [];
+  const recipes: RecipeSpec[] = [];
   const products = new Map(canonicals.map((p) => [p.name, p]));
   const units = new Map(colloquials.map((u) => [u.term, u]));
   const names = new Set<string>();
@@ -96,7 +93,7 @@ export function validateCatalog(
 
     const mealTypes = stringList(raw.meal_type);
     if (!mealTypes || mealTypes.length === 0) err("meal_type debe ser una lista con al menos un valor");
-    else for (const m of mealTypes) if (!MEAL_TYPES.includes(m as MealType)) err(`meal_type invalido "${m}" (usa: ${MEAL_TYPES.join(", ")})`);
+    else for (const m of mealTypes) if (!isMealType(m)) err(`meal_type invalido "${m}" (usa: ${MEAL_TYPES.join(", ")})`);
 
     const tags = stringList(raw.tags ?? []);
     if (!tags) err("tags debe ser una lista de textos");
@@ -107,10 +104,10 @@ export function validateCatalog(
 
     const declared = stringList(raw.allergens);
     if (!declared) err("allergens debe ser una lista (vacia si no tiene)");
-    else for (const a of declared) if (!ALLERGENS.includes(a)) err(`alergeno "${a}" no esta en la lista fija (${ALLERGENS.join(", ")})`);
+    else for (const a of declared) if (!isAllergen(a)) err(`alergeno "${a}" no esta en la lista fija (${ALLERGENS.join(", ")})`);
 
     // Ingredientes: siempre producto canonico, cantidad concreta en unidad base
-    const ingredients: ResolvedRecipe["ingredients"] = [];
+    const ingredients: RecipeSpec["ingredients"] = [];
     const implied = new Map<string, string[]>(); // alergeno -> productos que lo aportan
     if (!Array.isArray(raw.ingredients) || raw.ingredients.length === 0) err("sin ingredientes");
     else {
@@ -153,7 +150,7 @@ export function validateCatalog(
     }
 
     // Pasos
-    const steps: ResolvedRecipe["steps"] = [];
+    const steps: RecipeSpec["steps"] = [];
     if (!Array.isArray(raw.steps) || raw.steps.length === 0) err("sin pasos");
     else {
       raw.steps.forEach((step, i) => {
@@ -175,11 +172,11 @@ export function validateCatalog(
     recipes.push({
       name: label,
       cuisine: typeof raw.cuisine === "string" ? raw.cuisine.trim() : "",
-      meal_type: (mealTypes ?? []) as MealType[],
+      meal_type: (mealTypes ?? []).filter(isMealType),
       tags: tags ?? [],
       prep_time_minutes: raw.prep_time_minutes as number,
       servings_base: raw.servings_base as number,
-      allergens: declared ?? [],
+      allergens: (declared ?? []).filter(isAllergen),
       ingredients,
       steps,
     });

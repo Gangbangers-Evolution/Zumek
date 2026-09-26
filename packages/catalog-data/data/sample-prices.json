@@ -1,0 +1,28 @@
+{
+  "_instrucciones": "Precios de EJEMPLO para usar la app sin Supabase (Fases 1-4). Se reemplazan por los del scraper (Fase 5) en la base de datos. product = nombre exacto de canonical-products.json; store = slug de stores.json; package_quantity en la unidad base del producto; price_cents entero.",
+  "prices": [
+    {"store": "walmart", "product": "Pechuga de pollo", "brand": "Bachoco", "package_label": "Pechuga Bachoco 1 kg", "package_quantity": 1000, "price_cents": 13900},
+    {"store": "soriana", "product": "Pechuga de pollo", "brand": "Pilgrim's", "package_label": "Pechuga Pilgrim's 900 g", "package_quantity": 900, "price_cents": 12990},
+    {"store": "alsuper", "product": "Pechuga de pollo", "brand": null, "package_label": "Pechuga de pollo a granel 1 kg", "package_quantity": 1000, "price_cents": 14500},
+    {"store": "soriana", "product": "Huevo", "brand": "San Juan", "package_label": "Huevo blanco San Juan 18 pzas", "package_quantity": 18, "price_cents": 5490},
+    {"store": "walmart", "product": "Huevo", "brand": "Great Value", "package_label": "Huevo blanco Great Value 12 pzas", "package_quantity": 12, "price_cents": 3990},
+    {"store": "walmart", "product": "Frijol pinto", "brand": "Verde Valle", "package_label": "Frijol pinto Verde Valle 1 kg", "package_quantity": 1000, "price_cents": 3990},
+    {"store": "walmart", "product": "Arroz", "brand": "Verde Valle", "package_label": "Arroz super extra Verde Valle 1 kg", "package_quantity": 1000, "price_cents": 3290},
+    {"store": "soriana", "product": "Arroz", "brand": "Schettino", "package_label": "Arroz Schettino 900 g", "package_quantity": 900, "price_cents": 3150},
+    {"store": "soriana", "product": "Pasta spaghetti", "brand": "La Moderna", "package_label": "Spaghetti La Moderna 200 g", "package_quantity": 200, "price_cents": 1290},
+    {"store": "walmart", "product": "Avena", "brand": "Quaker", "package_label": "Avena Quaker 400 g", "package_quantity": 400, "price_cents": 3490},
+    {"store": "walmart", "product": "Tortilla de maíz", "brand": null, "package_label": "Tortilla de maiz 1 kg", "package_quantity": 1000, "price_cents": 2400},
+    {"store": "walmart", "product": "Jitomate", "brand": null, "package_label": "Jitomate saladet por kg", "package_quantity": 1000, "price_cents": 3490},
+    {"store": "walmart", "product": "Cebolla blanca", "brand": null, "package_label": "Cebolla blanca pieza", "package_quantity": 1, "price_cents": 900},
+    {"store": "alsuper", "product": "Ajo (dientes)", "brand": null, "package_label": "Ajo malla 3 cabezas (aprox. 30 dientes)", "package_quantity": 30, "price_cents": 2990},
+    {"store": "alsuper", "product": "Chile serrano", "brand": null, "package_label": "Chile serrano 10 pzas", "package_quantity": 10, "price_cents": 1500},
+    {"store": "alsuper", "product": "Cilantro", "brand": null, "package_label": "Cilantro manojo 50 g", "package_quantity": 50, "price_cents": 800},
+    {"store": "walmart", "product": "Plátano", "brand": null, "package_label": "Platano tabasco 6 pzas", "package_quantity": 6, "price_cents": 2190},
+    {"store": "walmart", "product": "Leche entera", "brand": "Lala", "package_label": "Leche entera Lala 1 L", "package_quantity": 1000, "price_cents": 2890},
+    {"store": "alsuper", "product": "Leche entera", "brand": "Alpura", "package_label": "Leche entera Alpura 1 L", "package_quantity": 1000, "price_cents": 2990},
+    {"store": "soriana", "product": "Queso fresco", "brand": "Nochebuena", "package_label": "Queso fresco Nochebuena 400 g", "package_quantity": 400, "price_cents": 5990},
+    {"store": "soriana", "product": "Crema", "brand": "Lala", "package_label": "Crema Lala 450 ml", "package_quantity": 450, "price_cents": 3290},
+    {"store": "alsuper", "product": "Aceite vegetal", "brand": "Nutrioli", "package_label": "Aceite Nutrioli 1 L", "package_quantity": 1000, "price_cents": 4590},
+    {"store": "alsuper", "product": "Sal", "brand": "La Fina", "package_label": "Sal La Fina 1 kg", "package_quantity": 1000, "price_cents": 1290}
+  ]
+}

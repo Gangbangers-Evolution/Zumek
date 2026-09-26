@@ -1,22 +1,27 @@
-# recipe-catalog
+# catalog-data
 
-Catálogo de recetas **curadas a mano** (se pueden redactar con ayuda de IA, pero nunca se scrapean). El objetivo del MVP es tener 30-50 recetas. Este paquete tiene:
+**Fuente única** del catálogo curado de Zumek. Lo usan la app (mientras no hay Supabase), el planner en sus tests, el scraper de precios y los seeds de la base. Si algo se corrige aquí, se corrige en todos lados.
 
-- `data/recipes.json`: todas las recetas, en un solo archivo;
-- `data/colloquial-units.json`: pizca, cucharadita, cucharada y taza, con su equivalencia en unidad base;
-- `pnpm validate`: revisa que ninguna receta rompa una regla dura;
-- `pnpm seed`: genera `out/seed-recipes.sql` para `supabase/seed.sql`.
+| Archivo | Qué es |
+|---|---|
+| `data/canonical-products.json` | Productos conceptuales (`canonical_product`), sus alérgenos y cómo buscarlos en las tiendas |
+| `data/stores.json` | Tiendas del MVP |
+| `data/recipes.json` | Recetas curadas a mano (se pueden redactar con ayuda de IA, pero nunca se scrapean). Meta del MVP: 30-50 |
+| `data/colloquial-units.json` | pizca, cucharadita, cucharada, taza, con su equivalencia en unidad base |
+| `data/sample-prices.json` | Precios **de ejemplo** para usar la app sin base de datos. Los reales salen del scraper |
 
-Los productos que puede usar una receta vienen de **`scripts/bootstrap-scraper/data/canonical-products.json`**, la misma lista que usa el scraper de precios. Si una receta necesita un ingrediente nuevo, primero se agrega ahí, con sus alérgenos, y así también se le buscarán precios.
+Al cargar, cada valor cerrado (unidad, alérgeno, tienda) se verifica, y `buildSampleCatalog()` se niega a construir el catálogo de la app si alguna receta no es válida. Así la app nunca corre con datos que el validador rechaza.
+
+Si una receta necesita un ingrediente nuevo, primero se agrega a `canonical-products.json`, con sus alérgenos; así también se le buscarán precios.
 
 ## Flujo
 
 ```bash
-cd scripts/recipe-catalog
+cd packages/catalog-data
 # 1. agregar o editar recetas en data/recipes.json
 pnpm validate      # 2. corregir hasta que no haya ERRORES
 pnpm seed          # 3. genera out/seed-recipes.sql
-pnpm test          # opcional: los tests también validan el recipes.json real
+pnpm test          # los tests también validan los JSON reales
 ```
 
 `out/seed-recipes.sql` se le pasa a quien lleva Supabase (Fase 2). Es idempotente: correrlo dos veces no duplica recetas, pasos ni ingredientes.
@@ -49,7 +54,7 @@ pnpm test          # opcional: los tests también validan el recipes.json real
 | `tags` | Sugeridos: `rápida`, `económica`, `alta en proteína`, `vegetariana`, `ligera`, `para niños` |
 | `servings_base` | Para cuántas personas es la receta. El planner escala las cantidades según las personas del plan |
 | `allergens` | **Obligatorio y exacto.** Lista fija: `gluten`, `lácteos`, `huevo`, `cacahuate`, `nueces`, `soya`, `pescado`, `mariscos`, `ajonjolí`. Vacía si no tiene |
-| `ingredients[].product` | Nombre **exacto** de `canonical-products.json` |
+| `ingredients[].product` | Nombre **exacto** de `data/canonical-products.json` |
 | `ingredients[].quantity` | Número en la unidad base del producto: gramos, mililitros o piezas |
 | `ingredients[].amount` + `unit` | Alternativa a `quantity` con unidad coloquial: `2` + `cucharada` = 30 ml. No se puede usar una unidad de volumen para un producto que se mide en gramos |
 | `steps[].title` | Corto (máximo 60 caracteres), porque lo muestra el modo cocina |

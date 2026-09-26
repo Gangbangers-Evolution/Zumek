@@ -7,9 +7,21 @@ export type Timestamp = string;
 /** Entero en centavos MXN. Nunca float. */
 export type Cents = number;
 
-export type UnitType = "mass_g" | "volume_ml" | "unit";
+// Valores cerrados del esquema: las listas son la fuente unica y los tipos se derivan de ellas.
+
+/** Familias de unidad base, sin conversion entre ellas (seccion 2). */
+export const UNIT_TYPES = ["mass_g", "volume_ml", "unit"] as const;
+export type UnitType = (typeof UNIT_TYPES)[number];
 export type ColloquialBaseUnit = Exclude<UnitType, "unit">;
-export type MealType = "desayuno" | "comida" | "cena" | "snack";
+
+/** En orden del dia: tambien define el orden en que se muestran y se planean. */
+export const MEAL_TYPES = ["desayuno", "comida", "cena", "snack"] as const;
+export type MealType = (typeof MEAL_TYPES)[number];
+
+/** Lista fija de alergenos (restriccion DURA). */
+export const ALLERGENS = ["gluten", "lácteos", "huevo", "cacahuate", "nueces", "soya", "pescado", "mariscos", "ajonjolí"] as const;
+export type Allergen = (typeof ALLERGENS)[number];
+
 export type PlanStatus = "ok" | "over_budget_close" | "infeasible_likely";
 
 // Catalogo de tiendas
@@ -65,7 +77,7 @@ export interface Recipe {
   prep_time_minutes: number;
   servings_base: number;
   /** Restriccion DURA. */
-  allergens: string[];
+  allergens: Allergen[];
 }
 
 export interface RecipeStep {

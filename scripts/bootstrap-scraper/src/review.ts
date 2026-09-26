@@ -2,12 +2,11 @@
 // y genera out/review.csv para revision humana (Sheets o LibreOffice).
 // La persona cambia la columna "incluir" a si/no y corrige lo que haga falta.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { loadCanonicalProducts, type CanonicalSpec } from "./catalog";
+import { CANONICAL_PRODUCTS, STORES, type CanonicalProductSpec } from "@zumek/catalog-data";
 import { toCsv } from "./csv";
 import { matchCanonical } from "./match";
 import { parsePackageSize, priceToCents } from "./parse";
 import type { RawRecord } from "./scrape";
-import { STORES } from "./stores";
 
 export const REVIEW_COLUMNS = [
   "incluir",
@@ -30,7 +29,7 @@ export const REVIEW_COLUMNS = [
 const MIN_CENTS = 500;
 const MAX_CENTS = 300_000;
 
-export function reviewRecord(record: RawRecord, canonical: CanonicalSpec) {
+export function reviewRecord(record: RawRecord, canonical: CanonicalProductSpec) {
   return record.products.map((product) => {
     const size = parsePackageSize(product.name);
     const cents = priceToCents(product.price);
@@ -63,7 +62,7 @@ export function reviewRecord(record: RawRecord, canonical: CanonicalSpec) {
 function main() {
   const rawDir = new URL("../out/raw/", import.meta.url).pathname;
   if (!existsSync(rawDir)) throw new Error("No hay datos crudos. Corre primero: pnpm scrape");
-  const canonicals = new Map(loadCanonicalProducts().map((c) => [c.name, c]));
+  const canonicals = new Map(CANONICAL_PRODUCTS.map((c) => [c.name, c]));
 
   const rows = readdirSync(rawDir)
     .filter((f) => f.endsWith(".json") && !f.includes(".check"))

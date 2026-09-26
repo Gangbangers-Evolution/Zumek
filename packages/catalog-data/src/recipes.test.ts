@@ -1,15 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { loadCanonicalProducts, loadColloquialUnits, loadRecipesFile } from "./files";
-import { buildRecipesSql } from "./seed";
-import { validateCatalog, type CanonicalProduct, type ColloquialUnit } from "./validate";
+import { validateRecipes } from "./recipes";
+import { buildSampleCatalog } from "./sample-catalog";
+import { buildRecipesSql } from "./seed-sql";
+import { RECIPES_FILE, type CanonicalProductSpec, type ColloquialUnitSpec } from "./specs";
 
-const products: CanonicalProduct[] = [
-  { name: "Queso fresco", unit_type: "mass_g", category: "lacteo", allergens: ["lácteos"] },
-  { name: "Jitomate", unit_type: "mass_g", category: "verdura", allergens: [] },
-  { name: "Aceite vegetal", unit_type: "volume_ml", category: "despensa", allergens: [] },
-  { name: "Sal", unit_type: "mass_g", category: "despensa", allergens: [] },
+const scraping = { search: "", require: [], exclude: [] };
+const products: CanonicalProductSpec[] = [
+  { name: "Queso fresco", unit_type: "mass_g", category: "lacteo", allergens: ["lácteos"], ...scraping },
+  { name: "Jitomate", unit_type: "mass_g", category: "verdura", allergens: [], ...scraping },
+  { name: "Aceite vegetal", unit_type: "volume_ml", category: "despensa", allergens: [], ...scraping },
+  { name: "Sal", unit_type: "mass_g", category: "despensa", allergens: [], ...scraping },
 ];
-const units: ColloquialUnit[] = [
+const units: ColloquialUnitSpec[] = [
   { term: "pizca", base_quantity: 1, base_unit: "mass_g" },
   { term: "cucharada", base_quantity: 15, base_unit: "volume_ml" },
 ];
@@ -38,16 +40,16 @@ function recipe(overrides: Record<string, unknown> = {}) {
 }
 
 function validate(...recipes: unknown[]) {
-  return validateCatalog({ recipes }, products, units);
+  return validateRecipes({ recipes }, products, units);
 }
 
 function messages(result: ReturnType<typeof validate>) {
   return result.errors.map((e) => e.message).join(" | ");
 }
 
-describe("validateCatalog", () => {
+describe("validateRecipes", () => {
   it("el catalogo real del repo es valido", () => {
-    const result = validateCatalog(loadRecipesFile(), loadCanonicalProducts(), loadColloquialUnits());
+    const result = validateRecipes(RECIPES_FILE);
     expect(result.errors).toEqual([]);
     expect(result.recipes.length).toBeGreaterThanOrEqual(6);
   });
@@ -116,8 +118,11 @@ describe("validateCatalog", () => {
 
 describe("buildRecipesSql", () => {
   it("genera SQL idempotente, con arreglos de Postgres y comillas escapadas", () => {
-    const { recipes } = validate(recipe({ name: "Ensalada de la 'abuela'", tags: ["rápida", "alta en proteína"] }));
-    const sql = buildRecipesSql(recipes, products, units);
+    // Productos reales del catalogo: el SQL tambien siembra los canonicos que usan las recetas
+    const { recipes } = validateRecipes({
+      recipes: [recipe({ name: "Ensalada de la 'abuela'", tags: ["rápida", "alta en proteína"] })],
+    });
+    const sql = buildRecipesSql(recipes);
 
     expect(sql).toContain("'Ensalada de la ''abuela'''");
     expect(sql).toContain(`'{"rápida","alta en proteína"}'`);
@@ -127,5 +132,42 @@ describe("buildRecipesSql", () => {
     // Cada insert trae su guarda para no duplicar al correrlo dos veces
     const inserts = sql.split("\n").filter((l) => l.startsWith("insert"));
     expect(inserts.every((l) => l.includes("where not exists"))).toBe(true);
+  });
+});
+
+describe("buildSampleCatalog", () => {
+  const catalog = buildSampleCatalog();
+
+  it("la app usa exactamente las recetas validadas, con sus alergenos", () => {
+    const avena = catalog.recipes.find((r) => r.name === "Avena con plátano");
+    expect(avena?.allergens).toEqual(["gluten", "lácteos"]);
+    expect(catalog.recipes).toHaveLength((validateRecipes(RECIPES_FILE).recipes).length);
+  });
+
+  it("todas las referencias apuntan a filas que existen", () => {
+    const ids = (rows: { id: string }[]) => new Set(rows.map((r) => r.id));
+    const recipes = ids(catalog.recipes);
+    const products = ids(catalog.canonical_products);
+    const stores = ids(catalog.stores);
+    const commercial = ids(catalog.commercial_products);
+    for (const i of catalog.recipe_ingredients) {
+      expect(recipes.has(i.recipe_id)).toBe(true);
+      expect(products.has(i.canonical_product_id)).toBe(true);
+    }
+    for (const s of catalog.recipe_steps) expect(recipes.has(s.recipe_id)).toBe(true);
+    for (const c of catalog.commercial_products) {
+      expect(products.has(c.canonical_product_id)).toBe(true);
+      expect(stores.has(c.store_id)).toBe(true);
+    }
+    for (const p of catalog.latest_prices) {
+      expect(commercial.has(p.commercial_product_id)).toBe(true);
+      expect(Number.isInteger(p.price_cents)).toBe(true);
+    }
+  });
+
+  it("los ids son unicos", () => {
+    for (const rows of [catalog.recipes, catalog.canonical_products, catalog.commercial_products, catalog.recipe_ingredients, catalog.recipe_steps]) {
+      expect(new Set(rows.map((r) => r.id)).size).toBe(rows.length);
+    }
   });
 });

@@ -1,7 +1,8 @@
-import { loadCanonicalProducts, loadColloquialUnits, loadRecipesFile } from "./files";
-import { MEAL_TYPES, validateCatalog, type Issue } from "./validate";
+import { MEAL_TYPES } from "@zumek/domain";
+import { RECIPES_FILE } from "../specs";
+import { validateRecipes, type Issue } from "../recipes";
 
-const { recipes, errors, warnings } = validateCatalog(loadRecipesFile(), loadCanonicalProducts(), loadColloquialUnits());
+const { recipes, errors, warnings } = validateRecipes(RECIPES_FILE);
 
 const print = (title: string, issues: Issue[]) => {
   if (issues.length === 0) return;

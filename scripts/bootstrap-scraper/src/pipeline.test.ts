@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CanonicalSpec } from "./catalog";
+import type { CanonicalProductSpec } from "@zumek/catalog-data";
 import { parseCsv, toCsv } from "./csv";
 import { extractProducts } from "./extract";
 import { matchCanonical } from "./match";
@@ -81,7 +81,7 @@ describe("extractProducts", () => {
   });
 });
 
-const pollo: CanonicalSpec = {
+const pollo: CanonicalProductSpec = {
   name: "Pechuga de pollo",
   unit_type: "mass_g",
   category: "proteina",

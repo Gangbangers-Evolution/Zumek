@@ -8,10 +8,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
+import { CANONICAL_PRODUCTS } from "@zumek/catalog-data";
 import { chromium, type Page, type Response } from "playwright";
-import { loadCanonicalProducts } from "./catalog";
 import { extractProducts, type RawProduct } from "./extract";
-import { STORES, type StoreConfig } from "./stores";
+import { SCRAPE_STORES, type StoreConfig } from "./stores";
 
 const { values: args } = parseArgs({
   options: {
@@ -86,8 +86,7 @@ async function isBlocked(page: Page, response: Response | null): Promise<boolean
 }
 
 async function scrapeStore(store: StoreConfig, ask: (q: string) => Promise<string>) {
-  const canonicals = loadCanonicalProducts();
-  const terms = args.check ? canonicals.slice(0, 1) : canonicals;
+  const terms = args.check ? CANONICAL_PRODUCTS.slice(0, 1) : CANONICAL_PRODUCTS;
   const records: RawRecord[] = [];
   const outFile = `${OUT}raw/${store.slug}${args.check ? ".check" : ""}.json`;
 
@@ -162,8 +161,8 @@ async function scrapeStore(store: StoreConfig, ask: (q: string) => Promise<strin
 
 async function main() {
   mkdirSync(`${OUT}raw`, { recursive: true });
-  const stores = args.store ? STORES.filter((s) => s.slug === args.store) : STORES;
-  if (stores.length === 0) throw new Error(`Tienda desconocida: ${args.store}. Opciones: ${STORES.map((s) => s.slug).join(", ")}`);
+  const stores = args.store ? SCRAPE_STORES.filter((s) => s.slug === args.store) : SCRAPE_STORES;
+  if (stores.length === 0) throw new Error(`Tienda desconocida: ${args.store}. Opciones: ${SCRAPE_STORES.map((s) => s.slug).join(", ")}`);
 
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   try {

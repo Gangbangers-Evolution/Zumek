@@ -3,26 +3,21 @@
 // - Walmart: responde /blocked a navegadores automatizados -> usar --manual.
 // - Soriana: bloqueo de Cloudflare -> usar --manual.
 // Si alguien confirma la URL de busqueda real de una tienda, se corrige aqui.
-export interface StoreConfig {
-  slug: string;
-  name: string;
+import { STORES, type StoreSpec } from "@zumek/catalog-data";
+
+export interface StoreConfig extends StoreSpec {
   searchUrl: (term: string) => string;
 }
 
-export const STORES: StoreConfig[] = [
-  {
-    slug: "alsuper",
-    name: "Alsuper",
-    searchUrl: (term) => `https://www.alsuper.com/buscar?q=${encodeURIComponent(term)}`,
-  },
-  {
-    slug: "walmart",
-    name: "Walmart",
-    searchUrl: (term) => `https://super.walmart.com.mx/search?q=${encodeURIComponent(term)}`,
-  },
-  {
-    slug: "soriana",
-    name: "Soriana",
-    searchUrl: (term) => `https://www.soriana.com/buscar?q=${encodeURIComponent(term)}`,
-  },
-];
+// Las tiendas (slug y nombre) vienen de catalog-data; aqui solo se agrega como buscar en cada una.
+const SEARCH_URLS: Record<string, (term: string) => string> = {
+  alsuper: (term) => `https://www.alsuper.com/buscar?q=${encodeURIComponent(term)}`,
+  walmart: (term) => `https://super.walmart.com.mx/search?q=${encodeURIComponent(term)}`,
+  soriana: (term) => `https://www.soriana.com/buscar?q=${encodeURIComponent(term)}`,
+};
+
+export const SCRAPE_STORES: StoreConfig[] = STORES.map((store) => {
+  const searchUrl = SEARCH_URLS[store.slug];
+  if (!searchUrl) throw new Error(`Falta la URL de busqueda para la tienda "${store.slug}" en stores.ts`);
+  return { ...store, searchUrl };
+});

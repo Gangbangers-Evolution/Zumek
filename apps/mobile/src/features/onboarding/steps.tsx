@@ -1,4 +1,5 @@
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
+import { MEAL_TYPES } from "@zumek/domain";
 import type { ComponentType } from "react";
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -7,7 +8,7 @@ import { Card } from "../../components/Card";
 import { Chip, ChipGroup } from "../../components/Chip";
 import { Stepper } from "../../components/Stepper";
 import { TextField } from "../../components/TextField";
-import { capitalize, MEAL_TYPE_LABEL, MEAL_TYPES } from "../../lib/labels";
+import { capitalize, MEAL_TYPE_LABEL } from "../../lib/labels";
 import { centsToPesosInput, parsePesosToCents } from "../../lib/money";
 import { unitLabel } from "../../lib/quantity";
 import { useCatalog } from "../../state/catalog";

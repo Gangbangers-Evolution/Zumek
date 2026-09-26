@@ -78,11 +78,12 @@ Si alguna fila con `si` tiene datos inválidos (precio no entero, unidad incorre
 
 ## Agregar productos
 
-Los productos que se buscan están en `data/canonical-products.json`. Para llegar a los 100-300 del MVP, agrega objetos con:
+Los productos que se buscan están en `packages/catalog-data/data/canonical-products.json` (la misma lista que usan las recetas). Para llegar a los 100-300 del MVP, agrega objetos con:
 
 - `name`: nombre del producto conceptual (debe coincidir con el que usan las recetas);
 - `unit_type`: `mass_g`, `volume_ml` o `unit`;
 - `category`;
+- `allergens`: alérgenos que aporta el producto (el validador de recetas los exige);
 - `search`: lo que se escribe en el buscador de la tienda;
 - `require`: palabras que el nombre debe tener;
 - `exclude`: palabras que lo descartan.

@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@zumek/catalog-data": "workspace:*",
+    "@zumek/domain": "workspace:*",
     "playwright": "^1.63.0"
   },
   "devDependencies": {

@@ -1,8 +1,10 @@
 import type { PantryInventory } from "@zumek/domain";
-import { catalogFixture } from "@zumek/domain/fixtures";
+import { buildSampleCatalog } from "@zumek/catalog-data";
 import { describe, expect, it } from "vitest";
 import { applyPantryUpdate, closePlanIntoPantry, planPantryDelta } from "./index";
 import { catalog, plan, prefs } from "./test-helpers";
+
+const sampleCatalog = buildSampleCatalog();
 
 const cat = catalog(
   [
@@ -105,26 +107,26 @@ describe("despensa al cerrar un plan (invariante 3)", () => {
     const stores = ["store-walmart", "store-soriana", "store-alsuper"];
     const initial: PantryInventory[] = [
       { ...row("cp-arroz", 400), unit: "mass_g" },
-      { ...row("cp-aceite", 800), unit: "volume_ml" },
+      { ...row("cp-aceite-vegetal", 800), unit: "volume_ml" },
     ];
     const bundle = plan(
-      catalogFixture,
+      sampleCatalog,
       prefs({
         daysCount: 7,
         mealTypes: ["comida", "cena"],
         storeIds: stores,
-        pantry: { "cp-arroz": 400, "cp-aceite": 800 },
+        pantry: { "cp-arroz": 400, "cp-aceite-vegetal": 800 },
       }),
     );
     const update = closePlanIntoPantry({
       bundle,
-      catalog: catalogFixture,
+      catalog: sampleCatalog,
       existing: initial,
       updatedAt: "2026-09-27T00:00:00Z",
       newId: (c) => `new-${c}`,
     });
     const final = applyPantryUpdate(initial, update);
-    const delta = planPantryDelta(bundle, catalogFixture);
+    const delta = planPantryDelta(bundle, sampleCatalog);
 
     for (const item of final) expect(item.remaining_quantity).toBeGreaterThan(0);
     for (const [canonical, change] of delta) {

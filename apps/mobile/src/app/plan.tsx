@@ -1,4 +1,4 @@
-import type { PlanMeal } from "@zumek/domain";
+import { MEAL_TYPES, type PlanMeal } from "@zumek/domain";
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
 import { Redirect, router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -7,7 +7,7 @@ import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Screen } from "../components/Screen";
 import { StatusBanner } from "../components/StatusBanner";
-import { dayLabel, MEAL_TYPE_LABEL, MEAL_TYPES } from "../lib/labels";
+import { dayLabel, MEAL_TYPE_LABEL } from "../lib/labels";
 import { formatCents } from "../lib/money";
 import { useCatalog } from "../state/catalog";
 import { usePantry } from "../state/pantry";

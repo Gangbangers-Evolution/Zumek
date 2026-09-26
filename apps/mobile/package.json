@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@zumek/catalog-data": "workspace:*",
     "@zumek/design-tokens": "workspace:*",
     "@zumek/domain": "workspace:*",
     "@zumek/planner": "workspace:*",

@@ -1,0 +1,17 @@
+{
+  "_instrucciones": "Tiendas del MVP (tabla store). El scraper agrega aqui la URL de busqueda por slug en su propia configuracion.",
+  "stores": [
+    {
+      "slug": "alsuper",
+      "name": "Alsuper"
+    },
+    {
+      "slug": "walmart",
+      "name": "Walmart"
+    },
+    {
+      "slug": "soriana",
+      "name": "Soriana"
+    }
+  ]
+}

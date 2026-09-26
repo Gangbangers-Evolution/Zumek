@@ -1,33 +1,20 @@
-// Genera SQL idempotente para el seed de recetas. Usa llaves naturales (nombre de
-// receta, nombre de producto, termino coloquial) para no depender de como se generen los ids.
-import type { CanonicalProduct, ColloquialUnit, ResolvedRecipe } from "./validate";
+// SQL idempotente para el seed de recetas. Usa llaves naturales (nombre de receta,
+// nombre de producto, termino coloquial) para no depender de como se generen los ids.
+import type { RecipeSpec } from "./recipes";
+import { CANONICAL_PRODUCTS, COLLOQUIAL_UNITS } from "./specs";
+import { pgArray, sqlLiteral as sql } from "./sql";
 
-function sql(value: string | number | null): string {
-  if (value === null) return "null";
-  if (typeof value === "number") return String(value);
-  return `'${value.replace(/'/g, "''")}'`;
-}
-
-/** Arreglo de Postgres como literal ('{"a","b"}'): se adapta a text[] o a un enum[]. */
-function pgArray(values: string[]): string {
-  return sql(`{${values.map((v) => `"${v.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`).join(",")}}`);
-}
-
-export function buildRecipesSql(
-  recipes: ResolvedRecipe[],
-  canonicals: CanonicalProduct[],
-  colloquials: ColloquialUnit[],
-): string {
-  const products = new Map(canonicals.map((p) => [p.name, p]));
+export function buildRecipesSql(recipes: RecipeSpec[]): string {
+  const products = new Map(CANONICAL_PRODUCTS.map((p) => [p.name, p]));
   const used = [...new Set(recipes.flatMap((r) => r.ingredients.map((i) => i.product)))].sort();
   const out: string[] = [
-    "-- Generado por scripts/recipe-catalog (pnpm seed) a partir de data/recipes.json.",
+    "-- Generado por packages/catalog-data (pnpm seed) a partir de data/recipes.json.",
     "-- No editar a mano: corregir recipes.json, validar y volver a generar.",
     "begin;",
     "",
     "-- Unidades coloquiales",
   ];
-  for (const u of colloquials) {
+  for (const u of COLLOQUIAL_UNITS) {
     out.push(
       `insert into colloquial_unit (term, base_quantity, base_unit) select ${sql(u.term)}, ${u.base_quantity}, ${sql(u.base_unit)} where not exists (select 1 from colloquial_unit where term = ${sql(u.term)});`,
     );

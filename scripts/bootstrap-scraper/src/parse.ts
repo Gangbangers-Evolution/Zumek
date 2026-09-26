@@ -1,8 +1,7 @@
 // Parser: convierte texto de tienda en numeros concretos (seccion 2: dinero en centavos,
 // cantidades en unidad base mass_g | volume_ml | unit).
-import { normalizeText } from "./text";
-
-export type UnitType = "mass_g" | "volume_ml" | "unit";
+import { normalizeText } from "@zumek/catalog-data";
+import type { UnitType } from "@zumek/domain";
 
 export interface PackageSize {
   quantity: number;
