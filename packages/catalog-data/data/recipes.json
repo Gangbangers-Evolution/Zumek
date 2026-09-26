@@ -133,6 +133,784 @@
         { "title": "Hervir", "content": "Calienta la leche con la avena a fuego medio moviendo seguido.", "timer_seconds": 420 },
         { "title": "Servir", "content": "Sirve y agrega el plátano en rodajas.", "timer_seconds": null }
       ]
+    },
+    {
+      "name": "Chilaquiles rojos",
+      "cuisine": "Mexicana",
+      "meal_type": ["desayuno"],
+      "tags": ["económica"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Jitomate", "quantity": 500 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Chile serrano", "quantity": 2 },
+        { "product": "Crema", "amount": 4, "unit": "cucharada" },
+        { "product": "Queso fresco", "quantity": 100 },
+        { "product": "Aceite vegetal", "amount": 3, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Freír la tortilla", "content": "Corta las tortillas en triángulos y fríelas en aceite hasta que estén doradas, unos 8 minutos.", "timer_seconds": 480 },
+        { "title": "Hacer la salsa", "content": "Licúa el jitomate con media cebolla, el ajo, los chiles y sal. Cocina la salsa 10 minutos.", "timer_seconds": 600 },
+        { "title": "Bañar los totopos", "content": "Agrega los totopos a la salsa y mezcla hasta cubrirlos.", "timer_seconds": null },
+        { "title": "Servir", "content": "Sirve con crema, queso desmoronado y aros de cebolla.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Molletes con pico de gallo",
+      "cuisine": "Mexicana",
+      "meal_type": ["desayuno", "cena"],
+      "tags": ["rápida", "para niños"],
+      "prep_time_minutes": 20,
+      "servings_base": 4,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Bolillo", "quantity": 4 },
+        { "product": "Frijol pinto", "quantity": 250 },
+        { "product": "Queso Oaxaca", "quantity": 200 },
+        { "product": "Jitomate", "quantity": 200 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Cilantro", "quantity": 10 },
+        { "product": "Chile serrano", "quantity": 1 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer los frijoles", "content": "Cuece los frijoles en agua con sal hasta que estén suaves y macháquelos.", "timer_seconds": 3600 },
+        { "title": "Armar", "content": "Parte los bolillos, úntales frijol y cúbrelos con queso deshebrado.", "timer_seconds": null },
+        { "title": "Gratinar", "content": "Hornea o calienta en comal tapado hasta que el queso se derrita, unos 8 minutos.", "timer_seconds": 480 },
+        { "title": "Pico de gallo", "content": "Pica jitomate, cebolla, cilantro y chile, mezcla con sal y sirve encima.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Huevos rancheros",
+      "cuisine": "Mexicana",
+      "meal_type": ["desayuno"],
+      "tags": ["rápida", "alta en proteína"],
+      "prep_time_minutes": 20,
+      "servings_base": 2,
+      "allergens": ["huevo"],
+      "ingredients": [
+        { "product": "Huevo", "quantity": 4 },
+        { "product": "Tortilla de maíz", "quantity": 120 },
+        { "product": "Jitomate", "quantity": 300 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 1 },
+        { "product": "Chile serrano", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Salsa ranchera", "content": "Licúa jitomate, un trozo de cebolla, ajo y chile. Cocina la salsa con sal 8 minutos.", "timer_seconds": 480 },
+        { "title": "Calentar tortillas", "content": "Pasa las tortillas por aceite caliente sin que se doren.", "timer_seconds": null },
+        { "title": "Estrellar huevos", "content": "Fríe los huevos a tu gusto, unos 3 minutos.", "timer_seconds": 180 },
+        { "title": "Servir", "content": "Pon los huevos sobre las tortillas y báñalos con la salsa.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Pan francés",
+      "cuisine": "Casera básica",
+      "meal_type": ["desayuno"],
+      "tags": ["para niños"],
+      "prep_time_minutes": 15,
+      "servings_base": 4,
+      "allergens": ["gluten", "huevo", "lácteos"],
+      "ingredients": [
+        { "product": "Pan de caja", "quantity": 320 },
+        { "product": "Huevo", "quantity": 3 },
+        { "product": "Leche entera", "amount": 1, "unit": "taza" },
+        { "product": "Mantequilla", "quantity": 30 },
+        { "product": "Azúcar", "quantity": 30 }
+      ],
+      "steps": [
+        { "title": "Mezclar", "content": "Bate los huevos con la leche y la mitad del azúcar.", "timer_seconds": null },
+        { "title": "Remojar", "content": "Pasa cada rebanada de pan por la mezcla, sin dejar que se deshaga.", "timer_seconds": null },
+        { "title": "Dorar", "content": "Dora el pan en mantequilla a fuego medio, 2 minutos por lado.", "timer_seconds": 240 },
+        { "title": "Servir", "content": "Espolvorea el azúcar restante y sirve caliente.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Yogur con manzana y avena",
+      "cuisine": "Casera básica",
+      "meal_type": ["desayuno", "snack"],
+      "tags": ["rápida", "ligera"],
+      "prep_time_minutes": 5,
+      "servings_base": 2,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Yogur natural", "quantity": 300 },
+        { "product": "Manzana", "quantity": 1 },
+        { "product": "Avena", "quantity": 60 }
+      ],
+      "steps": [
+        { "title": "Picar", "content": "Lava la manzana y pícala en cubos.", "timer_seconds": null },
+        { "title": "Servir", "content": "Sirve el yogur con la manzana y la avena encima.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Omelette de verduras",
+      "cuisine": "Casera básica",
+      "meal_type": ["desayuno", "cena"],
+      "tags": ["vegetariana", "ligera", "rápida"],
+      "prep_time_minutes": 15,
+      "servings_base": 2,
+      "allergens": ["huevo"],
+      "ingredients": [
+        { "product": "Huevo", "quantity": 4 },
+        { "product": "Calabacita", "quantity": 150 },
+        { "product": "Jitomate", "quantity": 100 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Picar", "content": "Pica la calabacita, el jitomate y un cuarto de cebolla.", "timer_seconds": null },
+        { "title": "Sofreír", "content": "Sofríe las verduras en aceite con sal por 4 minutos.", "timer_seconds": 240 },
+        { "title": "Cuajar", "content": "Agrega los huevos batidos, tapa y cocina a fuego bajo 5 minutos.", "timer_seconds": 300 },
+        { "title": "Servir", "content": "Dobla el omelette a la mitad y sirve.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Licuado de plátano con avena",
+      "cuisine": "Casera básica",
+      "meal_type": ["desayuno", "snack"],
+      "tags": ["rápida", "para niños"],
+      "prep_time_minutes": 5,
+      "servings_base": 2,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Leche entera", "amount": 2, "unit": "taza" },
+        { "product": "Plátano", "quantity": 2 },
+        { "product": "Avena", "quantity": 40 },
+        { "product": "Azúcar", "quantity": 10 }
+      ],
+      "steps": [
+        { "title": "Licuar", "content": "Licúa la leche con el plátano, la avena y el azúcar hasta que quede sin grumos.", "timer_seconds": null },
+        { "title": "Servir", "content": "Sirve frío al momento.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Tinga de pollo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 45,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 600 },
+        { "product": "Jitomate", "quantity": 500 },
+        { "product": "Cebolla blanca", "quantity": 2 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Chile serrano", "quantity": 2 },
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Crema", "amount": 4, "unit": "cucharada" },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer el pollo", "content": "Cuece la pechuga en agua con sal y ajo por 25 minutos, deshébrala.", "timer_seconds": 1500 },
+        { "title": "Acitronar", "content": "Fríe la cebolla en tiras en aceite hasta que esté transparente.", "timer_seconds": 300 },
+        { "title": "Salsa", "content": "Licúa el jitomate con los chiles y agrégalo a la cebolla. Cocina 10 minutos.", "timer_seconds": 600 },
+        { "title": "Integrar", "content": "Agrega el pollo, mezcla y sirve en tortillas con crema.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Picadillo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida"],
+      "tags": ["alta en proteína", "económica"],
+      "prep_time_minutes": 35,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Carne molida de res", "quantity": 500 },
+        { "product": "Papa", "quantity": 300 },
+        { "product": "Zanahoria", "quantity": 200 },
+        { "product": "Jitomate", "quantity": 400 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Picar", "content": "Pela y pica la papa y la zanahoria en cubos pequeños.", "timer_seconds": null },
+        { "title": "Dorar la carne", "content": "Dora la carne con cebolla y ajo picados, unos 8 minutos.", "timer_seconds": 480 },
+        { "title": "Guisar", "content": "Agrega el jitomate licuado, las verduras y sal. Tapa y cocina 15 minutos.", "timer_seconds": 900 },
+        { "title": "Servir", "content": "Rectifica la sal y sirve con arroz o tortillas.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Calabacitas a la mexicana",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana", "ligera", "económica"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Calabacita", "quantity": 700 },
+        { "product": "Jitomate", "quantity": 300 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Chile serrano", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Picar", "content": "Pica en cubos la calabacita, el jitomate, la cebolla y el chile.", "timer_seconds": null },
+        { "title": "Sofreír", "content": "Sofríe cebolla y chile en aceite 3 minutos.", "timer_seconds": 180 },
+        { "title": "Cocinar", "content": "Agrega calabacita, jitomate y sal. Tapa y cocina 12 minutos.", "timer_seconds": 720 }
+      ]
+    },
+    {
+      "name": "Rajas con crema",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana"],
+      "prep_time_minutes": 35,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Chile poblano", "quantity": 4 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Crema", "amount": 1, "unit": "taza" },
+        { "product": "Queso Oaxaca", "quantity": 150 },
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Asar los chiles", "content": "Asa los chiles en el comal hasta que la piel se queme, unos 10 minutos.", "timer_seconds": 600 },
+        { "title": "Pelar", "content": "Mételos en una bolsa 5 minutos, pélalos, quita semillas y córtalos en rajas.", "timer_seconds": 300 },
+        { "title": "Guisar", "content": "Sofríe la cebolla, agrega las rajas, la crema y el queso. Cocina 5 minutos.", "timer_seconds": 300 },
+        { "title": "Servir", "content": "Sirve con tortillas calientes.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Quesadillas",
+      "cuisine": "Mexicana",
+      "meal_type": ["cena", "snack"],
+      "tags": ["rápida", "para niños"],
+      "prep_time_minutes": 15,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Queso Oaxaca", "quantity": 250 }
+      ],
+      "steps": [
+        { "title": "Rellenar", "content": "Deshebra el queso y rellena cada tortilla doblada a la mitad.", "timer_seconds": null },
+        { "title": "Calentar", "content": "Calienta en comal hasta que el queso se derrita, 2 minutos por lado.", "timer_seconds": 240 }
+      ]
+    },
+    {
+      "name": "Enchiladas rojas de pollo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 50,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 400 },
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Jitomate", "quantity": 500 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Chile serrano", "quantity": 2 },
+        { "product": "Crema", "amount": 4, "unit": "cucharada" },
+        { "product": "Queso fresco", "quantity": 100 },
+        { "product": "Aceite vegetal", "amount": 3, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer el pollo", "content": "Cuece la pechuga con sal 25 minutos y deshébrala.", "timer_seconds": 1500 },
+        { "title": "Salsa", "content": "Licúa jitomate, ajo, chiles y un trozo de cebolla. Cocina 10 minutos con sal.", "timer_seconds": 600 },
+        { "title": "Enrollar", "content": "Pasa las tortillas por aceite, rellénalas de pollo y enróllalas.", "timer_seconds": null },
+        { "title": "Servir", "content": "Baña con salsa caliente, crema, queso y cebolla en aros.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Burritos de frijol con queso",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["rápida", "económica"],
+      "prep_time_minutes": 20,
+      "servings_base": 4,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Tortilla de harina", "quantity": 400 },
+        { "product": "Frijol pinto", "quantity": 300 },
+        { "product": "Queso Oaxaca", "quantity": 200 },
+        { "product": "Aguacate", "quantity": 1 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer los frijoles", "content": "Cuece los frijoles con sal hasta que estén suaves y macháquelos.", "timer_seconds": 3600 },
+        { "title": "Armar", "content": "Calienta las tortillas, úntales frijol, agrega queso y aguacate.", "timer_seconds": null },
+        { "title": "Dorar", "content": "Enróllalos y dóralos en comal 2 minutos por lado.", "timer_seconds": 240 }
+      ]
+    },
+    {
+      "name": "Arroz rojo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida"],
+      "tags": ["vegetariana", "económica"],
+      "prep_time_minutes": 35,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Arroz", "quantity": 250 },
+        { "product": "Jitomate", "quantity": 250 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 1 },
+        { "product": "Zanahoria", "quantity": 100 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Dorar el arroz", "content": "Fríe el arroz en aceite moviendo seguido hasta que esté dorado, 5 minutos.", "timer_seconds": 300 },
+        { "title": "Agregar el caldillo", "content": "Licúa jitomate, cebolla y ajo con 2 tazas de agua, agrégalo con la zanahoria picada y sal.", "timer_seconds": null },
+        { "title": "Cocer", "content": "Tapa y cocina a fuego bajo 20 minutos sin destapar.", "timer_seconds": 1200 }
+      ]
+    },
+    {
+      "name": "Guacamole con tostadas caseras",
+      "cuisine": "Mexicana",
+      "meal_type": ["snack"],
+      "tags": ["vegetariana", "rápida"],
+      "prep_time_minutes": 20,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Aguacate", "quantity": 3 },
+        { "product": "Jitomate", "quantity": 150 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Chile serrano", "quantity": 1 },
+        { "product": "Cilantro", "quantity": 10 },
+        { "product": "Limón", "quantity": 1 },
+        { "product": "Tortilla de maíz", "quantity": 200 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Tostadas", "content": "Corta las tortillas en triángulos y hornéalas con un poco de aceite 10 minutos.", "timer_seconds": 600 },
+        { "title": "Machacar", "content": "Machaca el aguacate con jugo de limón y sal.", "timer_seconds": null },
+        { "title": "Mezclar", "content": "Agrega jitomate, cebolla, chile y cilantro picados. Sirve con las tostadas.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Sopa de fideo",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida"],
+      "tags": ["económica", "para niños"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": ["gluten"],
+      "ingredients": [
+        { "product": "Fideo", "quantity": 200 },
+        { "product": "Jitomate", "quantity": 300 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Dorar el fideo", "content": "Fríe el fideo en aceite moviendo sin parar hasta que esté dorado, 3 minutos.", "timer_seconds": 180 },
+        { "title": "Caldillo", "content": "Licúa jitomate, cebolla y ajo con un litro de agua y agrégalo al fideo con sal.", "timer_seconds": null },
+        { "title": "Cocer", "content": "Cocina a fuego medio 12 minutos, hasta que el fideo esté suave.", "timer_seconds": 720 }
+      ]
+    },
+    {
+      "name": "Caldo de pollo con verduras",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida"],
+      "tags": ["ligera", "alta en proteína"],
+      "prep_time_minutes": 50,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 500 },
+        { "product": "Papa", "quantity": 300 },
+        { "product": "Zanahoria", "quantity": 200 },
+        { "product": "Calabacita", "quantity": 200 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Cilantro", "quantity": 10 },
+        { "product": "Limón", "quantity": 2 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Hervir el pollo", "content": "Pon el pollo con cebolla, ajo y sal en 2 litros de agua. Hierve 20 minutos.", "timer_seconds": 1200 },
+        { "title": "Agregar verduras", "content": "Agrega la papa y la zanahoria en trozos, cocina 10 minutos.", "timer_seconds": 600 },
+        { "title": "Calabacita", "content": "Agrega la calabacita y cocina 8 minutos más.", "timer_seconds": 480 },
+        { "title": "Servir", "content": "Sirve con cilantro picado y limón.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Lentejas guisadas",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida"],
+      "tags": ["vegetariana", "económica"],
+      "prep_time_minutes": 45,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Lentejas", "quantity": 300 },
+        { "product": "Jitomate", "quantity": 250 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Zanahoria", "quantity": 150 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer", "content": "Cuece las lentejas en 1.5 litros de agua con sal por 25 minutos.", "timer_seconds": 1500 },
+        { "title": "Sofrito", "content": "Licúa jitomate, cebolla y ajo y fríelo en aceite 5 minutos.", "timer_seconds": 300 },
+        { "title": "Integrar", "content": "Agrega el sofrito y la zanahoria picada a las lentejas. Cocina 10 minutos.", "timer_seconds": 600 }
+      ]
+    },
+    {
+      "name": "Sopa de codito",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida"],
+      "tags": ["económica", "para niños"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": ["gluten"],
+      "ingredients": [
+        { "product": "Pasta de codo", "quantity": 200 },
+        { "product": "Puré de tomate", "quantity": 210 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Dorar la pasta", "content": "Fríe el codito en aceite hasta que tome color, 3 minutos.", "timer_seconds": 180 },
+        { "title": "Caldillo", "content": "Licúa el puré con cebolla, ajo y un litro de agua, agrégalo con sal.", "timer_seconds": null },
+        { "title": "Cocer", "content": "Cocina 12 minutos a fuego medio.", "timer_seconds": 720 }
+      ]
+    },
+    {
+      "name": "Pollo a la plancha con verduras",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida", "cena"],
+      "tags": ["alta en proteína", "ligera"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 600 },
+        { "product": "Brócoli", "quantity": 300 },
+        { "product": "Zanahoria", "quantity": 200 },
+        { "product": "Aceite de oliva", "amount": 2, "unit": "cucharada" },
+        { "product": "Limón", "quantity": 2 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Marinar", "content": "Sazona el pollo con sal, limón y aceite de oliva.", "timer_seconds": null },
+        { "title": "Cocer las verduras", "content": "Cuece el brócoli y la zanahoria al vapor 8 minutos.", "timer_seconds": 480 },
+        { "title": "Asar el pollo", "content": "Asa las pechugas a fuego medio 6 minutos por lado.", "timer_seconds": 720 },
+        { "title": "Servir", "content": "Sirve el pollo en rebanadas con las verduras.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Ensalada de atún",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida", "cena"],
+      "tags": ["ligera", "rápida", "alta en proteína"],
+      "prep_time_minutes": 15,
+      "servings_base": 2,
+      "allergens": ["pescado"],
+      "ingredients": [
+        { "product": "Atún en agua", "quantity": 280 },
+        { "product": "Lechuga", "quantity": 1 },
+        { "product": "Jitomate", "quantity": 200 },
+        { "product": "Aguacate", "quantity": 1 },
+        { "product": "Limón", "quantity": 1 },
+        { "product": "Aceite de oliva", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Preparar", "content": "Lava y corta la lechuga, el jitomate y el aguacate.", "timer_seconds": null },
+        { "title": "Mezclar", "content": "Escurre el atún y mézclalo con las verduras, limón, aceite y sal.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Ensalada de coditos con atún",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida"],
+      "tags": ["económica"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": ["gluten", "lácteos", "pescado"],
+      "ingredients": [
+        { "product": "Pasta de codo", "quantity": 200 },
+        { "product": "Atún en agua", "quantity": 280 },
+        { "product": "Crema", "amount": 4, "unit": "cucharada" },
+        { "product": "Zanahoria", "quantity": 100 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer la pasta", "content": "Cuece los coditos en agua con sal 10 minutos y escúrrelos.", "timer_seconds": 600 },
+        { "title": "Mezclar", "content": "Mezcla la pasta fría con el atún, la crema, la zanahoria rallada y sal.", "timer_seconds": null },
+        { "title": "Enfriar", "content": "Refrigera 15 minutos antes de servir.", "timer_seconds": 900 }
+      ]
+    },
+    {
+      "name": "Crema de calabacita",
+      "cuisine": "Casera básica",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana", "ligera"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Calabacita", "quantity": 600 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 1 },
+        { "product": "Leche entera", "amount": 2, "unit": "taza" },
+        { "product": "Mantequilla", "quantity": 20 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer", "content": "Cuece la calabacita con cebolla y ajo en poca agua 12 minutos.", "timer_seconds": 720 },
+        { "title": "Licuar", "content": "Licúa las verduras con la leche hasta que quede tersa.", "timer_seconds": null },
+        { "title": "Terminar", "content": "Calienta la crema con la mantequilla y sal 5 minutos sin que hierva.", "timer_seconds": 300 }
+      ]
+    },
+    {
+      "name": "Sándwich de atún",
+      "cuisine": "Casera básica",
+      "meal_type": ["cena", "snack"],
+      "tags": ["rápida"],
+      "prep_time_minutes": 10,
+      "servings_base": 2,
+      "allergens": ["gluten", "pescado"],
+      "ingredients": [
+        { "product": "Pan de caja", "quantity": 160 },
+        { "product": "Atún en agua", "quantity": 140 },
+        { "product": "Jitomate", "quantity": 100 },
+        { "product": "Lechuga", "quantity": 1 },
+        { "product": "Limón", "quantity": 1 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Preparar el atún", "content": "Escurre el atún y mézclalo con jugo de limón y sal.", "timer_seconds": null },
+        { "title": "Armar", "content": "Arma los sándwiches con el atún, jitomate y lechuga.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Spaghetti a la boloñesa",
+      "cuisine": "Italiana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 40,
+      "servings_base": 4,
+      "allergens": ["gluten"],
+      "ingredients": [
+        { "product": "Pasta spaghetti", "quantity": 400 },
+        { "product": "Carne molida de res", "quantity": 400 },
+        { "product": "Puré de tomate", "quantity": 420 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Zanahoria", "quantity": 100 },
+        { "product": "Aceite de oliva", "amount": 2, "unit": "cucharada" },
+        { "product": "Orégano", "quantity": 2 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer la pasta", "content": "Cuece el spaghetti en agua con sal 10 minutos y escúrrelo.", "timer_seconds": 600 },
+        { "title": "Dorar la carne", "content": "Sofríe cebolla, ajo y zanahoria picados en aceite, agrega la carne y dora 8 minutos.", "timer_seconds": 480 },
+        { "title": "Salsa", "content": "Agrega el puré, el orégano y sal. Cocina a fuego bajo 15 minutos.", "timer_seconds": 900 },
+        { "title": "Servir", "content": "Sirve la pasta con la salsa encima.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Pasta con verduras",
+      "cuisine": "Italiana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Pasta spaghetti", "quantity": 400 },
+        { "product": "Calabacita", "quantity": 300 },
+        { "product": "Pimiento morrón", "quantity": 1 },
+        { "product": "Brócoli", "quantity": 200 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Aceite de oliva", "amount": 3, "unit": "cucharada" },
+        { "product": "Queso fresco", "quantity": 100 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer la pasta", "content": "Cuece la pasta en agua con sal 10 minutos.", "timer_seconds": 600 },
+        { "title": "Saltear", "content": "Saltea el ajo y las verduras en tiras en aceite de oliva 6 minutos.", "timer_seconds": 360 },
+        { "title": "Mezclar", "content": "Mezcla la pasta con las verduras y sirve con queso desmoronado.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Arroz frito con verduras",
+      "cuisine": "Asiática",
+      "meal_type": ["comida", "cena"],
+      "tags": ["económica", "rápida"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": ["gluten", "huevo", "soya"],
+      "ingredients": [
+        { "product": "Arroz", "quantity": 300 },
+        { "product": "Huevo", "quantity": 2 },
+        { "product": "Zanahoria", "quantity": 150 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Salsa de soya", "amount": 3, "unit": "cucharada" },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" }
+      ],
+      "steps": [
+        { "title": "Cocer el arroz", "content": "Cuece el arroz en agua 18 minutos y déjalo enfriar.", "timer_seconds": 1080 },
+        { "title": "Saltear", "content": "Saltea la zanahoria y la cebolla picadas en aceite muy caliente 4 minutos.", "timer_seconds": 240 },
+        { "title": "Huevo", "content": "Haz a un lado las verduras, revuelve los huevos y rómpelos en trozos.", "timer_seconds": null },
+        { "title": "Terminar", "content": "Agrega el arroz y la salsa de soya, saltea 3 minutos más.", "timer_seconds": 180 }
+      ]
+    },
+    {
+      "name": "Pollo teriyaki",
+      "cuisine": "Asiática",
+      "meal_type": ["comida", "cena"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 35,
+      "servings_base": 4,
+      "allergens": ["gluten", "soya"],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 600 },
+        { "product": "Salsa de soya", "amount": 4, "unit": "cucharada" },
+        { "product": "Azúcar", "quantity": 30 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Arroz", "quantity": 250 },
+        { "product": "Brócoli", "quantity": 300 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" }
+      ],
+      "steps": [
+        { "title": "Cocer el arroz", "content": "Cuece el arroz en agua con sal 18 minutos.", "timer_seconds": 1080 },
+        { "title": "Dorar el pollo", "content": "Corta el pollo en cubos y dóralo en aceite 8 minutos.", "timer_seconds": 480 },
+        { "title": "Glasear", "content": "Agrega la soya, el azúcar y el ajo picado, cocina hasta que espese, 4 minutos.", "timer_seconds": 240 },
+        { "title": "Servir", "content": "Sirve con el arroz y el brócoli cocido al vapor.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Tofu salteado con verduras",
+      "cuisine": "Asiática",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": ["gluten", "soya"],
+      "ingredients": [
+        { "product": "Tofu firme", "quantity": 400 },
+        { "product": "Brócoli", "quantity": 250 },
+        { "product": "Pimiento morrón", "quantity": 1 },
+        { "product": "Zanahoria", "quantity": 150 },
+        { "product": "Salsa de soya", "amount": 3, "unit": "cucharada" },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Arroz", "quantity": 250 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" }
+      ],
+      "steps": [
+        { "title": "Cocer el arroz", "content": "Cuece el arroz en agua con sal 18 minutos.", "timer_seconds": 1080 },
+        { "title": "Dorar el tofu", "content": "Corta el tofu en cubos y dóralo en aceite 6 minutos.", "timer_seconds": 360 },
+        { "title": "Saltear", "content": "Agrega ajo y verduras en tiras, saltea 5 minutos con la salsa de soya.", "timer_seconds": 300 },
+        { "title": "Servir", "content": "Sirve sobre el arroz.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Ensalada de garbanzo",
+      "cuisine": "Mediterránea",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana", "ligera"],
+      "prep_time_minutes": 20,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Garbanzo", "quantity": 250 },
+        { "product": "Jitomate", "quantity": 250 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Pimiento morrón", "quantity": 1 },
+        { "product": "Limón", "quantity": 2 },
+        { "product": "Aceite de oliva", "amount": 3, "unit": "cucharada" },
+        { "product": "Cilantro", "quantity": 10 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer el garbanzo", "content": "Cuece el garbanzo remojado en agua con sal 60 minutos y escúrrelo.", "timer_seconds": 3600 },
+        { "title": "Picar", "content": "Pica el jitomate, la cebolla, el pimiento y el cilantro.", "timer_seconds": null },
+        { "title": "Aderezar", "content": "Mezcla todo con jugo de limón, aceite de oliva y sal.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Pollo al horno con papas",
+      "cuisine": "Mediterránea",
+      "meal_type": ["comida"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 60,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 700 },
+        { "product": "Papa", "quantity": 600 },
+        { "product": "Ajo (dientes)", "quantity": 3 },
+        { "product": "Aceite de oliva", "amount": 3, "unit": "cucharada" },
+        { "product": "Orégano", "quantity": 3 },
+        { "product": "Limón", "quantity": 2 },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Preparar", "content": "Corta las papas en gajos y ponlas en un refractario con el pollo.", "timer_seconds": null },
+        { "title": "Sazonar", "content": "Baña con aceite, jugo de limón, ajo picado, orégano y sal.", "timer_seconds": null },
+        { "title": "Hornear", "content": "Hornea a 200 °C por 40 minutos, hasta que las papas estén doradas.", "timer_seconds": 2400 }
+      ]
+    },
+    {
+      "name": "Lentejas con arroz",
+      "cuisine": "Mediterránea",
+      "meal_type": ["comida", "cena"],
+      "tags": ["vegetariana", "económica"],
+      "prep_time_minutes": 45,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Lentejas", "quantity": 250 },
+        { "product": "Arroz", "quantity": 200 },
+        { "product": "Cebolla blanca", "quantity": 2 },
+        { "product": "Aceite de oliva", "amount": 3, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer las lentejas", "content": "Cuece las lentejas en agua con sal 20 minutos.", "timer_seconds": 1200 },
+        { "title": "Agregar el arroz", "content": "Agrega el arroz y cocina tapado 18 minutos más.", "timer_seconds": 1080 },
+        { "title": "Cebolla dorada", "content": "Fríe la cebolla en tiras en aceite de oliva hasta que esté dorada, 12 minutos, y sirve encima.", "timer_seconds": 720 }
+      ]
+    },
+    {
+      "name": "Manzana con yogur",
+      "cuisine": "Casera básica",
+      "meal_type": ["snack"],
+      "tags": ["rápida", "ligera", "para niños"],
+      "prep_time_minutes": 5,
+      "servings_base": 2,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Manzana", "quantity": 2 },
+        { "product": "Yogur natural", "quantity": 200 },
+        { "product": "Azúcar", "quantity": 10 }
+      ],
+      "steps": [
+        { "title": "Cortar", "content": "Lava la manzana y córtala en rebanadas delgadas.", "timer_seconds": null },
+        { "title": "Servir", "content": "Sirve con el yogur endulzado con un poco de azúcar.", "timer_seconds": null }
+      ]
     }
   ]
 }
