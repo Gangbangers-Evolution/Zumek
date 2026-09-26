@@ -43,7 +43,7 @@ export async function loadCatalog(client: ZumekClient): Promise<Catalog> {
   const [stores, canonical_products, commercial_products, latest_prices, colloquial_units, recipes, recipe_steps, recipe_ingredients] =
     await Promise.all([
       selectAll<Store>(client, "store", "id, name, slug, active"),
-      selectAll<CanonicalProduct>(client, "canonical_product", "id, name, unit_type, category"),
+      selectAll<CanonicalProduct>(client, "canonical_product", "id, name, unit_type, category, allergens"),
       selectAll<CommercialProduct>(client, "commercial_product", "id, canonical_product_id, store_id, brand, package_label, package_quantity, package_unit"),
       selectAll<PriceObservation>(client, "latest_price", "id, commercial_product_id, price_cents, observed_at"),
       selectAll<ColloquialUnit>(client, "colloquial_unit", "term, base_quantity, base_unit"),
@@ -85,3 +85,5 @@ export async function savePantry(client: ZumekClient, userId: string, rows: Pant
   const { error } = await remove;
   if (error) throw new Error(`Supabase despensa (borrar): ${error.message}`);
 }
+
+export { askChat, ChatError, type ChatErrorCode, type ChatProposal, type ChatReply, type ChatRequest, type ChatTurn } from "./chat";

@@ -27,8 +27,8 @@ export function buildCatalogSeedSql(catalog: Catalog): string {
     insert("store", ["id", "name", "slug", "active"], catalog.stores.map((s) => [v(s.id), v(s.name), v(s.slug), String(s.active)])),
     insert(
       "canonical_product",
-      ["id", "name", "unit_type", "category"],
-      catalog.canonical_products.map((p) => [v(p.id), v(p.name), v(p.unit_type), v(p.category)]),
+      ["id", "name", "unit_type", "category", "allergens"],
+      catalog.canonical_products.map((p) => [v(p.id), v(p.name), v(p.unit_type), v(p.category), pgArray(p.allergens)]),
     ),
     insert(
       "colloquial_unit",

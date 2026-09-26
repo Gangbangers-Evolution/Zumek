@@ -1,33 +1,35 @@
-// Fase 1: respuestas simuladas. En Fase 6 esto llama a la Edge Function 'chat'.
-import { delay } from "./fake";
+// Chat y asistente de cocina: con Supabase configurado habla con la Edge Function 'chat'
+// (Fase 6). Sin Supabase (desarrollo con datos de ejemplo) responde un demo local que
+// propone cambios reales: el costo siempre lo calcula el planner, nunca un texto fijo.
+import type { PlanBundle } from "@zumek/domain";
+import { askChat, type ChatReply, type ChatRequest } from "@zumek/supabase-client";
+import { getSupabase } from "./supabase";
 
-export interface ChangeProposal {
-  description: string;
-  deltaCents: number;
+export { ChatError, type ChatProposal, type ChatTurn } from "@zumek/supabase-client";
+
+export async function askZumek(request: ChatRequest, bundle: PlanBundle): Promise<ChatReply> {
+  const supabase = getSupabase();
+  if (supabase) return askChat(supabase, request);
+  return offlineDemo(request, bundle);
 }
 
-export interface ChatReply {
-  text: string;
-  proposal?: ChangeProposal;
-}
-
-export async function sendChatMessage(message: string): Promise<ChatReply> {
-  await delay(900);
-  const text = message.toLowerCase();
-  if (text.includes("barat") || text.includes("ahorr")) {
+async function offlineDemo(request: ChatRequest, bundle: PlanBundle): Promise<ChatReply> {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  if (request.cooking) {
+    return { text: "El asistente de cocina necesita conexión. Mientras tanto, sigue el paso en pantalla." };
+  }
+  const text = request.messages.at(-1)?.content.toLowerCase() ?? "";
+  const meal = bundle.meals[0];
+  if (meal && /barat|ahorr|cambi/.test(text)) {
     return {
-      text: "Puedo cambiar el spaghetti del día 2 por enfrijoladas, que reutilizan la tortilla y el queso que ya compras.",
+      text: "Modo sin conexión: te propongo cambiar la primera comida de tu semana.",
       proposal: {
-        description: "Día 2, comida: Spaghetti con jitomate → Enfrijoladas",
-        deltaCents: -2150,
+        tool: "swap_recipe",
+        input: { day_index: meal.day_index, meal_type: meal.meal_type, exclude_recipe_id: meal.recipe_id },
       },
     };
   }
   return {
-    text: "Puedo ayudarte a cambiar recetas, ajustar el presupuesto o explicarte el plan. Prueba con: \"hazlo más barato\".",
+    text: 'Modo sin conexión: puedo proponerte cambios básicos. Prueba con "hazlo más barato".',
   };
-}
-
-export async function applyProposal(_proposal: ChangeProposal): Promise<void> {
-  await delay(700);
 }

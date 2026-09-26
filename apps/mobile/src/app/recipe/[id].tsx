@@ -1,6 +1,6 @@
 import { colors, radius, spacing } from "@zumek/design-tokens";
 import { lookup } from "@zumek/domain";
-import { scaleQuantity } from "@zumek/planner";
+import { effectiveIngredients, scaleQuantity } from "@zumek/planner";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../../components/AppText";
@@ -19,7 +19,7 @@ import { useWeek } from "../../state/week";
 export default function RecipeScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalog = useCatalog();
-  const { bundle } = useWeek();
+  const { active, bundle } = useWeek();
   const { state } = useOnboarding();
   // El id viene de la URL: puede no existir, por eso get() y no lookup()
   const recipe = catalog.recipeById.get(id);
@@ -33,7 +33,9 @@ export default function RecipeScreen() {
   }
 
   const people = bundle?.plan.people_count ?? state.peopleCount;
-  const ingredients = catalog.ingredientsByRecipe.get(recipe.id) ?? [];
+  // Con los cambios de ingrediente que el usuario confirmo en el chat
+  const swaps = active?.substitutions[recipe.id] ?? {};
+  const ingredients = effectiveIngredients(catalog, recipe.id, active?.substitutions);
   const steps = catalog.stepsByRecipe.get(recipe.id) ?? [];
 
   return (
@@ -87,9 +89,12 @@ export default function RecipeScreen() {
           return (
             <View key={ing.id} style={styles.ingredient}>
               <Icon name="checkCircle" size={18} color={colors.secondary} />
-              <AppText variant="bodyMdMedium" style={styles.flex}>
-                {product.name}
-              </AppText>
+              <View style={styles.flex}>
+                <AppText variant="bodyMdMedium">{product.name}</AppText>
+                {Object.values(swaps).includes(ing.canonical_product_id) ? (
+                  <Badge label="Cambiado desde el chat" tone="neutral" />
+                ) : null}
+              </View>
               <AppText tone="muted">{formatWithColloquial(quantity, ing.unit, catalog.colloquial_units)}</AppText>
             </View>
           );

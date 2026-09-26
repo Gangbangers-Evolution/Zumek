@@ -22,9 +22,18 @@ export interface PlannerPreferences {
   savingsWeight: number;
 }
 
+/**
+ * Ingredientes cambiados por el usuario (swap_ingredient):
+ * recipe_id -> canonical_product_id original -> canonical_product_id que lo reemplaza.
+ * Misma cantidad en unidad base: solo se permite entre productos del mismo unit_type.
+ */
+export type Substitutions = Readonly<Record<string, Readonly<Record<string, string>>>>;
+
 export interface PlannerInput {
   catalog: IndexedCatalog;
   preferences: PlannerPreferences;
+  /** Opcional: sin cambios de ingrediente cada receta usa los suyos. */
+  substitutions?: Substitutions;
   /** Ids y fecha los decide quien llama: el planner no tiene efectos secundarios. */
   planId: string;
   userId: string;

@@ -1,5 +1,4 @@
 import { colors, layout, radius, spacing } from "@zumek/design-tokens";
-import type { PlanBundle } from "@zumek/domain";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
@@ -32,9 +31,9 @@ export default function Generating() {
   useEffect(() => {
     let cancelled = false;
     generatePlan(state, catalog, userId)
-      .then((bundle: PlanBundle) => {
+      .then((plan) => {
         if (cancelled) return;
-        planGenerated(bundle, state.pantry);
+        planGenerated(plan, state.pantry);
         setResult({ attempt, outcome: "done" });
       })
       .catch(() => !cancelled && setResult({ attempt, outcome: "failed" }));

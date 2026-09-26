@@ -9,8 +9,10 @@ import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
 import { ProgressBar } from "../../components/ProgressBar";
 import { Screen } from "../../components/Screen";
+import { CookingAssistant } from "../../features/chat/CookingAssistant";
 import { EXAMPLES } from "../../features/examples";
 import { useCatalog } from "../../state/catalog";
+import { useWeek } from "../../state/week";
 
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -21,6 +23,7 @@ function formatTimer(seconds: number): string {
 export default function CookScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalog = useCatalog();
+  const { bundle } = useWeek();
   // El id viene de la URL: puede no existir, por eso get() y no lookup()
   const recipe = catalog.recipeById.get(id);
   const steps = catalog.stepsByRecipe.get(id) ?? [];
@@ -86,6 +89,9 @@ export default function CookScreen() {
         // key: cada paso arranca con su propio temporizador desde el primer render
         <StepTimer key={step.id} seconds={step.timer_seconds} />
       ) : null}
+
+      {/* El asistente responde sobre el plan activo; sin plan no hay a quien preguntarle. */}
+      {bundle ? <CookingAssistant recipeId={recipe.id} stepIndex={index} /> : null}
 
       <Card tone="warning">
         <View style={styles.row}>

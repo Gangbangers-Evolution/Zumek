@@ -95,11 +95,19 @@ La app **nunca** llama a AWS directo. Solo la Edge Function conoce las llaves.
    Crear el usuario `zumek-chat` sin acceso a la consola, asignarle solo esa política y generar sus access keys (*Application running outside AWS*).
 4. **Secrets en Supabase:** `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION=us-east-1` y `BEDROCK_MODEL_ID`.
 5. **Edge Function `chat`:** usa `AnthropicBedrockMantle` de `@anthropic-ai/bedrock-sdk` con las 5 tools del Master Prompt (sección 6).
+6. **Desplegar:** desde la raíz del repo, con el proyecto vinculado (`supabase link`):
+   ```bash
+   supabase db push                 # aplica las migraciones pendientes
+   supabase functions deploy chat   # sube la Edge Function
+   ```
+   Para probar: en la app, genera un plan, abre la pestaña Chat y escribe "hazlo más barato". Si la función no está desplegada, el chat responde "No pude procesar eso".
 
 ### Reglas del chat
 
 - **Límite de uso:** antes de cada llamada se revisa `ai_call_log`. Si el usuario lleva 10 o más llamadas en el último minuto, se responde con error sin llamar al modelo.
-- **La IA nunca escribe en la base:** las tools que modifican el plan (`update_budget`, `swap_recipe`, `swap_ingredient`) solo **proponen**. La app corre el planner, muestra "¿Aplicar este cambio?" y guarda solo si el usuario confirma.
+- **La IA nunca escribe en la base:** las tools que modifican el plan (`update_budget`, `swap_recipe`, `swap_ingredient`) solo **proponen**. La función revisa que los ids existan en el plan del usuario; la app corre el planner, muestra "¿Aplicar este cambio?" con la diferencia de costo y guarda solo si el usuario confirma.
+- **Contexto del plan:** la función lee el plan de la base con el JWT del usuario (RLS), así que nunca ve planes ajenos. El historial que manda la app solo acepta turnos de texto.
+- **Asistente de cocina:** en el modo cocina la app manda la receta y el paso en pantalla; ahí la IA solo responde dudas con `get_recipe_step`, no cambia el plan.
 - **Errores:** si algo falla, el chat muestra "No pude procesar eso, ¿puedes reformular?" y el detalle técnico queda solo en los logs.
 
 ### Plan B si los créditos no cubren Bedrock

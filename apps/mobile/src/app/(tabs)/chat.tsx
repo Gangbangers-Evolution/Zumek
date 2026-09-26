@@ -7,73 +7,22 @@ import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
 import { IconTile } from "../../components/IconTile";
-import { applyProposal, sendChatMessage, type ChangeProposal } from "../../data/chat-source";
 import { EXAMPLES } from "../../features/examples";
+import { useAssistant, type AssistantMessage } from "../../features/chat/use-assistant";
 import { formatCents, formatDeltaCents } from "../../lib/money";
 
-type ProposalState = "pending" | "applying" | "applied" | "rejected" | "error";
-
-interface Message {
-  id: number;
-  role: "user" | "assistant";
-  text: string;
-  proposal?: ChangeProposal;
-  proposalState?: ProposalState;
-  failed?: boolean;
-}
-
-const GENERIC_ERROR = "No pude procesar eso, ¿puedes reformular?";
-
 export default function ChatScreen() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 0,
-      role: "assistant",
-      text: "Hola, soy Zumek. Puedo cambiar recetas, ajustar tu presupuesto o explicarte por qué armé así tu semana.",
-    },
-  ]);
+  const { messages, sending, send, apply, reject } = useAssistant({
+    greeting: "Hola, soy Zumek. Puedo cambiar recetas o ingredientes, ajustar tu presupuesto o explicarte por qué armé así tu semana.",
+  });
   const [input, setInput] = useState("");
-  const [sending, setSending] = useState(false);
   const [focused, setFocused] = useState(false);
-  const nextId = useRef(1);
   const scrollRef = useRef<ScrollView>(null);
 
-  const push = (message: Omit<Message, "id">) =>
-    setMessages((prev) => [...prev, { ...message, id: nextId.current++ }]);
-
-  const update = (id: number, patch: Partial<Message>) =>
-    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, ...patch } : m)));
-
-  const send = async () => {
-    const text = input.trim();
-    if (!text || sending) return;
-    setSending(true);
+  const submit = () => {
+    if (!input.trim() || sending) return;
+    void send(input);
     setInput("");
-    push({ role: "user", text });
-    try {
-      const reply = await sendChatMessage(text);
-      push({
-        role: "assistant",
-        text: reply.text,
-        proposal: reply.proposal,
-        proposalState: reply.proposal ? "pending" : undefined,
-      });
-    } catch {
-      push({ role: "assistant", text: GENERIC_ERROR, failed: true });
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const apply = async (message: Message) => {
-    if (!message.proposal) return;
-    update(message.id, { proposalState: "applying" });
-    try {
-      await applyProposal(message.proposal);
-      update(message.id, { proposalState: "applied" });
-    } catch {
-      update(message.id, { proposalState: "error" });
-    }
   };
 
   const canSend = !sending && input.trim().length > 0;
@@ -99,9 +48,7 @@ export default function ChatScreen() {
                     <View style={[styles.bubble, styles.assistant]}>
                       <AppText tone={m.failed ? "danger" : "default"}>{m.text}</AppText>
                     </View>
-                    {m.proposal ? (
-                      <ProposalCard message={m} onApply={() => apply(m)} onReject={() => update(m.id, { proposalState: "rejected" })} />
-                    ) : null}
+                    {m.proposal ? <ProposalCard message={m} onApply={() => apply(m)} onReject={() => reject(m)} /> : null}
                   </View>
                 </View>
               ),
@@ -129,7 +76,7 @@ export default function ChatScreen() {
               placeholder="Ej. hazlo más barato"
               placeholderTextColor={colors.outline}
               editable={!sending}
-              onSubmitEditing={send}
+              onSubmitEditing={submit}
               returnKeyType="send"
             />
             <Pressable
@@ -137,7 +84,7 @@ export default function ChatScreen() {
               accessibilityLabel="Enviar mensaje"
               accessibilityState={{ disabled: !canSend }}
               disabled={!canSend}
-              onPress={send}
+              onPress={submit}
               style={[styles.send, !canSend && styles.sendDisabled]}
             >
               <Icon name="send" size={20} color={colors.onPrimaryContainer} />
@@ -154,26 +101,37 @@ function ProposalCard({
   onApply,
   onReject,
 }: {
-  message: Message;
+  message: AssistantMessage;
   onApply: () => void;
   onReject: () => void;
 }) {
   const proposal = message.proposal!;
-  const state = message.proposalState ?? "pending";
-  const saves = proposal.deltaCents <= 0;
+  if (proposal.state === "unavailable") {
+    return (
+      <Card tone="warning">
+        <AppText style={{ color: colors.onTertiaryFixed }}>{proposal.reason}</AppText>
+      </Card>
+    );
+  }
+  const { change, state } = proposal;
+  const saves = change.deltaCents <= 0;
   return (
     <Card style={styles.proposal}>
       <AppText variant="labelSm" tone="savings">
         PROPUESTA INTELIGENTE
       </AppText>
       <AppText variant="headlineSm">¿Aplicar este cambio al plan?</AppText>
-      <AppText tone="muted">{proposal.description}</AppText>
+      <AppText tone="muted">{change.description}</AppText>
       <Card tone={saves ? "savings" : "warning"}>
         <AppText variant="headlineSm" style={{ color: saves ? colors.onSecondaryContainer : colors.onTertiaryFixed }}>
-          {saves ? `¡Ahorras ${formatCents(-proposal.deltaCents)} en este cambio!` : `Cuesta ${formatCents(proposal.deltaCents)} más`}
+          {change.deltaCents === 0
+            ? "Cuesta lo mismo"
+            : saves
+              ? `¡Ahorras ${formatCents(-change.deltaCents)} en este cambio!`
+              : `Cuesta ${formatCents(change.deltaCents)} más`}
         </AppText>
         <AppText variant="caption" style={{ color: saves ? colors.onSecondaryContainer : colors.onTertiaryFixed }}>
-          Diferencia en tu lista de compras: {formatDeltaCents(proposal.deltaCents)}
+          Nuevo total de tu lista: {formatCents(change.next.bundle.plan.total_cost_cents)} ({formatDeltaCents(change.deltaCents)})
         </AppText>
       </Card>
       <View style={styles.note}>
@@ -182,19 +140,18 @@ function ProposalCard({
           {EXAMPLES.proposalNote}
         </AppText>
       </View>
-      {state === "pending" || state === "applying" || state === "error" ? (
+      {state === "pending" ? (
         <>
-          {state === "error" ? (
-            <AppText variant="caption" tone="danger">
-              No se pudo aplicar el cambio. Inténtalo de nuevo.
-            </AppText>
-          ) : null}
-          <Button label="Aplicar cambio al plan" icon="check" loading={state === "applying"} onPress={onApply} accessibilityLabel="Aplicar el cambio" />
-          <Button label="Cancelar y mantener el anterior" variant="text" disabled={state === "applying"} onPress={onReject} accessibilityLabel="No aplicar el cambio" />
+          <Button label="Aplicar cambio al plan" icon="check" onPress={onApply} accessibilityLabel="Aplicar el cambio" />
+          <Button label="Cancelar y mantener el anterior" variant="text" onPress={onReject} accessibilityLabel="No aplicar el cambio" />
         </>
       ) : (
         <AppText variant="labelMd" tone={state === "applied" ? "savings" : "muted"}>
-          {state === "applied" ? "Cambio aplicado" : "Cambio descartado"}
+          {state === "applied"
+            ? "Cambio aplicado"
+            : state === "stale"
+              ? "Tu plan cambió desde esta propuesta; pídela de nuevo."
+              : "Cambio descartado"}
         </AppText>
       )}
     </Card>

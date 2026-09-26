@@ -1,5 +1,5 @@
 import { MEAL_TYPES, type MealType, type Recipe } from "@zumek/domain";
-import { buildShopping, sumNeeds, type PurchaseOption, type ShoppingResult } from "./shopping";
+import { buildShopping, effectiveIngredients, sumNeeds, type PurchaseOption, type ShoppingResult } from "./shopping";
 import type { PlannerInput, PlannerPreferences } from "./types";
 
 export interface Slot {
@@ -50,7 +50,7 @@ export interface Attempt {
   quality: number;
 }
 
-function normalize(text: string): string {
+export function normalize(text: string): string {
   return text.trim().toLowerCase();
 }
 
@@ -74,7 +74,10 @@ export function buildContext(input: PlannerInput): PlannerContext {
   const allowed = catalog.recipes
     .filter((recipe) => {
       if (recipe.allergens.some((a) => allergens.has(normalize(a)))) return false;
-      const ingredients = catalog.ingredientsByRecipe.get(recipe.id) ?? [];
+      const ingredients = effectiveIngredients(catalog, recipe.id, input.substitutions);
+      // Tambien por producto: un ingrediente cambiado puede traer un alergeno que la receta no declara.
+      const productAllergens = ingredients.flatMap((ing) => catalog.productById.get(ing.canonical_product_id)?.allergens ?? []);
+      if (productAllergens.some((a) => allergens.has(normalize(a)))) return false;
       return (
         ingredients.length > 0 &&
         ingredients.every(
@@ -107,6 +110,7 @@ export function shoppingFor(choices: Choice[], ctx: PlannerContext): ShoppingRes
     choices.map((c) => c.recipe),
     ctx.input.catalog,
     ctx.prefs.peopleCount,
+    ctx.input.substitutions,
   );
   return buildShopping(needs, ctx.options, ctx.prefs.pantry, ctx.prefs.savingsWeight);
 }
@@ -122,7 +126,7 @@ export function preferenceScore(recipe: Recipe, prefs: PlannerPreferences): numb
 }
 
 /** Cuantas veces ya se eligio la receta en otros slots; repetirla el mismo dia pesa doble. */
-function repeatCount(recipe: Recipe, slot: Slot, others: Choice[]): number {
+export function repeatCount(recipe: Recipe, slot: Slot, others: Choice[]): number {
   return others
     .filter((c) => c.recipe.id === recipe.id && c.slot !== slot)
     .reduce((count, c) => count + (c.slot.dayIndex === slot.dayIndex ? 2 : 1), 0);
@@ -132,9 +136,9 @@ function reuseScore(recipe: Recipe, chosen: Choice[], ctx: PlannerContext): numb
   const { catalog } = ctx.input;
   const available = new Set(Object.keys(ctx.prefs.pantry).filter((id) => (ctx.prefs.pantry[id] ?? 0) > 0));
   for (const c of chosen) {
-    for (const ing of catalog.ingredientsByRecipe.get(c.recipe.id) ?? []) available.add(ing.canonical_product_id);
+    for (const ing of effectiveIngredients(catalog, c.recipe.id, ctx.input.substitutions)) available.add(ing.canonical_product_id);
   }
-  const own = catalog.ingredientsByRecipe.get(recipe.id) ?? [];
+  const own = effectiveIngredients(catalog, recipe.id, ctx.input.substitutions);
   return own.length === 0 ? 0 : own.filter((i) => available.has(i.canonical_product_id)).length / own.length;
 }
 

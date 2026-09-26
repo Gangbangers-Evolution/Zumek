@@ -40,6 +40,8 @@ export interface CanonicalProduct {
   name: string;
   unit_type: UnitType;
   category: string;
+  /** Alergenos que el producto aporta a cualquier receta que lo use. */
+  allergens: Allergen[];
 }
 
 export interface CommercialProduct {

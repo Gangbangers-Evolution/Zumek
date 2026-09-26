@@ -46,6 +46,7 @@ export function buildSampleCatalog(): Catalog {
       name: p.name,
       unit_type: p.unit_type,
       category: p.category,
+      allergens: p.allergens,
     })),
     commercial_products: commercial.map(({ price_cents: _price, ...product }) => product),
     latest_prices: commercial.map((c) => ({

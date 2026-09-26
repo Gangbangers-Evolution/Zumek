@@ -1,4 +1,5 @@
-import type { CommercialProduct, IndexedCatalog, Recipe } from "@zumek/domain";
+import type { CommercialProduct, IndexedCatalog, Recipe, RecipeIngredient } from "@zumek/domain";
+import type { Substitutions } from "./types";
 
 export interface PurchaseOption {
   product: CommercialProduct;
@@ -25,14 +26,32 @@ export function scaleQuantity(quantity: number, servingsBase: number, peopleCoun
   return (quantity * peopleCount) / servingsBase;
 }
 
+/** Ingredientes de una receta ya con los cambios del usuario aplicados. */
+export function effectiveIngredients(
+  catalog: IndexedCatalog,
+  recipeId: string,
+  substitutions: Substitutions = {},
+): RecipeIngredient[] {
+  const swaps = substitutions[recipeId] ?? {};
+  return (catalog.ingredientsByRecipe.get(recipeId) ?? []).map((ing) => {
+    const to = swaps[ing.canonical_product_id];
+    return to ? { ...ing, canonical_product_id: to } : ing;
+  });
+}
+
 /**
  * Lo que usan las recetas (una por comida, pueden repetirse), escalado por personas y
  * sumado por canonical_product_id. Es la unica definicion de "cantidad usada".
  */
-export function sumNeeds(recipes: Recipe[], catalog: IndexedCatalog, peopleCount: number): Map<string, number> {
+export function sumNeeds(
+  recipes: Recipe[],
+  catalog: IndexedCatalog,
+  peopleCount: number,
+  substitutions: Substitutions = {},
+): Map<string, number> {
   const needs = new Map<string, number>();
   for (const recipe of recipes) {
-    for (const ing of catalog.ingredientsByRecipe.get(recipe.id) ?? []) {
+    for (const ing of effectiveIngredients(catalog, recipe.id, substitutions)) {
       const qty = scaleQuantity(ing.quantity, recipe.servings_base, peopleCount);
       needs.set(ing.canonical_product_id, (needs.get(ing.canonical_product_id) ?? 0) + qty);
     }

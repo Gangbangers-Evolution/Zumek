@@ -1,5 +1,6 @@
 import { lookup, type IndexedCatalog, type PantryInventory, type PlanBundle } from "@zumek/domain";
 import { sumNeeds } from "./shopping";
+import type { Substitutions } from "./types";
 
 const EPSILON = 1e-6;
 
@@ -15,11 +16,16 @@ function unitOf(catalog: IndexedCatalog, canonicalProductId: string) {
  * Comprado menos usado por ingrediente, en unidad base (invariante 3 de la seccion 3).
  * Negativo = el plan consumio despensa que ya existia.
  */
-export function planPantryDelta(bundle: PlanBundle, catalog: IndexedCatalog): Map<string, number> {
+export function planPantryDelta(
+  bundle: PlanBundle,
+  catalog: IndexedCatalog,
+  substitutions: Substitutions = {},
+): Map<string, number> {
   const used = sumNeeds(
     bundle.meals.map((meal) => lookup(catalog.recipeById, meal.recipe_id, "Receta")),
     catalog,
     bundle.plan.people_count,
+    substitutions,
   );
   const delta = new Map([...used].map(([canonicalId, quantity]) => [canonicalId, -quantity]));
   for (const item of bundle.shopping_items) {
@@ -40,6 +46,8 @@ export interface PantryUpdate {
 export interface ClosePlanInput {
   bundle: PlanBundle;
   catalog: IndexedCatalog;
+  /** Cambios de ingrediente del plan: lo usado es el sustituto, no el original. */
+  substitutions?: Substitutions;
   /** Despensa actual del usuario. */
   existing: PantryInventory[];
   updatedAt: string;
@@ -53,7 +61,7 @@ export interface ClosePlanInput {
  * Si el plan uso mas de lo que compro y no habia fila, no se crea nada negativo.
  */
 export function closePlanIntoPantry(input: ClosePlanInput): PantryUpdate {
-  const { bundle, catalog, existing, updatedAt, newId } = input;
+  const { bundle, catalog, substitutions, existing, updatedAt, newId } = input;
   const rows = new Map(
     existing.filter((row) => row.user_id === bundle.plan.user_id).map((row) => [row.canonical_product_id, row]),
   );
@@ -61,7 +69,7 @@ export function closePlanIntoPantry(input: ClosePlanInput): PantryUpdate {
   const upserts: PantryInventory[] = [];
   const deletes: string[] = [];
 
-  for (const [canonicalId, change] of [...planPantryDelta(bundle, catalog)].sort(([a], [b]) => a.localeCompare(b))) {
+  for (const [canonicalId, change] of [...planPantryDelta(bundle, catalog, substitutions)].sort(([a], [b]) => a.localeCompare(b))) {
     if (Math.abs(change) <= EPSILON) continue;
     const row = rows.get(canonicalId);
     const remaining = round((row?.remaining_quantity ?? 0) + change);

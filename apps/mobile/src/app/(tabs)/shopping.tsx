@@ -18,12 +18,15 @@ import { useCatalog } from "../../state/catalog";
 import { useWeek } from "../../state/week";
 
 export default function ShoppingScreen() {
-  const { bundle } = useWeek();
+  const { active, bundle } = useWeek();
   const catalog = useCatalog();
   const [checked, setChecked] = useState<Set<string>>(new Set());
   // Todo se deriva del plan en memoria: no hay nada que esperar ni que pueda fallar al cargar.
   const groups = useMemo(() => (bundle ? groupShoppingByStore(bundle, catalog) : []), [bundle, catalog]);
-  const delta = useMemo(() => (bundle ? planPantryDelta(bundle, catalog) : new Map<string, number>()), [bundle, catalog]);
+  const delta = useMemo(
+    () => (active ? planPantryDelta(active.bundle, catalog, active.substitutions) : new Map<string, number>()),
+    [active, catalog],
+  );
 
   if (!bundle) return <NoActivePlan />;
 

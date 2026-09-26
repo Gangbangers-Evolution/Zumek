@@ -8,25 +8,25 @@ insert into public.store (id, name, slug, active) values
   ('store-soriana', 'Soriana', 'soriana', true)
 on conflict do nothing;
 
-insert into public.canonical_product (id, name, unit_type, category) values
-  ('cp-pechuga-de-pollo', 'Pechuga de pollo', 'mass_g', 'proteina'),
-  ('cp-huevo', 'Huevo', 'unit', 'proteina'),
-  ('cp-frijol-pinto', 'Frijol pinto', 'mass_g', 'grano'),
-  ('cp-arroz', 'Arroz', 'mass_g', 'grano'),
-  ('cp-pasta-spaghetti', 'Pasta spaghetti', 'mass_g', 'grano'),
-  ('cp-avena', 'Avena', 'mass_g', 'grano'),
-  ('cp-tortilla-de-maiz', 'Tortilla de maíz', 'mass_g', 'grano'),
-  ('cp-jitomate', 'Jitomate', 'mass_g', 'verdura'),
-  ('cp-cebolla-blanca', 'Cebolla blanca', 'unit', 'verdura'),
-  ('cp-ajo-dientes', 'Ajo (dientes)', 'unit', 'verdura'),
-  ('cp-chile-serrano', 'Chile serrano', 'unit', 'verdura'),
-  ('cp-cilantro', 'Cilantro', 'mass_g', 'verdura'),
-  ('cp-platano', 'Plátano', 'unit', 'fruta'),
-  ('cp-leche-entera', 'Leche entera', 'volume_ml', 'lacteo'),
-  ('cp-queso-fresco', 'Queso fresco', 'mass_g', 'lacteo'),
-  ('cp-crema', 'Crema', 'volume_ml', 'lacteo'),
-  ('cp-aceite-vegetal', 'Aceite vegetal', 'volume_ml', 'despensa'),
-  ('cp-sal', 'Sal', 'mass_g', 'despensa')
+insert into public.canonical_product (id, name, unit_type, category, allergens) values
+  ('cp-pechuga-de-pollo', 'Pechuga de pollo', 'mass_g', 'proteina', '{}'),
+  ('cp-huevo', 'Huevo', 'unit', 'proteina', '{"huevo"}'),
+  ('cp-frijol-pinto', 'Frijol pinto', 'mass_g', 'grano', '{}'),
+  ('cp-arroz', 'Arroz', 'mass_g', 'grano', '{}'),
+  ('cp-pasta-spaghetti', 'Pasta spaghetti', 'mass_g', 'grano', '{"gluten"}'),
+  ('cp-avena', 'Avena', 'mass_g', 'grano', '{"gluten"}'),
+  ('cp-tortilla-de-maiz', 'Tortilla de maíz', 'mass_g', 'grano', '{}'),
+  ('cp-jitomate', 'Jitomate', 'mass_g', 'verdura', '{}'),
+  ('cp-cebolla-blanca', 'Cebolla blanca', 'unit', 'verdura', '{}'),
+  ('cp-ajo-dientes', 'Ajo (dientes)', 'unit', 'verdura', '{}'),
+  ('cp-chile-serrano', 'Chile serrano', 'unit', 'verdura', '{}'),
+  ('cp-cilantro', 'Cilantro', 'mass_g', 'verdura', '{}'),
+  ('cp-platano', 'Plátano', 'unit', 'fruta', '{}'),
+  ('cp-leche-entera', 'Leche entera', 'volume_ml', 'lacteo', '{"lácteos"}'),
+  ('cp-queso-fresco', 'Queso fresco', 'mass_g', 'lacteo', '{"lácteos"}'),
+  ('cp-crema', 'Crema', 'volume_ml', 'lacteo', '{"lácteos"}'),
+  ('cp-aceite-vegetal', 'Aceite vegetal', 'volume_ml', 'despensa', '{}'),
+  ('cp-sal', 'Sal', 'mass_g', 'despensa', '{}')
 on conflict do nothing;
 
 insert into public.colloquial_unit (term, base_quantity, base_unit) values
