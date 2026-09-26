@@ -19,7 +19,7 @@ export default function ShoppingScreen() {
   const catalog = useCatalog();
   const [state, retry] = useAsync(
     () => (bundle ? loadShoppingList(bundle, catalog) : Promise.resolve([])),
-    [bundle, catalog],
+    bundle, // el catalogo no cambia durante la sesion
   );
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const delta = useMemo(() => (bundle ? planPantryDelta(bundle, catalog) : new Map<string, number>()), [bundle, catalog]);

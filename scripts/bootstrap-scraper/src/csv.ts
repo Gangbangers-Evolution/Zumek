@@ -13,7 +13,7 @@ export function parseCsv(text: string): Array<Record<string, string>> {
   let field = "";
   let record: string[] = [];
   let inQuotes = false;
-  const input = text.replace(/^﻿/, "");
+  const input = text.replace(/^\uFEFF/, "");
   for (let i = 0; i < input.length; i++) {
     const char = input[i]!;
     if (inQuotes) {

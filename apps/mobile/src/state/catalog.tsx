@@ -17,16 +17,24 @@ const CatalogContext = createContext<CatalogContextValue | null>(null);
 export function CatalogProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<CatalogState>({ status: "loading" });
 
-  const load = useCallback(() => {
-    setState({ status: "loading" });
+  // El estado solo cambia cuando la peticion responde; "cargando" es el estado inicial
+  // y el reintento lo vuelve a poner desde el boton (un evento, no un efecto).
+  const fetchCatalog = useCallback(() => {
     loadCatalog()
       .then((catalog) => setState({ status: "ready", catalog }))
       .catch(() => setState({ status: "error" }));
   }, []);
 
-  useEffect(load, [load]);
+  useEffect(() => {
+    fetchCatalog();
+  }, [fetchCatalog]);
 
-  return <CatalogContext.Provider value={{ state, retry: load }}>{children}</CatalogContext.Provider>;
+  const retry = useCallback(() => {
+    setState({ status: "loading" });
+    fetchCatalog();
+  }, [fetchCatalog]);
+
+  return <CatalogContext.Provider value={{ state, retry }}>{children}</CatalogContext.Provider>;
 }
 
 export function useCatalogState(): CatalogContextValue {

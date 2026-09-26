@@ -6,3 +6,4 @@ packages:
 # Dependencias a las que se permite correr scripts de instalacion
 allowBuilds:
   esbuild: true
+  unrs-resolver: true

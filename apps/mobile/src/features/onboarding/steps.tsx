@@ -239,7 +239,7 @@ function StoresStep() {
   );
 }
 
-const SAVINGS_OPTIONS: Array<{ weight: number; label: string; hint: string }> = [
+const SAVINGS_OPTIONS: { weight: number; label: string; hint: string }[] = [
   { weight: 0, label: "Máximo ahorro", hint: "El plan más barato, aunque vayas a más tiendas" },
   { weight: 0.25, label: "Más ahorro", hint: "Prioriza el precio" },
   { weight: 0.5, label: "Balance", hint: "Un poco de todo" },

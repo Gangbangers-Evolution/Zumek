@@ -75,17 +75,15 @@ export default function CookScreen() {
 
 function StepTimer({ seconds }: { seconds: number }) {
   const [remaining, setRemaining] = useState(seconds);
-  const [running, setRunning] = useState(false);
+  const [started, setStarted] = useState(false);
+  // Al llegar a cero se detiene solo: "corriendo" se deriva, no se sincroniza con un efecto.
+  const running = started && remaining > 0;
 
   useEffect(() => {
     if (!running) return;
     const handle = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000);
     return () => clearInterval(handle);
   }, [running]);
-
-  useEffect(() => {
-    if (remaining === 0) setRunning(false);
-  }, [remaining]);
 
   return (
     <View style={styles.timer}>
@@ -103,7 +101,7 @@ function StepTimer({ seconds }: { seconds: number }) {
             label={running ? "Pausar" : "Iniciar"}
             variant="secondary"
             disabled={remaining === 0}
-            onPress={() => setRunning((r) => !r)}
+            onPress={() => setStarted(!running)}
             accessibilityLabel={running ? "Pausar temporizador" : "Iniciar temporizador"}
           />
         </View>
@@ -112,7 +110,7 @@ function StepTimer({ seconds }: { seconds: number }) {
             label="Reiniciar"
             variant="ghost"
             onPress={() => {
-              setRunning(false);
+              setStarted(false);
               setRemaining(seconds);
             }}
             accessibilityLabel="Reiniciar temporizador"

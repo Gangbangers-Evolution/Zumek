@@ -82,7 +82,7 @@ function main() {
   );
 
   const outFile = new URL("../out/review.csv", import.meta.url).pathname;
-  writeFileSync(outFile, "﻿" + toCsv(rows, REVIEW_COLUMNS)); // BOM: Excel/Sheets leen bien los acentos
+  writeFileSync(outFile, "\uFEFF" + toCsv(rows, REVIEW_COLUMNS)); // BOM: Excel/Sheets leen bien los acentos
   const count = (estado: string) => rows.filter((r) => r.estado === estado).length;
   console.log(`${rows.length} candidatos: ${count("ok")} ok, ${count("revisar")} por revisar, ${count("descartado")} descartados`);
 
