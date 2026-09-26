@@ -7,6 +7,12 @@ function round(quantity: number): number {
   return Math.round(quantity * 1000) / 1000;
 }
 
+function unitOf(catalog: Catalog, canonicalProductId: string): UnitType {
+  const product = catalog.canonical_products.find((p) => p.id === canonicalProductId);
+  if (!product) throw new Error(`Producto canonico desconocido en la despensa: ${canonicalProductId}`);
+  return product.unit_type;
+}
+
 /**
  * Comprado menos usado por ingrediente, en unidad base (invariante 3 de la seccion 3).
  * Negativo = el plan consumio despensa que ya existia.
@@ -58,7 +64,6 @@ export interface ClosePlanInput {
  */
 export function closePlanIntoPantry(input: ClosePlanInput): PantryUpdate {
   const { bundle, catalog, existing, updatedAt, newId } = input;
-  const unitOf = new Map<string, UnitType>(catalog.canonical_products.map((p) => [p.id, p.unit_type]));
   const rows = new Map(
     existing.filter((row) => row.user_id === bundle.plan.user_id).map((row) => [row.canonical_product_id, row]),
   );
@@ -80,12 +85,48 @@ export function closePlanIntoPantry(input: ClosePlanInput): PantryUpdate {
       user_id: bundle.plan.user_id,
       canonical_product_id: canonicalId,
       remaining_quantity: remaining,
-      unit: row?.unit ?? unitOf.get(canonicalId) ?? "unit",
+      unit: row?.unit ?? unitOf(catalog, canonicalId),
       source_plan_id: bundle.plan.id,
       updated_at: updatedAt,
     });
   }
   return { upserts, deletes };
+}
+
+export interface DeclarePantryInput {
+  /** canonical_product_id -> cantidad que el usuario dice tener, en unidad base. */
+  declared: Record<string, number>;
+  existing: PantryInventory[];
+  userId: string;
+  catalog: Catalog;
+  updatedAt: string;
+  newId: (canonicalProductId: string) => string;
+}
+
+/**
+ * Lo que el usuario confirma en "¿Qué tienes en casa?" es la fuente de verdad: viene
+ * precargado con su despensa y puede corregirlo (se lo comio, se echo a perder). A diferencia
+ * de cerrar un plan, aqui se REEMPLAZA. Las filas que no cambian conservan id, origen y fecha.
+ */
+export function declarePantry(input: DeclarePantryInput): PantryInventory[] {
+  const { declared, existing, userId, catalog, updatedAt, newId } = input;
+  const mine = new Map(existing.filter((row) => row.user_id === userId).map((row) => [row.canonical_product_id, row]));
+  const declaredRows = Object.entries(declared)
+    .filter(([, quantity]) => quantity > EPSILON)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([canonicalId, quantity]): PantryInventory => {
+      const previous = mine.get(canonicalId);
+      return {
+        id: previous?.id ?? newId(canonicalId),
+        user_id: userId,
+        canonical_product_id: canonicalId,
+        remaining_quantity: quantity,
+        unit: previous?.unit ?? unitOf(catalog, canonicalId),
+        source_plan_id: previous?.source_plan_id ?? null,
+        updated_at: previous?.remaining_quantity === quantity ? previous.updated_at : updatedAt,
+      };
+    });
+  return [...existing.filter((row) => row.user_id !== userId), ...declaredRows];
 }
 
 /** Aplica un PantryUpdate a una lista en memoria (la app lo usa hasta tener Supabase). */

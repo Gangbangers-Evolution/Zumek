@@ -5,8 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorState, LoadingState } from "../components/AsyncStates";
 import { CatalogProvider, useCatalogState } from "../state/catalog";
 import { OnboardingProvider } from "../state/onboarding";
-import { PantryProvider } from "../state/pantry";
-import { PlanProvider } from "../state/plan";
+import { WeekProvider } from "../state/week";
 
 function CatalogGate() {
   const { state, retry } = useCatalogState();
@@ -21,23 +20,25 @@ function CatalogGate() {
     );
   }
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: colors.surface },
-        headerTintColor: colors.primary,
-        headerTitleStyle: { color: colors.textPrimary, fontWeight: typography.fontWeight.semibold },
-        headerShadowVisible: false,
-        contentStyle: { backgroundColor: colors.background },
-        headerBackButtonDisplayMode: "minimal",
-      }}
-    >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="generating" options={{ headerShown: false, gestureEnabled: false }} />
-      <Stack.Screen name="plan" options={{ title: "Tu plan" }} />
-      <Stack.Screen name="shopping" options={{ title: "Lista de compras" }} />
-      <Stack.Screen name="pantry" options={{ title: "Mi despensa" }} />
-      <Stack.Screen name="chat" options={{ title: "Pregúntale a Zumek" }} />
-    </Stack>
+    <WeekProvider>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.primary,
+          headerTitleStyle: { color: colors.textPrimary, fontWeight: typography.fontWeight.semibold },
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: colors.background },
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      >
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="generating" options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="plan" options={{ title: "Tu plan" }} />
+        <Stack.Screen name="shopping" options={{ title: "Lista de compras" }} />
+        <Stack.Screen name="pantry" options={{ title: "Mi despensa" }} />
+        <Stack.Screen name="chat" options={{ title: "Pregúntale a Zumek" }} />
+      </Stack>
+    </WeekProvider>
   );
 }
 
@@ -46,13 +47,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <CatalogProvider>
-        <PantryProvider>
-          <OnboardingProvider>
-            <PlanProvider>
-              <CatalogGate />
-            </PlanProvider>
-          </OnboardingProvider>
-        </PantryProvider>
+        <OnboardingProvider>
+          <CatalogGate />
+        </OnboardingProvider>
       </CatalogProvider>
     </SafeAreaProvider>
   );

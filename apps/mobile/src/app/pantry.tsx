@@ -7,13 +7,11 @@ import { Screen } from "../components/Screen";
 import { useStartPlanning } from "../features/onboarding/use-start-planning";
 import { formatQuantity } from "../lib/quantity";
 import { useCatalog } from "../state/catalog";
-import { usePantry } from "../state/pantry";
-import { usePlan } from "../state/plan";
+import { useWeek } from "../state/week";
 
 export default function PantryScreen() {
   const catalog = useCatalog();
-  const { inventory } = usePantry();
-  const { bundle } = usePlan();
+  const { inventory, bundle } = useWeek();
   const startPlanning = useStartPlanning();
   const nameOf = (id: string) => catalog.canonical_products.find((p) => p.id === id)?.name ?? "Ingrediente";
   const items = [...inventory].sort((a, b) => nameOf(a.canonical_product_id).localeCompare(nameOf(b.canonical_product_id)));

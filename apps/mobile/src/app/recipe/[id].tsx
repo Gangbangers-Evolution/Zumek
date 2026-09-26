@@ -9,12 +9,12 @@ import { capitalize } from "../../lib/labels";
 import { formatWithColloquial, scaleQuantity } from "../../lib/quantity";
 import { useCatalog } from "../../state/catalog";
 import { useOnboarding } from "../../state/onboarding";
-import { usePlan } from "../../state/plan";
+import { useWeek } from "../../state/week";
 
 export default function RecipeScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalog = useCatalog();
-  const { bundle } = usePlan();
+  const { bundle } = useWeek();
   const { state } = useOnboarding();
   const recipe = catalog.recipes.find((r) => r.id === id);
 

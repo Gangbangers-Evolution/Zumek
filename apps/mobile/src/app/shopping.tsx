@@ -1,5 +1,4 @@
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
-import { Redirect } from "expo-router";
 import { planPantryDelta } from "@zumek/planner";
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -12,10 +11,11 @@ import { formatCents } from "../lib/money";
 import { formatQuantity } from "../lib/quantity";
 import { useAsync } from "../lib/use-async";
 import { useCatalog } from "../state/catalog";
-import { usePlan } from "../state/plan";
+import { NoActivePlan } from "../features/onboarding/NoActivePlan";
+import { useWeek } from "../state/week";
 
 export default function ShoppingScreen() {
-  const { bundle } = usePlan();
+  const { bundle } = useWeek();
   const catalog = useCatalog();
   const [state, retry] = useAsync(
     () => (bundle ? loadShoppingList(bundle, catalog) : Promise.resolve([])),
@@ -24,7 +24,7 @@ export default function ShoppingScreen() {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const delta = useMemo(() => (bundle ? planPantryDelta(bundle, catalog) : new Map<string, number>()), [bundle, catalog]);
 
-  if (!bundle) return <Redirect href="/" />;
+  if (!bundle) return <NoActivePlan />;
   if (state.status === "loading") return <LoadingState message="Armando tu lista de compras…" />;
   if (state.status === "error") {
     return <ErrorState message="No pudimos cargar tu lista de compras." onRetry={retry} />;

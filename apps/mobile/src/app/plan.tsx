@@ -1,6 +1,6 @@
 import { MEAL_TYPES, type PlanMeal } from "@zumek/domain";
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "../components/AppText";
 import { Button } from "../components/Button";
@@ -10,20 +10,13 @@ import { StatusBanner } from "../components/StatusBanner";
 import { dayLabel, MEAL_TYPE_LABEL } from "../lib/labels";
 import { formatCents } from "../lib/money";
 import { useCatalog } from "../state/catalog";
-import { usePantry } from "../state/pantry";
-import { usePlan } from "../state/plan";
+import { NoActivePlan } from "../features/onboarding/NoActivePlan";
+import { useWeek } from "../state/week";
 
 export default function PlanScreen() {
-  const { bundle, setBundle } = usePlan();
+  const { bundle, finishWeek } = useWeek();
   const catalog = useCatalog();
-  const { closePlan } = usePantry();
-  if (!bundle) return <Redirect href="/" />;
-
-  const finishWeek = () => {
-    closePlan(bundle, catalog);
-    router.replace("/pantry");
-    setBundle(null);
-  };
+  if (!bundle) return <NoActivePlan />;
 
   const { plan, meals } = bundle;
   const overBy = plan.total_cost_cents - plan.budget_cents;
@@ -105,7 +98,14 @@ export default function PlanScreen() {
           <AppText variant="caption" tone="secondary">
             Guardamos en tu despensa lo que sobró de cada paquete para usarlo primero en tu siguiente plan.
           </AppText>
-          <Button label="Terminé esta semana" variant="secondary" onPress={finishWeek} />
+          <Button
+            label="Terminé esta semana"
+            variant="secondary"
+            onPress={() => {
+              finishWeek();
+              router.replace("/pantry");
+            }}
+          />
         </Card>
       ) : null}
     </Screen>

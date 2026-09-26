@@ -7,8 +7,10 @@ export { scaleQuantity } from "./shopping";
 export {
   applyPantryUpdate,
   closePlanIntoPantry,
+  declarePantry,
   planPantryDelta,
   type ClosePlanInput,
+  type DeclarePantryInput,
   type PantryUpdate,
 } from "./pantry";
 

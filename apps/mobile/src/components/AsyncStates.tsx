@@ -34,6 +34,31 @@ export function ErrorState({
   );
 }
 
+/** Pantalla sin datos que mostrar, con una accion para salir de ahi. */
+export function EmptyState({
+  title,
+  message,
+  actionLabel,
+  onAction,
+}: {
+  title: string;
+  message: string;
+  actionLabel: string;
+  onAction: () => void;
+}) {
+  return (
+    <View style={styles.center}>
+      <AppText variant="heading" style={styles.text}>
+        {title}
+      </AppText>
+      <AppText tone="secondary" style={styles.text}>
+        {message}
+      </AppText>
+      <Button label={actionLabel} onPress={onAction} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   center: {
     flex: 1,

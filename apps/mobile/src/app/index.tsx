@@ -5,11 +5,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "../components/AppText";
 import { Button } from "../components/Button";
 import { useStartPlanning } from "../features/onboarding/use-start-planning";
-import { usePlan } from "../state/plan";
+import { useWeek } from "../state/week";
 
 export default function Welcome() {
   const startPlanning = useStartPlanning();
-  const { bundle } = usePlan();
+  const { bundle } = useWeek();
 
   return (
     <SafeAreaView style={styles.safe}>

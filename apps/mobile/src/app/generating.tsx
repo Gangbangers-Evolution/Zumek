@@ -4,14 +4,12 @@ import { ErrorState, LoadingState } from "../components/AsyncStates";
 import { generatePlan } from "../data/plan-source";
 import { useCatalog } from "../state/catalog";
 import { useOnboarding } from "../state/onboarding";
-import { usePantry } from "../state/pantry";
-import { usePlan } from "../state/plan";
+import { useWeek } from "../state/week";
 
 export default function Generating() {
   const { state } = useOnboarding();
   const catalog = useCatalog();
-  const { replaceWithDeclared } = usePantry();
-  const { setBundle } = usePlan();
+  const { planGenerated } = useWeek();
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
@@ -25,8 +23,7 @@ export default function Generating() {
     generatePlan(state, catalog)
       .then((bundle) => {
         if (cancelled) return;
-        replaceWithDeclared(state.pantry, catalog);
-        setBundle(bundle);
+        planGenerated(bundle, state.pantry);
         router.replace("/plan");
       })
       .catch(() => {

@@ -1,7 +1,7 @@
 import type { PantryInventory } from "@zumek/domain";
 import { buildSampleCatalog } from "@zumek/catalog-data";
 import { describe, expect, it } from "vitest";
-import { applyPantryUpdate, closePlanIntoPantry, planPantryDelta } from "./index";
+import { applyPantryUpdate, closePlanIntoPantry, declarePantry, planPantryDelta } from "./index";
 import { catalog, plan, prefs } from "./test-helpers";
 
 const sampleCatalog = buildSampleCatalog();
@@ -134,5 +134,40 @@ describe("despensa al cerrar un plan (invariante 3)", () => {
       const after = final.find((r) => r.canonical_product_id === canonical)?.remaining_quantity ?? 0;
       expect(after).toBeCloseTo(Math.max(0, before + change), 3);
     }
+  });
+});
+
+describe("despensa declarada en el onboarding", () => {
+  function declare(declared: Record<string, number>, existing: PantryInventory[] = []) {
+    return declarePantry({
+      declared,
+      existing,
+      userId: "u1",
+      catalog: cat,
+      updatedAt: "2026-09-27T00:00:00Z",
+      newId: (canonical) => `new-${canonical}`,
+    });
+  }
+
+  it("reemplaza (no suma): lo declarado es la fuente de verdad", () => {
+    const result = declare({ arroz: 100 }, [row("arroz", 500), row("pollo", 300)]);
+    expect(result).toEqual([
+      expect.objectContaining({ id: "row-arroz", canonical_product_id: "arroz", remaining_quantity: 100 }),
+    ]);
+  });
+
+  it("filas nuevas sin plan de origen; las que no cambian conservan origen y fecha", () => {
+    const [nueva, igual] = declare({ pollo: 250, arroz: 500 }, [row("arroz", 500)]).sort((a, b) => a.id.localeCompare(b.id));
+    expect(nueva).toMatchObject({ id: "new-pollo", source_plan_id: null, updated_at: "2026-09-27T00:00:00Z" });
+    expect(igual).toMatchObject({ id: "row-arroz", source_plan_id: "plan-anterior", updated_at: "2026-09-01T00:00:00Z" });
+  });
+
+  it("no toca la despensa de otros usuarios", () => {
+    const ajena = { ...row("pollo", 999, "ajena"), user_id: "otro" };
+    expect(declare({}, [ajena])).toEqual([ajena]);
+  });
+
+  it("truena con un producto que no existe en el catalogo", () => {
+    expect(() => declare({ "no-existe": 1 })).toThrow(/desconocido/);
   });
 });

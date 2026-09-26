@@ -143,7 +143,8 @@ export interface PantryInventory {
   /** En unidad base. */
   remaining_quantity: number;
   unit: UnitType;
-  source_plan_id: Id;
+  /** null cuando la fila la declaro el usuario y no viene de cerrar un plan. */
+  source_plan_id: Id | null;
   updated_at: Timestamp;
 }
 
