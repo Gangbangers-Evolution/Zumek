@@ -112,7 +112,13 @@ La app **nunca** llama a AWS directo. Solo la Edge Function conoce las llaves.
 
 ### Plan B si los créditos no cubren Bedrock
 
-Se cambia solo el proveedor. Por ejemplo, la API de Claude directa (`@anthropic-ai/sdk`, secret `ANTHROPIC_API_KEY`, modelo `claude-opus-5`). Las tools, el límite de uso, la confirmación y la app se quedan igual.
+La función ya soporta la API de Claude directa, sin cambiar código:
+
+1. Crear una API key en [platform.claude.com](https://platform.claude.com) (requiere saldo en la cuenta).
+2. Guardarla como secret `ANTHROPIC_API_KEY` en Supabase. Opcional: `ANTHROPIC_MODEL` (por defecto `claude-opus-5`).
+3. Volver a desplegar: `supabase functions deploy chat`.
+
+Si existe `ANTHROPIC_API_KEY`, la función la usa; si no, usa Bedrock. Las tools, el límite de uso, la confirmación y la app se quedan igual.
 
 ---
 

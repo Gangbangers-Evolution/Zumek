@@ -1,5 +1,5 @@
 import { AnthropicBedrockMantle } from "npm:@anthropic-ai/bedrock-sdk";
-import type Anthropic from "npm:@anthropic-ai/sdk";
+import Anthropic from "npm:@anthropic-ai/sdk";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import {
   loadPlanContext,
@@ -11,9 +11,14 @@ import {
   validateProposal,
 } from "./tools.ts";
 
-// AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY se leen solas de los secrets.
-const client = new AnthropicBedrockMantle({ awsRegion: Deno.env.get("AWS_REGION")! });
-const MODEL = Deno.env.get("BEDROCK_MODEL_ID")!;
+// Proveedor segun los secrets: con ANTHROPIC_API_KEY se usa la API de Claude directa;
+// si no, AWS Bedrock (AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY se leen solas).
+// Las dos exponen la misma API de messages, el resto de la funcion no cambia.
+const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+const client = ANTHROPIC_API_KEY
+  ? new Anthropic({ apiKey: ANTHROPIC_API_KEY })
+  : new AnthropicBedrockMantle({ awsRegion: Deno.env.get("AWS_REGION")! });
+const MODEL = ANTHROPIC_API_KEY ? (Deno.env.get("ANTHROPIC_MODEL") ?? "claude-opus-5") : Deno.env.get("BEDROCK_MODEL_ID")!;
 const RATE_LIMIT_PER_MINUTE = 10;
 const MAX_TOOL_ROUNDS = 4;
 const MAX_MESSAGES = 20;
