@@ -11,6 +11,7 @@ import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Icon } from "../components/Icon";
 import { IconTile } from "../components/IconTile";
+import { ProgressBar } from "../components/ProgressBar";
 import { generatePlan } from "../data/plan-source";
 import { EXAMPLES } from "../features/examples";
 import { formatCents } from "../lib/money";
@@ -71,10 +72,13 @@ export default function Generating() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.column}>
           <View style={styles.hero}>
-            <View style={styles.mascot}>
-              <Icon name="restaurant" size={44} color={colors.primary} />
+            <View style={styles.mascotHalo}>
+              <View style={styles.mascot}>
+                <Icon name="restaurant" size={44} color={colors.primary} />
+              </View>
+              {/* El presupuesto va encimado en la base de la mascota, como en el mockup */}
+              <Badge label={budget} tone="savings" icon="savings" style={styles.budgetBadge} />
             </View>
-            <Badge label={budget} tone="savings" icon="savings" />
             <AppText variant="headlineLg" style={styles.center} accessibilityRole="header">
               {done ? "¡Tu plan está listo!" : "Creando tu plan a la medida…"}
             </AppText>
@@ -84,9 +88,26 @@ export default function Generating() {
           </View>
 
           <Card>
-            <AppText variant="labelSm" tone="muted">
-              PASOS DE CÁLCULO
-            </AppText>
+            <View style={styles.progressRow}>
+              <AppText variant="labelMd" style={styles.flex}>
+                {done ? "Optimización completa" : "Optimizando alacena y supermercado"}
+              </AppText>
+              <AppText variant="labelMd" tone="muted">
+                {done ? "100%" : "…"}
+              </AppText>
+            </View>
+            <ProgressBar value={done ? 1 : 0.3} max={1} label={done ? "Plan listo" : "Generando plan"} height={8} />
+          </Card>
+
+          <Card>
+            <View style={styles.progressRow}>
+              <AppText variant="labelSm" tone="muted" style={styles.flex}>
+                PASOS DE CÁLCULO
+              </AppText>
+              <AppText variant="labelSm" tone="savings">
+                {done ? `${steps.length} de ${steps.length}` : `En curso`}
+              </AppText>
+            </View>
             {steps.map((step) => (
               <View key={step.title} style={styles.step}>
                 {done ? <IconTile name="check" tone="savings" size={28} /> : <ActivityIndicator color={colors.primary} />}
@@ -100,14 +121,25 @@ export default function Generating() {
             ))}
           </Card>
 
-          <Card tone="accent">
-            <View style={styles.step}>
-              <Icon name="lightbulb" color={colors.onPrimaryFixedVariant} />
+          <Card style={styles.tip}>
+            <View style={styles.tipRow}>
+              <View style={styles.tipIcon}>
+                <Icon name="lightbulb" size={20} color={colors.onPrimary} />
+              </View>
               <View style={styles.flex}>
-                <AppText variant="labelMd" style={{ color: colors.onPrimaryFixedVariant }}>
-                  ¿Sabías esto?
+                <AppText variant="labelMd">¿Sabías esto?</AppText>
+                <AppText>
+                  {/* Cifras (porcentajes y montos) resaltadas en verde, como en el mockup */}
+                  {EXAMPLES.generatingTip.split(/(\d+%|\$[\d,.]+ MXN)/).map((part, i) =>
+                    i % 2 === 1 ? (
+                      <AppText key={i} variant="labelMd" tone="savings">
+                        {part}
+                      </AppText>
+                    ) : (
+                      part
+                    ),
+                  )}
                 </AppText>
-                <AppText style={{ color: colors.onPrimaryFixedVariant }}>{EXAMPLES.generatingTip}</AppText>
               </View>
             </View>
           </Card>
@@ -118,6 +150,12 @@ export default function Generating() {
             loading={!done}
             onPress={() => router.replace("/plan")}
           />
+          <View style={styles.privacy}>
+            <Icon name="lock" size={14} color={colors.onSurfaceVariant} />
+            <AppText variant="caption" tone="muted">
+              Tus preferencias culinarias están seguras y personalizadas
+            </AppText>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -129,14 +167,34 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1, padding: spacing.md },
   column: { width: "100%", maxWidth: layout.maxContentWidth, alignSelf: "center", gap: spacing.md },
   hero: { alignItems: "center", gap: spacing.sm, paddingVertical: spacing.md },
+  mascotHalo: {
+    padding: spacing.md,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primaryFixed,
+    alignItems: "center",
+    marginBottom: spacing.sm,
+  },
   mascot: {
     width: 104,
     height: 104,
     borderRadius: radius.pill,
-    backgroundColor: colors.primaryFixed,
+    backgroundColor: colors.surfaceContainerLowest,
     alignItems: "center",
     justifyContent: "center",
   },
+  budgetBadge: { position: "absolute", bottom: -spacing.xs, alignSelf: "center" },
+  progressRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  tip: { borderColor: colors.primaryContainer, backgroundColor: colors.primaryFixed },
+  tipRow: { flexDirection: "row", gap: spacing.md },
+  tipIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    backgroundColor: colors.onSurface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  privacy: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: spacing.xs },
   center: { textAlign: "center" },
   step: { flexDirection: "row", alignItems: "center", gap: spacing.md, minHeight: 40 },
   flex: { flex: 1, gap: spacing.xxs },

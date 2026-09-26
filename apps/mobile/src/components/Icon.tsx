@@ -21,6 +21,7 @@ const ICONS = {
   group: { ios: "person.2", android: "group", web: "group" },
   home: { ios: "house", android: "home", web: "home" },
   kitchen: { ios: "refrigerator", android: "kitchen", web: "kitchen" },
+  lock: { ios: "lock", android: "lock", web: "lock" },
   lightbulb: { ios: "lightbulb", android: "lightbulb", web: "lightbulb" },
   pause: { ios: "pause.fill", android: "pause", web: "pause" },
   play: { ios: "play.fill", android: "play_arrow", web: "play_arrow" },

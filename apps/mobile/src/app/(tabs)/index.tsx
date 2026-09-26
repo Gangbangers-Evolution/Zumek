@@ -24,7 +24,7 @@ export default function Welcome() {
           <AppText variant="headlineXl" accessibilityRole="header">
             Zumek
           </AppText>
-          <Badge label="PLANIFICA & AHORRA" />
+          <Badge label="PLANIFICA & AHORRA" style={styles.centerSelf} />
           <AppText variant="bodyLg" tone="muted" style={styles.center}>
             Planifica tus comidas, cuida tu bolsillo y come delicioso cada día.
           </AppText>
