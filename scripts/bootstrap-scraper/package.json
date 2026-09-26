@@ -1,0 +1,23 @@
+{
+  "name": "@zumek/bootstrap-scraper",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Script desechable de una sola corrida supervisada (Fase 5). No lo consume la app.",
+  "scripts": {
+    "scrape": "tsx src/scrape.ts",
+    "review": "tsx src/review.ts",
+    "seed": "tsx src/seed.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.2"
+  }
+}

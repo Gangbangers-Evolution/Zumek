@@ -1,0 +1,23 @@
+{
+  "_instrucciones": "Un objeto por producto conceptual (canonical_product). search = lo que se escribe en el buscador de la tienda. require = palabras que DEBE tener el nombre del producto de tienda. exclude = palabras que lo descartan. Todo se compara sin acentos y en minusculas.",
+  "products": [
+    { "name": "Pechuga de pollo", "unit_type": "mass_g", "category": "proteina", "search": "pechuga de pollo", "require": ["pechuga", "pollo"], "exclude": ["empaniz", "nugget", "jamon", "salchicha", "sopa", "caldo", "consome", "pavo"] },
+    { "name": "Huevo", "unit_type": "unit", "category": "proteina", "search": "huevo blanco", "require": ["huevo"], "exclude": ["pascua", "chocolate", "kinder", "polvo", "liquido"] },
+    { "name": "Frijol pinto", "unit_type": "mass_g", "category": "grano", "search": "frijol pinto", "require": ["frijol", "pinto"], "exclude": ["refrito", "lata", "sopa"] },
+    { "name": "Arroz", "unit_type": "mass_g", "category": "grano", "search": "arroz blanco", "require": ["arroz"], "exclude": ["leche", "inflado", "cereal", "galleta", "precocido", "sabor"] },
+    { "name": "Pasta spaghetti", "unit_type": "mass_g", "category": "grano", "search": "spaghetti", "require": ["spaghetti"], "exclude": ["salsa", "lata", "preparad"] },
+    { "name": "Avena", "unit_type": "mass_g", "category": "grano", "search": "avena en hojuelas", "require": ["avena"], "exclude": ["galleta", "barra", "bebida", "leche", "cereal"] },
+    { "name": "Tortilla de maíz", "unit_type": "mass_g", "category": "grano", "search": "tortilla de maiz", "require": ["tortilla", "maiz"], "exclude": ["tostada", "chips", "totopo", "harina"] },
+    { "name": "Jitomate", "unit_type": "mass_g", "category": "verdura", "search": "jitomate saladet", "require": ["jitomate"], "exclude": ["pure", "salsa", "lata", "deshidratad", "cherry"] },
+    { "name": "Cebolla blanca", "unit_type": "unit", "category": "verdura", "search": "cebolla blanca", "require": ["cebolla"], "exclude": ["polvo", "morada", "cambray", "aros"] },
+    { "name": "Ajo (dientes)", "unit_type": "unit", "category": "verdura", "search": "ajo", "require": ["ajo"], "exclude": ["polvo", "sal", "pan", "aceite"] },
+    { "name": "Chile serrano", "unit_type": "unit", "category": "verdura", "search": "chile serrano", "require": ["serrano"], "exclude": ["lata", "encurtid", "salsa"] },
+    { "name": "Cilantro", "unit_type": "mass_g", "category": "verdura", "search": "cilantro", "require": ["cilantro"], "exclude": ["deshidratad", "seco"] },
+    { "name": "Plátano", "unit_type": "unit", "category": "fruta", "search": "platano tabasco", "require": ["platano"], "exclude": ["macho", "chips", "deshidratad", "pure"] },
+    { "name": "Leche entera", "unit_type": "volume_ml", "category": "lacteo", "search": "leche entera", "require": ["leche"], "exclude": ["polvo", "condensada", "evaporada", "sabor", "deslactosada", "light", "almendra", "soya", "avena"] },
+    { "name": "Queso fresco", "unit_type": "mass_g", "category": "lacteo", "search": "queso fresco", "require": ["queso", "fresco"], "exclude": ["crema", "untable"] },
+    { "name": "Crema", "unit_type": "volume_ml", "category": "lacteo", "search": "crema acida", "require": ["crema"], "exclude": ["cacahuate", "batida", "facial", "corporal", "cafe", "dental", "avellana"] },
+    { "name": "Aceite vegetal", "unit_type": "volume_ml", "category": "despensa", "search": "aceite vegetal", "require": ["aceite"], "exclude": ["oliva", "motor", "bebe", "corporal", "spray", "coco"] },
+    { "name": "Sal", "unit_type": "mass_g", "category": "despensa", "search": "sal de mesa", "require": ["sal"], "exclude": ["salsa", "salchicha", "salmon", "ajo", "grano", "saladas", "galleta"] }
+  ]
+}
