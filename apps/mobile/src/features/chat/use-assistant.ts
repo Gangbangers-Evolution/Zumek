@@ -54,7 +54,7 @@ export function useAssistant({ greeting, cooking }: { greeting: string; cooking?
       { role: "user", content: text },
     ];
     try {
-      const reply = await askZumek({ messages: history, planId: plan.bundle.plan.id, cooking }, plan.bundle);
+      const reply = await askZumek({ messages: history, planId: plan.bundle.plan.id, cooking }, plan, catalog);
       const current = activeRef.current;
       let proposal: Proposal | undefined;
       // En modo cocina no se cambia el plan: solo se responden dudas.

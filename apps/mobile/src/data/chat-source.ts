@@ -1,35 +1,25 @@
-// Chat y asistente de cocina: con Supabase configurado habla con la Edge Function 'chat'
-// (Fase 6). Sin Supabase (desarrollo con datos de ejemplo) responde un demo local que
-// propone cambios reales: el costo siempre lo calcula el planner, nunca un texto fijo.
-import type { PlanBundle } from "@zumek/domain";
+// Chat y asistente de cocina. Dos modos, segun EXPO_PUBLIC_CHAT_MODE:
+// - "ia": la Edge Function 'chat' (Fase 6) con el LLM. Requiere Supabase.
+// - cualquier otro valor (por defecto): respuestas preconfiguradas en el dispositivo.
+// En los dos, las propuestas de cambio las calcula el planner, nunca un texto fijo.
+import type { IndexedCatalog } from "@zumek/domain";
 import { askChat, type ChatReply, type ChatRequest } from "@zumek/supabase-client";
+import { scriptedReply } from "../features/chat/scripted";
+import type { ActivePlan } from "./plan-source";
 import { getSupabase } from "./supabase";
 
 export { ChatError, type ChatProposal, type ChatTurn } from "@zumek/supabase-client";
 
-export async function askZumek(request: ChatRequest, bundle: PlanBundle): Promise<ChatReply> {
-  const supabase = getSupabase();
-  if (supabase) return askChat(supabase, request);
-  return offlineDemo(request, bundle);
-}
+const WANTS_IA = process.env.EXPO_PUBLIC_CHAT_MODE === "ia";
 
-async function offlineDemo(request: ChatRequest, bundle: PlanBundle): Promise<ChatReply> {
-  await new Promise((resolve) => setTimeout(resolve, 600));
-  if (request.cooking) {
-    return { text: "El asistente de cocina necesita conexión. Mientras tanto, sigue el paso en pantalla." };
-  }
-  const text = request.messages.at(-1)?.content.toLowerCase() ?? "";
-  const meal = bundle.meals[0];
-  if (meal && /barat|ahorr|cambi/.test(text)) {
-    return {
-      text: "Modo sin conexión: te propongo cambiar la primera comida de tu semana.",
-      proposal: {
-        tool: "swap_recipe",
-        input: { day_index: meal.day_index, meal_type: meal.meal_type, exclude_recipe_id: meal.recipe_id },
-      },
-    };
-  }
-  return {
-    text: 'Modo sin conexión: puedo proponerte cambios básicos. Prueba con "hazlo más barato".',
-  };
+/** true: el chat responde con textos preconfigurados (la UI lo avisa). */
+export const CHAT_IS_DEMO = !WANTS_IA || !process.env.EXPO_PUBLIC_SUPABASE_URL;
+
+export async function askZumek(request: ChatRequest, active: ActivePlan, catalog: IndexedCatalog): Promise<ChatReply> {
+  // El cliente se pide al usarse, no al importar (en web el import corre sin window).
+  const supabase = CHAT_IS_DEMO ? null : getSupabase();
+  if (supabase) return askChat(supabase, request);
+  // Pausa corta para que se note el "escribiendo"; el calculo es instantaneo.
+  await new Promise((resolve) => setTimeout(resolve, 700));
+  return scriptedReply(request.messages.at(-1)?.content ?? "", { active, catalog, cooking: request.cooking });
 }

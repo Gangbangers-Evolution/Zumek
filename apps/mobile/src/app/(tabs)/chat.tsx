@@ -3,10 +3,12 @@ import { useRef, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "../../components/AppText";
+import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
 import { IconTile } from "../../components/IconTile";
+import { CHAT_IS_DEMO } from "../../data/chat-source";
 import { EXAMPLES } from "../../features/examples";
 import { useAssistant, type AssistantMessage } from "../../features/chat/use-assistant";
 import { formatCents, formatDeltaCents } from "../../lib/money";
@@ -36,6 +38,7 @@ export default function ChatScreen() {
           onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
         >
           <View style={styles.column}>
+            {CHAT_IS_DEMO ? <Badge label="Modo demo · respuestas preconfiguradas" tone="neutral" icon="smartToy" style={styles.centerSelf} /> : null}
             {messages.map((m) =>
               m.role === "user" ? (
                 <View key={m.id} style={[styles.bubble, styles.user]}>
@@ -175,6 +178,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: radius.sm,
   },
   proposal: { gap: spacing.sm, ...elevation.floating },
+  centerSelf: { alignSelf: "center" },
   note: { flexDirection: "row", gap: spacing.xs, alignItems: "flex-start" },
   composerBar: {
     borderTopWidth: 1,
