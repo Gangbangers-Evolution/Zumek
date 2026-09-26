@@ -3,32 +3,24 @@ import { planPantryDelta } from "@zumek/planner";
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "../components/AppText";
-import { ErrorState, LoadingState } from "../components/AsyncStates";
 import { Card } from "../components/Card";
 import { Screen } from "../components/Screen";
-import { loadShoppingList, type ShoppingRow } from "../data/shopping-source";
 import { formatCents } from "../lib/money";
 import { formatQuantity } from "../lib/quantity";
-import { useAsync } from "../lib/use-async";
 import { useCatalog } from "../state/catalog";
 import { NoActivePlan } from "../features/onboarding/NoActivePlan";
+import { groupShoppingByStore, type ShoppingRow } from "../features/shopping/group-by-store";
 import { useWeek } from "../state/week";
 
 export default function ShoppingScreen() {
   const { bundle } = useWeek();
   const catalog = useCatalog();
-  const [state, retry] = useAsync(
-    () => (bundle ? loadShoppingList(bundle, catalog) : Promise.resolve([])),
-    bundle, // el catalogo no cambia durante la sesion
-  );
   const [checked, setChecked] = useState<Set<string>>(new Set());
+  // Todo se deriva del plan en memoria: no hay nada que esperar ni que pueda fallar al cargar.
+  const groups = useMemo(() => (bundle ? groupShoppingByStore(bundle, catalog) : []), [bundle, catalog]);
   const delta = useMemo(() => (bundle ? planPantryDelta(bundle, catalog) : new Map<string, number>()), [bundle, catalog]);
 
   if (!bundle) return <NoActivePlan />;
-  if (state.status === "loading") return <LoadingState message="Armando tu lista de compras…" />;
-  if (state.status === "error") {
-    return <ErrorState message="No pudimos cargar tu lista de compras." onRetry={retry} />;
-  }
 
   const toggle = (id: string) =>
     setChecked((prev) => {
@@ -50,7 +42,7 @@ export default function ShoppingScreen() {
         </AppText>
       </Card>
 
-      {state.data.map((group) => (
+      {groups.map((group) => (
         <View key={group.store.id} style={styles.group}>
           <View style={styles.between}>
             <AppText variant="heading" accessibilityRole="header">
