@@ -1,0 +1,9 @@
+{
+  "_instrucciones": "Terminos coloquiales -> cantidad en unidad base (seccion 2). Solo mass_g o volume_ml. La app los usa para mostrar 'pizca de sal (1 g)'; el planner nunca los ve.",
+  "units": [
+    { "term": "pizca", "base_quantity": 1, "base_unit": "mass_g" },
+    { "term": "cucharadita", "base_quantity": 5, "base_unit": "volume_ml" },
+    { "term": "cucharada", "base_quantity": 15, "base_unit": "volume_ml" },
+    { "term": "taza", "base_quantity": 240, "base_unit": "volume_ml" }
+  ]
+}

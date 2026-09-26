@@ -5,6 +5,8 @@ export interface CanonicalSpec {
   name: string;
   unit_type: UnitType;
   category: string;
+  /** Alergenos que aporta a cualquier receta que lo use (solo para validar recetas). */
+  allergens: string[];
   search: string;
   require: string[];
   exclude: string[];

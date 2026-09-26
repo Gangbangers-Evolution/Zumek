@@ -85,6 +85,7 @@ const pollo: CanonicalSpec = {
   name: "Pechuga de pollo",
   unit_type: "mass_g",
   category: "proteina",
+  allergens: [],
   search: "pechuga de pollo",
   require: ["pechuga", "pollo"],
   exclude: ["empaniz", "nugget"],

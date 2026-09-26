@@ -1,0 +1,138 @@
+{
+  "_instrucciones": "Ver README.md. Cantidades en unidad base del producto (g, ml o piezas) con 'quantity', o con 'amount' + 'unit' coloquial (pizca, cucharadita, cucharada, taza). Correr 'pnpm validate' despues de cada cambio.",
+  "recipes": [
+    {
+      "name": "Tacos de pollo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["rápida", "alta en proteína"],
+      "prep_time_minutes": 25,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 500 },
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Cilantro", "quantity": 20 },
+        { "product": "Aceite vegetal", "amount": 1, "unit": "cucharada" },
+        { "product": "Sal", "amount": 2, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Cocer el pollo", "content": "Pon la pechuga en una olla con agua y sal. Deja hervir a fuego medio.", "timer_seconds": 900 },
+        { "title": "Deshebrar", "content": "Saca el pollo, deja que se enfríe un poco y deshébralo con dos tenedores.", "timer_seconds": null },
+        { "title": "Picar", "content": "Pica la cebolla y el cilantro finamente.", "timer_seconds": null },
+        { "title": "Calentar tortillas", "content": "Calienta las tortillas en un comal con un poco de aceite y arma los tacos.", "timer_seconds": 120 }
+      ]
+    },
+    {
+      "name": "Arroz con pollo",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida"],
+      "tags": ["alta en proteína"],
+      "prep_time_minutes": 45,
+      "servings_base": 4,
+      "allergens": [],
+      "ingredients": [
+        { "product": "Pechuga de pollo", "quantity": 400 },
+        { "product": "Arroz", "quantity": 300 },
+        { "product": "Jitomate", "quantity": 250 },
+        { "product": "Cebolla blanca", "quantity": 1 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 3, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Dorar el arroz", "content": "Calienta el aceite y dora el arroz hasta que se vea transparente.", "timer_seconds": 300 },
+        { "title": "Licuar", "content": "Licúa el jitomate con la cebolla, el ajo y una taza de agua.", "timer_seconds": null },
+        { "title": "Cocer", "content": "Agrega el licuado, el pollo en trozos y sal. Tapa y cocina a fuego bajo.", "timer_seconds": 1500 },
+        { "title": "Reposar", "content": "Apaga el fuego y deja reposar tapado antes de servir.", "timer_seconds": 300 }
+      ]
+    },
+    {
+      "name": "Huevos a la mexicana",
+      "cuisine": "Mexicana",
+      "meal_type": ["desayuno", "cena"],
+      "tags": ["rápida", "económica"],
+      "prep_time_minutes": 15,
+      "servings_base": 2,
+      "allergens": ["huevo"],
+      "ingredients": [
+        { "product": "Huevo", "quantity": 4 },
+        { "product": "Jitomate", "quantity": 150 },
+        { "product": "Cebolla blanca", "quantity": 0.5 },
+        { "product": "Chile serrano", "quantity": 1 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharadita" },
+        { "product": "Sal", "amount": 1, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Picar", "content": "Pica el jitomate, la cebolla y el chile serrano.", "timer_seconds": null },
+        { "title": "Sofreír", "content": "Sofríe la verdura en aceite caliente.", "timer_seconds": 180 },
+        { "title": "Agregar huevo", "content": "Agrega los huevos batidos con sal y mueve hasta que cuajen.", "timer_seconds": 240 }
+      ]
+    },
+    {
+      "name": "Spaghetti con jitomate",
+      "cuisine": "Italiana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["económica"],
+      "prep_time_minutes": 30,
+      "servings_base": 4,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Pasta spaghetti", "quantity": 400 },
+        { "product": "Jitomate", "quantity": 500 },
+        { "product": "Ajo (dientes)", "quantity": 2 },
+        { "product": "Aceite vegetal", "amount": 2, "unit": "cucharada" },
+        { "product": "Sal", "amount": 3, "unit": "pizca" },
+        { "product": "Queso fresco", "quantity": 100 }
+      ],
+      "steps": [
+        { "title": "Cocer la pasta", "content": "Hierve agua con sal y cuece la pasta.", "timer_seconds": 600 },
+        { "title": "Salsa", "content": "Sofríe el ajo en aceite, agrega el jitomate picado y cocina hasta que espese.", "timer_seconds": 600 },
+        { "title": "Servir", "content": "Mezcla la pasta con la salsa y sirve con queso desmoronado.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Enfrijoladas",
+      "cuisine": "Mexicana",
+      "meal_type": ["comida", "cena"],
+      "tags": ["económica"],
+      "prep_time_minutes": 35,
+      "servings_base": 4,
+      "allergens": ["lácteos"],
+      "ingredients": [
+        { "product": "Frijol pinto", "quantity": 300 },
+        { "product": "Tortilla de maíz", "quantity": 400 },
+        { "product": "Queso fresco", "quantity": 150 },
+        { "product": "Crema", "quantity": 100 },
+        { "product": "Cebolla blanca", "quantity": 0.5 },
+        { "product": "Aceite vegetal", "quantity": 20 },
+        { "product": "Sal", "amount": 3, "unit": "pizca" }
+      ],
+      "steps": [
+        { "title": "Licuar frijoles", "content": "Licúa los frijoles cocidos con un poco de su caldo y cebolla.", "timer_seconds": null },
+        { "title": "Calentar salsa", "content": "Calienta el licuado en una olla con sal hasta que hierva.", "timer_seconds": 300 },
+        { "title": "Pasar tortillas", "content": "Pasa las tortillas por aceite caliente y luego por la salsa de frijol.", "timer_seconds": null },
+        { "title": "Servir", "content": "Dobla las tortillas y sirve con crema y queso.", "timer_seconds": null }
+      ]
+    },
+    {
+      "name": "Avena con plátano",
+      "cuisine": "Mexicana",
+      "meal_type": ["desayuno"],
+      "tags": ["rápida", "económica"],
+      "prep_time_minutes": 10,
+      "servings_base": 2,
+      "allergens": ["gluten", "lácteos"],
+      "ingredients": [
+        { "product": "Avena", "quantity": 100 },
+        { "product": "Leche entera", "quantity": 500 },
+        { "product": "Plátano", "quantity": 2 }
+      ],
+      "steps": [
+        { "title": "Hervir", "content": "Calienta la leche con la avena a fuego medio moviendo seguido.", "timer_seconds": 420 },
+        { "title": "Servir", "content": "Sirve y agrega el plátano en rodajas.", "timer_seconds": null }
+      ]
+    }
+  ]
+}
