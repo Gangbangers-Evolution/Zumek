@@ -1,38 +1,40 @@
 import { spacing } from "@zumek/design-tokens";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "../components/AppText";
-import { ErrorState, LoadingState } from "../components/AsyncStates";
+import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Screen } from "../components/Screen";
-import { loadPantry } from "../data/pantry-source";
+import { useStartPlanning } from "../features/onboarding/use-start-planning";
 import { formatQuantity } from "../lib/quantity";
-import { useAsync } from "../lib/use-async";
 import { useCatalog } from "../state/catalog";
+import { usePantry } from "../state/pantry";
+import { usePlan } from "../state/plan";
 
 export default function PantryScreen() {
   const catalog = useCatalog();
-  const [state, retry] = useAsync(loadPantry, []);
-
-  if (state.status === "loading") return <LoadingState message="Revisando tu despensa…" />;
-  if (state.status === "error") return <ErrorState message="No pudimos cargar tu despensa." onRetry={retry} />;
+  const { inventory } = usePantry();
+  const { bundle } = usePlan();
+  const startPlanning = useStartPlanning();
+  const nameOf = (id: string) => catalog.canonical_products.find((p) => p.id === id)?.name ?? "Ingrediente";
+  const items = [...inventory].sort((a, b) => nameOf(a.canonical_product_id).localeCompare(nameOf(b.canonical_product_id)));
 
   return (
-    <Screen>
+    <Screen footer={bundle ? null : <Button label="Planear otra semana" onPress={startPlanning} />}>
       <AppText tone="secondary">
         Lo que te sobra de semanas anteriores. Lo usamos primero al armar tu siguiente plan.
       </AppText>
-      {state.data.length === 0 ? (
+      {items.length === 0 ? (
         <Card>
           <AppText variant="label">Tu despensa está vacía</AppText>
-          <AppText tone="secondary">Cuando termines tu primer plan, aquí verás lo que te sobró.</AppText>
+          <AppText tone="secondary">
+            Cuando termines una semana, aquí verás lo que te sobró de cada paquete.
+          </AppText>
         </Card>
       ) : (
         <Card>
-          {state.data.map((item) => (
+          {items.map((item) => (
             <View key={item.id} style={styles.row}>
-              <AppText style={styles.flex}>
-                {catalog.canonical_products.find((p) => p.id === item.canonical_product_id)?.name ?? "Ingrediente"}
-              </AppText>
+              <AppText style={styles.flex}>{nameOf(item.canonical_product_id)}</AppText>
               <AppText variant="label">{formatQuantity(item.remaining_quantity, item.unit)}</AppText>
             </View>
           ))}

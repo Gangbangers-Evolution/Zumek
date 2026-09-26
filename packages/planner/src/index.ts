@@ -4,6 +4,13 @@ import type { PlannerInput } from "./types";
 
 export type { PlannerInput, PlannerPreferences } from "./types";
 export { scaleQuantity } from "./shopping";
+export {
+  applyPantryUpdate,
+  closePlanIntoPantry,
+  planPantryDelta,
+  type ClosePlanInput,
+  type PantryUpdate,
+} from "./pantry";
 
 /**
  * Status sobre el mejor intento (seccion 7). Un greedy no prueba imposibilidad,

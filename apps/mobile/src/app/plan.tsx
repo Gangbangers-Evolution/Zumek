@@ -10,12 +10,20 @@ import { StatusBanner } from "../components/StatusBanner";
 import { dayLabel, MEAL_TYPE_LABEL, MEAL_TYPES } from "../lib/labels";
 import { formatCents } from "../lib/money";
 import { useCatalog } from "../state/catalog";
+import { usePantry } from "../state/pantry";
 import { usePlan } from "../state/plan";
 
 export default function PlanScreen() {
-  const { bundle } = usePlan();
+  const { bundle, setBundle } = usePlan();
   const catalog = useCatalog();
+  const { closePlan } = usePantry();
   if (!bundle) return <Redirect href="/" />;
+
+  const finishWeek = () => {
+    closePlan(bundle, catalog);
+    router.replace("/pantry");
+    setBundle(null);
+  };
 
   const { plan, meals } = bundle;
   const overBy = plan.total_cost_cents - plan.budget_cents;
@@ -90,6 +98,16 @@ export default function PlanScreen() {
             ))}
         </View>
       ))}
+
+      {plan.status !== "infeasible_likely" ? (
+        <Card>
+          <AppText variant="label">¿Ya terminaste esta semana?</AppText>
+          <AppText variant="caption" tone="secondary">
+            Guardamos en tu despensa lo que sobró de cada paquete para usarlo primero en tu siguiente plan.
+          </AppText>
+          <Button label="Terminé esta semana" variant="secondary" onPress={finishWeek} />
+        </Card>
+      ) : null}
     </Screen>
   );
 }

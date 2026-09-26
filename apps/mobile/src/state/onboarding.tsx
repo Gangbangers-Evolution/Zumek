@@ -24,7 +24,7 @@ export type OnboardingAction =
   | { type: "toggle"; field: "mealTypes" | "cuisines" | "tags" | "allergens" | "excludedProductIds" | "storeIds"; value: string }
   | { type: "setPantryItem"; productId: string; quantity: number | null }
   | { type: "setSavingsWeight"; weight: number }
-  | { type: "reset" };
+  | { type: "reset"; pantry?: Record<string, number> };
 
 export const initialOnboardingState: OnboardingState = {
   budgetCents: null,
@@ -63,7 +63,7 @@ export function onboardingReducer(state: OnboardingState, action: OnboardingActi
     case "setSavingsWeight":
       return { ...state, savingsWeight: action.weight };
     case "reset":
-      return initialOnboardingState;
+      return { ...initialOnboardingState, pantry: action.pantry ?? {} };
   }
 }
 

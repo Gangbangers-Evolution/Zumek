@@ -4,8 +4,7 @@ import type { Catalog, PlanBundle } from "@zumek/domain";
 import { generatePlan as runPlanner } from "@zumek/planner";
 import type { OnboardingState } from "../state/onboarding";
 import { delay } from "./fake";
-
-const LOCAL_USER_ID = "local-user";
+import { LOCAL_USER_ID } from "./session";
 
 export async function generatePlan(input: OnboardingState, catalog: Catalog): Promise<PlanBundle> {
   // Cede un tick para que la pantalla "Generando" se pinte antes del calculo.

@@ -4,11 +4,11 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "../components/AppText";
 import { Button } from "../components/Button";
-import { useOnboarding } from "../state/onboarding";
+import { useStartPlanning } from "../features/onboarding/use-start-planning";
 import { usePlan } from "../state/plan";
 
 export default function Welcome() {
-  const { dispatch } = useOnboarding();
+  const startPlanning = useStartPlanning();
   const { bundle } = usePlan();
 
   return (
@@ -24,13 +24,7 @@ export default function Welcome() {
           </AppText>
         </View>
         <View style={styles.actions}>
-          <Button
-            label="Empezar"
-            onPress={() => {
-              dispatch({ type: "reset" });
-              router.push({ pathname: "/onboarding/[step]", params: { step: "1" } });
-            }}
-          />
+          <Button label="Empezar" onPress={startPlanning} />
           {bundle ? <Button label="Ver mi plan" variant="secondary" onPress={() => router.push("/plan")} /> : null}
         </View>
       </View>

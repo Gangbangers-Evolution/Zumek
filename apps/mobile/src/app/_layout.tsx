@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorState, LoadingState } from "../components/AsyncStates";
 import { CatalogProvider, useCatalogState } from "../state/catalog";
 import { OnboardingProvider } from "../state/onboarding";
+import { PantryProvider } from "../state/pantry";
 import { PlanProvider } from "../state/plan";
 
 function CatalogGate() {
@@ -45,11 +46,13 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <CatalogProvider>
-        <OnboardingProvider>
-          <PlanProvider>
-            <CatalogGate />
-          </PlanProvider>
-        </OnboardingProvider>
+        <PantryProvider>
+          <OnboardingProvider>
+            <PlanProvider>
+              <CatalogGate />
+            </PlanProvider>
+          </OnboardingProvider>
+        </PantryProvider>
       </CatalogProvider>
     </SafeAreaProvider>
   );

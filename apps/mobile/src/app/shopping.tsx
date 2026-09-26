@@ -1,6 +1,7 @@
 import { colors, radius, spacing, touchTarget } from "@zumek/design-tokens";
 import { Redirect } from "expo-router";
-import { useState } from "react";
+import { planPantryDelta } from "@zumek/planner";
+import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "../components/AppText";
 import { ErrorState, LoadingState } from "../components/AsyncStates";
@@ -8,6 +9,7 @@ import { Card } from "../components/Card";
 import { Screen } from "../components/Screen";
 import { loadShoppingList, type ShoppingRow } from "../data/shopping-source";
 import { formatCents } from "../lib/money";
+import { formatQuantity } from "../lib/quantity";
 import { useAsync } from "../lib/use-async";
 import { useCatalog } from "../state/catalog";
 import { usePlan } from "../state/plan";
@@ -20,6 +22,7 @@ export default function ShoppingScreen() {
     [bundle, catalog],
   );
   const [checked, setChecked] = useState<Set<string>>(new Set());
+  const delta = useMemo(() => (bundle ? planPantryDelta(bundle, catalog) : new Map<string, number>()), [bundle, catalog]);
 
   if (!bundle) return <Redirect href="/" />;
   if (state.status === "loading") return <LoadingState message="Armando tu lista de compras…" />;
@@ -56,7 +59,13 @@ export default function ShoppingScreen() {
             <AppText variant="label">{formatCents(group.subtotalCents)}</AppText>
           </View>
           {group.rows.map((row) => (
-            <ItemRow key={row.id} row={row} checked={checked.has(row.id)} onToggle={() => toggle(row.id)} />
+            <ItemRow
+              key={row.id}
+              row={row}
+              leftover={delta.get(row.product.canonical_product_id) ?? 0}
+              checked={checked.has(row.id)}
+              onToggle={() => toggle(row.id)}
+            />
           ))}
         </View>
       ))}
@@ -64,7 +73,18 @@ export default function ShoppingScreen() {
   );
 }
 
-function ItemRow({ row, checked, onToggle }: { row: ShoppingRow; checked: boolean; onToggle: () => void }) {
+function ItemRow({
+  row,
+  leftover,
+  checked,
+  onToggle,
+}: {
+  row: ShoppingRow;
+  /** Comprado menos usado en la semana; positivo = queda para la despensa. */
+  leftover: number;
+  checked: boolean;
+  onToggle: () => void;
+}) {
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -83,6 +103,11 @@ function ItemRow({ row, checked, onToggle }: { row: ShoppingRow; checked: boolea
         <AppText variant="caption" tone="secondary">
           {formatCents(row.unitPriceCents)} c/u
         </AppText>
+        {leftover > 0 ? (
+          <AppText variant="caption" tone="success">
+            Te sobran {formatQuantity(leftover, row.product.package_unit)} para tu despensa
+          </AppText>
+        ) : null}
       </View>
       <AppText>{formatCents(row.subtotalCents)}</AppText>
     </Pressable>
