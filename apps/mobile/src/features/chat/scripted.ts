@@ -54,23 +54,29 @@ function budgetReply(text: string, { active }: ScriptContext): ChatReply | null 
 
 function ingredientReply(text: string, { active, catalog }: ScriptContext): ChatReply | null {
   if (!/cambi|sustitu|reemplaz|no me gusta|sin |no tengo|otro|otra/.test(text)) return null;
+  // Gana el ingrediente del plan cuyo nombre coincide con mas palabras del mensaje
+  // ("queso fresco" elige Queso fresco y no Queso Oaxaca). Empate: el primero del plan.
+  let best: { recipeId: string; canonicalProductId: string; name: string; score: number } | null = null;
   for (const meal of active.bundle.meals) {
     for (const ing of effectiveIngredients(catalog, meal.recipe_id, active.substitutions)) {
       const product = catalog.productById.get(ing.canonical_product_id);
-      // Basta una palabra del producto ("queso" en "Queso fresco", "spaghetti" en "Pasta spaghetti").
-      const words = product ? normalize(product.name).split(/[\s()]+/).filter((w) => w.length >= 4) : [];
-      if (!product || !words.some((w) => text.includes(w))) continue;
-      const recipe = catalog.recipeById.get(meal.recipe_id)!;
-      return {
-        text: `Busco un sustituto para ${product.name.toLowerCase()} en ${recipe.name} que respete tus alergias y tiendas.`,
-        proposal: {
-          tool: "swap_ingredient",
-          input: { recipe_id: meal.recipe_id, canonical_product_id: ing.canonical_product_id, reason: text.slice(0, 200) },
-        },
-      };
+      if (!product) continue;
+      const words = normalize(product.name).split(/[\s()]+/).filter((w) => w.length >= 4);
+      const score = words.filter((w) => text.includes(w)).length;
+      if (score > (best?.score ?? 0)) {
+        best = { recipeId: meal.recipe_id, canonicalProductId: ing.canonical_product_id, name: product.name, score };
+      }
     }
   }
-  return null;
+  if (!best) return null;
+  const recipe = catalog.recipeById.get(best.recipeId)!;
+  return {
+    text: `Busco un sustituto para ${best.name.toLowerCase()} en ${recipe.name} que respete tus alergias y tiendas.`,
+    proposal: {
+      tool: "swap_ingredient",
+      input: { recipe_id: best.recipeId, canonical_product_id: best.canonicalProductId, reason: text.slice(0, 200) },
+    },
+  };
 }
 
 function mealReply(text: string, { active, catalog }: ScriptContext): ChatReply | null {

@@ -1,3 +1,5 @@
+import { buildSampleCatalog } from "@zumek/catalog-data";
+import { indexCatalog } from "@zumek/domain";
 import { describe, expect, it } from "vitest";
 import { closePlanIntoPantry, generatePlan, swapIngredient, swapMeal } from "./index";
 import { catalog, input, plan, prefs } from "./test-helpers";
@@ -145,5 +147,26 @@ describe("swapIngredient (swap_ingredient)", () => {
       canonicalProductId: "queso-caro",
     });
     expect(byOriginal?.substituteId).toBe("queso-caro");
+  });
+});
+
+describe("swapIngredient con el catalogo real", () => {
+  const real = indexCatalog(buildSampleCatalog());
+  const stores = real.stores.map((s) => s.id);
+  const recipeUsing = (productId: string) =>
+    real.recipes.find((r) => real.ingredientsByRecipe.get(r.id)?.some((i) => i.canonical_product_id === productId))!;
+
+  it.each([
+    ["cp-queso-fresco", "cp-queso-oaxaca"],
+    ["cp-aceite-vegetal", "cp-aceite-de-oliva"],
+    ["cp-tortilla-de-maiz", "cp-tortilla-de-harina"],
+  ])("%s solo se cambia por su mismo grupo culinario (%s)", (from, to) => {
+    const recipe = recipeUsing(from);
+    const p = prefs({ storeIds: stores, mealTypes: recipe.meal_type, budgetCents: 1_000_000 });
+    // Un plan de un dia con solo esa receta como candidata posible
+    const only = { ...real, recipes: [recipe] };
+    const current = generatePlan(input(only, p, "p1"));
+    const result = swapIngredient(input(only, p), current, { recipeId: recipe.id, canonicalProductId: from });
+    expect(result?.substituteId).toBe(to);
   });
 });
