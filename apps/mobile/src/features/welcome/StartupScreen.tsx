@@ -14,7 +14,7 @@ export function StartupScreen({ children, footer }: { children?: ReactNode; foot
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.column}>
-        <BrandHero>
+        <BrandHero animate={Boolean(footer)}>
           {children}
           {footer}
         </BrandHero>

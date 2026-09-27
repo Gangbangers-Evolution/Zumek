@@ -34,13 +34,13 @@ export function BudgetStep() {
           PRESUPUESTO SEMANAL (MXN)
         </AppText>
         <View style={styles.amountRow}>
-          <AppText variant="headlineLg" style={{ color: colors.accent }}>
+          <AppText variant="headlineLg" style={{ color: colors.primary }}>
             $
           </AppText>
           <TextInput
             accessibilityLabel="Presupuesto semanal (MXN)"
             value={text}
-            placeholder="900"
+            placeholder="0"
             placeholderTextColor={colors.outline}
             keyboardType="decimal-pad"
             inputMode="decimal"
@@ -73,18 +73,18 @@ export function BudgetStep() {
       </AppText>
       <ChipGroup>
         {SUGGESTIONS.map((value) => (
-          <Chip key={value} tone="money" label={formatCents(value)} selected={state.budgetCents === value} onPress={() => setFromCents(value)} />
+          <Chip key={value} label={formatCents(value)} selected={state.budgetCents === value} onPress={() => setFromCents(value)} />
         ))}
       </ChipGroup>
 
-      <Card tone="savings">
+      <Card tone="accent">
         <View style={styles.tip}>
-          <IconTile name="savings" tone="savings" />
+          <IconTile name="savings" />
           <View style={styles.flex}>
-            <AppText variant="labelMd" style={{ color: colors.onSecondaryContainer }}>
+            <AppText variant="labelMd" style={{ color: colors.onPrimaryFixedVariant }}>
               Consejo de ahorro Zumek
             </AppText>
-            <AppText style={{ color: colors.onSecondaryContainer }}>{EXAMPLES.budgetTip}</AppText>
+            <AppText style={{ color: colors.onPrimaryFixedVariant }}>{EXAMPLES.budgetTip}</AppText>
           </View>
         </View>
       </Card>
@@ -98,19 +98,19 @@ function RoundButton({ icon, label, onPress }: { icon: "add" | "remove"; label: 
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={({ pressed }) => [styles.round, pressed && { backgroundColor: colors.surfaceContainerHigh }]}
+      style={({ pressed }) => [styles.round, pressed && { backgroundColor: colors.primaryFixed }]}
     >
-      <Icon name={icon} size={22} color={colors.onSurface} />
+      <Icon name={icon} size={22} color={colors.primary} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: { alignItems: "center", gap: spacing.md, paddingVertical: spacing.lg },
+  hero: { alignItems: "center", gap: spacing.md, paddingVertical: spacing.lg, borderColor: colors.outlineVariant },
   amountRow: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   amount: {
     ...typography.currencyHero,
-    color: colors.accent,
+    color: colors.primary,
     minWidth: 120,
     maxWidth: 220,
     textAlign: "center",
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     width: touchTarget.min,
     height: touchTarget.min,
     borderRadius: radius.pill,
-    backgroundColor: colors.surfaceContainer,
+    backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
   },

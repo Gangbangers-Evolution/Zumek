@@ -1,7 +1,7 @@
 import { colors } from "@zumek/design-tokens";
-import { useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { AccessibilityInfo, Animated, AppState, Easing, Image, Platform, StyleSheet, View, type ViewProps } from "react-native";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Animated, Easing, Image, Platform, StyleSheet, View, type ViewProps } from "react-native";
+import { useDecorativeMotion } from "../../components/useDecorativeMotion";
 
 const artwork = {
   hello: require("../../../assets/images/chat/reply-transparent.png"),
@@ -9,27 +9,8 @@ const artwork = {
   cooking: require("../../../assets/images/chat/cooking-transparent.png"),
 };
 
-// Pause decorative motion off-screen, in the background, or with reduced motion.
-function useMotionEnabled() {
-  const [reduced, setReduced] = useState(true);
-  const [focused, setFocused] = useState(false);
-  const [active, setActive] = useState(AppState.currentState === "active");
-  useFocusEffect(useCallback(() => {
-    setFocused(true);
-    return () => setFocused(false);
-  }, []));
-  useEffect(() => {
-    let mounted = true;
-    void AccessibilityInfo.isReduceMotionEnabled().then((value) => { if (mounted) setReduced(value); });
-    const motion = AccessibilityInfo.addEventListener("reduceMotionChanged", setReduced);
-    const app = AppState.addEventListener("change", (state) => setActive(state === "active"));
-    return () => { mounted = false; motion.remove(); app.remove(); };
-  }, []);
-  return focused && active && !reduced;
-}
-
 export function MessageEntrance({ children, style, ...props }: ViewProps & { children: ReactNode }) {
-  const enabled = useMotionEnabled();
+  const enabled = useDecorativeMotion();
   const progress = useRef(new Animated.Value(1)).current;
   const played = useRef(false);
   useEffect(() => {
@@ -44,7 +25,7 @@ export function MessageEntrance({ children, style, ...props }: ViewProps & { chi
 }
 
 export function ChatMascot({ state = "hello", size = 140, animate = true }: { state?: keyof typeof artwork; size?: number; animate?: boolean }) {
-  const enabled = useMotionEnabled();
+  const enabled = useDecorativeMotion();
   const motion = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     motion.setValue(0);
@@ -67,7 +48,7 @@ export function ChatMascot({ state = "hello", size = 140, animate = true }: { st
 }
 
 export function ThinkingDots() {
-  const enabled = useMotionEnabled();
+  const enabled = useDecorativeMotion();
   const dots = useRef([new Animated.Value(0), new Animated.Value(0), new Animated.Value(0)]).current;
   useEffect(() => {
     dots.forEach((dot) => dot.setValue(0));

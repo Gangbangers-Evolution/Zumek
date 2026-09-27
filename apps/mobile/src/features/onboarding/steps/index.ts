@@ -13,8 +13,6 @@ import { StoresStep } from "./stores";
 
 export interface OnboardingStep {
   badge: { label: string; icon: IconName };
-  /** "money": el paso trata del dinero del usuario y se pinta en coral, como en el mockup. */
-  tone?: "money";
   title: string;
   subtitle: string;
   isValid: (state: OnboardingState) => boolean;
@@ -24,7 +22,6 @@ export interface OnboardingStep {
 export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     badge: { label: "Paso inicial", icon: "wallet" },
-    tone: "money",
     title: "¿Cuál es tu presupuesto?",
     subtitle: "Armamos tu semana alrededor de este presupuesto, sin desperdiciar comida.",
     isValid: (s) => s.budgetCents !== null && s.budgetCents > 0,

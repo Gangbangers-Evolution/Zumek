@@ -46,7 +46,7 @@ export function PreferencesStep() {
         <AppText variant="headlineSm" style={styles.flex}>
           Alergias e intolerancias
         </AppText>
-        <Badge label="Prioridad alta" />
+        <Badge label="Prioridad alta" tone="brand" />
       </View>
       <AppText variant="caption" tone="muted">
         Excluimos de forma garantizada cualquier receta con estos alérgenos.

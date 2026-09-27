@@ -1,12 +1,55 @@
 import { colors } from "@zumek/design-tokens";
-import type { ReactNode } from "react";
-import { Image, StyleSheet, View, useWindowDimensions } from "react-native";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Animated, Easing, Image, Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { AppText } from "../../components/AppText";
 import { BrandLockup } from "../../components/BrandLockup";
 import { Icon } from "../../components/Icon";
+import { useDecorativeMotion } from "../../components/useDecorativeMotion";
 
-export function BrandHero({ children }: { children?: ReactNode }) {
+function FloatingHeroArt({ children, wide }: { children: ReactNode; wide: boolean }) {
+  const enabled = useDecorativeMotion();
+  const float = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    float.setValue(0);
+    if (!enabled) return;
+    const driver = Platform.OS !== "web";
+    const animation = Animated.loop(Animated.sequence([
+      Animated.timing(float, { toValue: 1, duration: 2200, easing: Easing.inOut(Easing.sin), useNativeDriver: driver, isInteraction: false }),
+      Animated.timing(float, { toValue: 0, duration: 2200, easing: Easing.inOut(Easing.sin), useNativeDriver: driver, isInteraction: false }),
+    ]));
+    animation.start();
+    return () => animation.stop();
+  }, [enabled, float]);
+
+  return (
+    <Animated.View
+      style={[styles.art, wide && styles.artWide, { transform: [{ translateY: float.interpolate({ inputRange: [0, 1], outputRange: [3, -5] }) }] }]}
+      accessible={false}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+export function BrandHero({ children, animate = false }: { children?: ReactNode; animate?: boolean }) {
   const wide = useWindowDimensions().width >= 860;
+  const artwork = (
+    <>
+      <View style={styles.halo} />
+      <View style={styles.orbit} />
+      <View style={styles.peachDot} />
+      <Image source={require("../../../assets/images/brand/home.png")} style={styles.mascot} resizeMode="contain" accessible={false} />
+      <View style={[styles.floatingCard, styles.topCard]}>
+        <View style={styles.miniIcon}><Icon name="calendar" size={20} color={colors.primary} /></View>
+        <View><AppText variant="labelMd">¿Qué comemos hoy?</AppText><AppText variant="caption" tone="muted">Tu semana, resuelta.</AppText></View>
+      </View>
+      <View style={[styles.floatingCard, styles.bottomCard]}>
+        <View style={[styles.miniIcon, styles.peachIcon]}><Icon name="savings" size={20} color={colors.onPeachText} /></View>
+        <View><AppText variant="labelMd">Cada ingrediente cuenta</AppText><AppText variant="caption" tone="muted">Más provecho, menos desperdicio.</AppText></View>
+      </View>
+    </>
+  );
   return (
     <View style={styles.wrapper}>
       <View style={styles.header}>
@@ -20,20 +63,7 @@ export function BrandHero({ children }: { children?: ReactNode }) {
           <AppText variant="bodyLg" tone="muted" style={styles.description}>Tu menú, tus compras y lo que ya tienes en casa. Todo en un solo lugar, a tu gusto y a tu presupuesto.</AppText>
           <View style={styles.actions}>{children}</View>
         </View>
-        <View style={[styles.art, wide && styles.artWide]} accessible={false}>
-          <View style={styles.halo} />
-          <View style={styles.orbit} />
-          <View style={styles.peachDot} />
-          <Image source={require("../../../assets/images/brand/home.png")} style={styles.mascot} resizeMode="contain" accessible={false} />
-          <View style={[styles.floatingCard, styles.topCard]}>
-            <View style={styles.miniIcon}><Icon name="calendar" size={20} color={colors.primary} /></View>
-            <View><AppText variant="labelMd">¿Qué comemos hoy?</AppText><AppText variant="caption" tone="muted">Tu semana, resuelta.</AppText></View>
-          </View>
-          <View style={[styles.floatingCard, styles.bottomCard]}>
-            <View style={[styles.miniIcon, styles.peachIcon]}><Icon name="savings" size={20} color={colors.onPeachText} /></View>
-            <View><AppText variant="labelMd">Cada ingrediente cuenta</AppText><AppText variant="caption" tone="muted">Más provecho, menos desperdicio.</AppText></View>
-          </View>
-        </View>
+        {animate ? <FloatingHeroArt wide={wide}>{artwork}</FloatingHeroArt> : <View style={[styles.art, wide && styles.artWide]} accessible={false}>{artwork}</View>}
       </View>
     </View>
   );

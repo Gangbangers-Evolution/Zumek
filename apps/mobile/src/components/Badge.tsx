@@ -2,10 +2,11 @@ import { colors, radius, spacing, typography } from "@zumek/design-tokens";
 import { StyleSheet, Text, View, type ViewStyle } from "react-native";
 import { Icon, type IconName } from "./Icon";
 
-type Tone = "accent" | "savings" | "warning" | "neutral";
+type Tone = "accent" | "brand" | "savings" | "warning" | "neutral";
 
 const look: Record<Tone, { bg: string; fg: string }> = {
   accent: { bg: colors.accentFixed, fg: colors.onAccentFixed },
+  brand: { bg: colors.primaryFixed, fg: colors.onPrimaryFixedVariant },
   savings: { bg: colors.secondaryContainer, fg: colors.onSecondaryContainer },
   warning: { bg: colors.tertiaryFixed, fg: colors.onTertiaryFixed },
   neutral: { bg: colors.surfaceContainer, fg: colors.onSurfaceVariant },
