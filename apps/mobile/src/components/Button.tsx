@@ -1,4 +1,4 @@
-import { colors, radius, spacing, touchTarget, typography } from "@zumek/design-tokens";
+import { colors, spacing, touchTarget, typography } from "@zumek/design-tokens";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon, type IconName } from "./Icon";
 
@@ -50,6 +50,7 @@ export function Button({
         styles.base,
         { backgroundColor: isPressed ? pressed : bg },
         border ? { borderWidth: 1, borderColor: border } : null,
+        isPressed && !inactive && styles.pressed,
         inactive && styles.disabled,
       ]}
     >
@@ -68,14 +69,16 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: touchTarget.button,
+    minHeight: 52,
     minWidth: touchTarget.min,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.control,
+    paddingVertical: 12,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
   },
   content: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   label: { ...typography.labelMd, fontSize: 16, textAlign: "center" },
+  pressed: { transform: [{ scale: 0.98 }] },
   disabled: { opacity: 0.45 },
 });

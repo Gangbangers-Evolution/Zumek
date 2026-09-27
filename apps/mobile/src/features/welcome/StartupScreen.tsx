@@ -1,60 +1,55 @@
-import { colors, layout, radius, spacing } from "@zumek/design-tokens";
+import { colors, radius, spacing } from "@zumek/design-tokens";
 import type { ReactNode } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "../../components/AppText";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
+import { LoadingArtwork } from "../../components/LoadingArtwork";
 import { BrandHero } from "./BrandHero";
 
-/** Marco de la pantalla "Carga inicial y Bienvenida": marca arriba, estado en medio, acciones abajo. */
+/** Bienvenida adaptable: marca, presentación y acciones; comparte el marco con carga y error. */
 export function StartupScreen({ children, footer }: { children?: ReactNode; footer?: ReactNode }) {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.column}>
-        <BrandHero />
-        <View style={styles.body}>{children}</View>
-        {footer ? <View style={styles.footer}>{footer}</View> : null}
+        <BrandHero>
+          {children}
+          {footer}
+        </BrandHero>
+        {footer ? (
+          <View style={styles.how}>
+            <View style={styles.sectionHeading}>
+              <AppText variant="labelSm" tone="accent">DE LA IDEA A TU MESA</AppText>
+              <AppText variant="headlineMd">Tu semana se siente más ligera.</AppText>
+            </View>
+            <View style={styles.benefits}>
+              {[
+                { number: "01", icon: "tune" as const, title: "A tu medida", text: "Cuéntanos qué te gusta y cuánto quieres gastar." },
+                { number: "02", icon: "calendar" as const, title: "Todo organizado", text: "Recibe tu menú y una lista de compras por tienda." },
+                { number: "03", icon: "restaurant" as const, title: "A disfrutar", text: "Cocina paso a paso y aprovecha lo que sobra." },
+              ].map((item) => (
+                <View key={item.number} style={styles.benefit}>
+                  <View style={styles.benefitTop}><View style={styles.benefitIcon}><Icon name={item.icon} color={colors.primary} size={22} /></View><AppText variant="headlineMd" style={styles.stepNumber}>{item.number}</AppText></View>
+                  <AppText variant="headlineSm">{item.title}</AppText>
+                  <AppText tone="muted">{item.text}</AppText>
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-/**
- * Tarjeta de "Sincronizando despensa y recetas". La carga es un solo fetch sin avance
- * medible, asi que la barra es decorativa (verde: menu, durazno: ahorro) y no finge un %.
- */
+/** Estado real de carga del catálogo, sin simular porcentajes de avance. */
 export function SyncCard() {
   return (
     <Card tone="muted" style={styles.sync}>
-      <View style={styles.row} accessibilityRole="progressbar" accessibilityLabel="Sincronizando despensa y recetas">
-        <ActivityIndicator size="small" color={colors.primaryContainer} />
-        <AppText variant="labelSm" tone="muted" style={styles.flex}>
-          Sincronizando despensa y recetas…
-        </AppText>
-      </View>
-      <View style={styles.track}>
-        <View style={[styles.segment, { flex: 2, backgroundColor: colors.primaryContainer }]} />
-        <View style={[styles.segment, { flex: 1, backgroundColor: colors.peach }]} />
-        <View style={{ flex: 1 }} />
-      </View>
-      <View style={styles.legend}>
-        <Legend color={colors.primaryContainer} textColor={colors.onSurfaceVariant} label="Menú semanal" />
-        <Legend color={colors.peach} textColor={colors.onPeachText} label="Ahorro estimado" />
-      </View>
+      <LoadingArtwork label="Preparando tu despensa y tus recetas…" />
     </Card>
-  );
-}
-
-function Legend({ color, textColor, label }: { color: string; textColor: string; label: string }) {
-  return (
-    <View style={styles.legendItem}>
-      <View style={[styles.dot, { backgroundColor: color }]} />
-      <AppText variant="caption" style={{ color: textColor }}>
-        {label}
-      </AppText>
-    </View>
   );
 }
 
@@ -87,27 +82,20 @@ const styles = StyleSheet.create({
   column: {
     flexGrow: 1,
     width: "100%",
-    maxWidth: layout.maxContentWidth,
+    maxWidth: 1080,
     alignSelf: "center",
     padding: spacing.lg,
-    gap: spacing.lg,
+    gap: 40,
   },
-  body: { gap: spacing.md },
-  footer: { marginTop: "auto", gap: spacing.sm },
+  how: { gap: 20, paddingBottom: 12 },
+  sectionHeading: { gap: 8 },
+  benefits: { flexDirection: "row", flexWrap: "wrap", gap: 14 },
+  benefit: { flexGrow: 1, flexBasis: 240, gap: 10, padding: 22, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant, borderRadius: 24 },
+  benefitTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 8 },
+  benefitIcon: { width: 44, height: 44, borderRadius: 15, backgroundColor: colors.primarySoft, alignItems: "center", justifyContent: "center" },
+  stepNumber: { color: colors.outline },
   sync: { gap: spacing.sm },
-  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   flex: { flex: 1 },
-  track: {
-    flexDirection: "row",
-    height: 12,
-    borderRadius: radius.pill,
-    overflow: "hidden",
-    backgroundColor: colors.primarySoft,
-  },
-  segment: { height: "100%" },
-  legend: { flexDirection: "row", justifyContent: "space-between" },
-  legendItem: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
-  dot: { width: 10, height: 10, borderRadius: radius.pill },
   errorRow: { flexDirection: "row", alignItems: "flex-start", gap: spacing.sm },
   errorIcon: {
     width: 40,

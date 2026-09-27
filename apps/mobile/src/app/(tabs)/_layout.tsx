@@ -1,4 +1,6 @@
-import { colors, fontFamily, typography } from "@zumek/design-tokens";
+import { colors, fontFamily } from "@zumek/design-tokens";
+import { View } from "react-native";
+import { BrandLockup } from "../../components/BrandLockup";
 import { Tabs } from "expo-router";
 import { Icon, type IconName } from "../../components/Icon";
 import { useWeek } from "../../state/week";
@@ -21,14 +23,13 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.onSurfaceVariant,
         tabBarLabelStyle: { fontFamily: fontFamily.semibold, fontSize: 12 },
         tabBarStyle: bundle
-          ? { backgroundColor: colors.surfaceContainerLowest, borderTopColor: colors.divider, minHeight: 60 }
+          ? { backgroundColor: colors.surfaceContainerLowest, borderTopColor: colors.outlineVariant, minHeight: 72, paddingTop: 8, paddingBottom: 8 }
           : { display: "none" },
         // Encabezado de marca como en los mockups; cada pantalla trae su propio titulo
-        headerTitle: "Zumek",
+        headerTitle: () => <BrandLockup compact />,
         headerTitleAlign: "left",
         headerStyle: { backgroundColor: colors.background },
         headerShadowVisible: false,
-        headerTitleStyle: { ...typography.headlineMd, color: colors.primary },
         sceneStyle: { backgroundColor: colors.background },
       }}
     >
@@ -40,7 +41,7 @@ export default function TabsLayout() {
             title,
             headerShown: name !== "index",
             tabBarAccessibilityLabel: title,
-            tabBarIcon: ({ color }) => <Icon name={icon} size={24} color={color} />,
+            tabBarIcon: ({ color, focused }) => <View style={{ width: 48, height: 30, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: focused ? colors.primarySoft : "transparent" }}><Icon name={icon} size={22} color={color} /></View>,
           }}
         />
       ))}

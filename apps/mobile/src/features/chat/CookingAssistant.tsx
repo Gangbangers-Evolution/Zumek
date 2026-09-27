@@ -1,10 +1,10 @@
-import { colors, spacing } from "@zumek/design-tokens";
+import { spacing } from "@zumek/design-tokens";
 import { useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppText } from "../../components/AppText";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
-import { IconTile } from "../../components/IconTile";
+import { ChatMascot, MessageEntrance, ThinkingDots } from "./ChatMotion";
 import { TextField } from "../../components/TextField";
 import { useAssistant } from "./use-assistant";
 
@@ -27,12 +27,12 @@ export function CookingAssistant({ recipeId, stepIndex }: { recipeId: string; st
   return (
     <Card>
       <View style={styles.row}>
-        <IconTile name="smartToy" size={32} />
+        <ChatMascot state={sending ? "thinking" : "cooking"} size={76} />
         <View style={styles.flex} accessibilityLiveRegion="polite">
           {sending ? (
-            <ActivityIndicator color={colors.primary} accessibilityLabel="Zumek está escribiendo" />
+            <View accessibilityLabel="Zumek está pensando"><AppText variant="labelMd" tone="accent">Vamos paso a paso…</AppText><ThinkingDots /></View>
           ) : (
-            <AppText tone={last.failed ? "danger" : "default"}>{last.role === "assistant" ? last.text : ""}</AppText>
+            <MessageEntrance key={last.id}><AppText tone={last.failed ? "danger" : "default"}>{last.role === "assistant" ? last.text : ""}</AppText></MessageEntrance>
           )}
         </View>
       </View>
@@ -52,6 +52,6 @@ export function CookingAssistant({ recipeId, stepIndex }: { recipeId: string; st
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: "row", alignItems: "flex-start", gap: spacing.sm },
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   flex: { flex: 1 },
 });

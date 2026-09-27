@@ -1,11 +1,11 @@
-import { colors, elevation, radius, spacing } from "@zumek/design-tokens";
+import { colors, elevation, spacing } from "@zumek/design-tokens";
 import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
 type Tone = "default" | "muted" | "accent" | "savings" | "warning" | "danger";
 
 const look: Record<Tone, { bg: string; border: string }> = {
-  default: { bg: colors.surfaceContainerLowest, border: colors.divider },
+  default: { bg: colors.surfaceContainerLowest, border: colors.outlineVariant },
   muted: { bg: colors.surfaceContainerLow, border: colors.surfaceContainerLow },
   accent: { bg: colors.primaryFixed, border: colors.primaryFixed },
   savings: { bg: colors.secondaryContainer, border: colors.secondaryContainer },
@@ -23,5 +23,5 @@ export function Card({ children, tone = "default", style }: { children: ReactNod
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radius.card, borderWidth: 1, padding: spacing.md, gap: spacing.sm },
+  card: { borderRadius: 22, borderWidth: 1, padding: 20, gap: spacing.sm },
 });

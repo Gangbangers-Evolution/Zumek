@@ -9,6 +9,7 @@ import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
 import { IconTile } from "../../components/IconTile";
 import { ProgressBar } from "../../components/ProgressBar";
+import { PageHeading } from "../../components/PageHeading";
 import { Screen } from "../../components/Screen";
 import { StatusBanner } from "../../components/StatusBanner";
 import { EXAMPLES } from "../../features/examples";
@@ -43,6 +44,7 @@ export default function PlanScreen() {
         <Button label="Ver lista de compras" icon="shoppingCart" onPress={() => router.navigate("/shopping")} />
       }
     >
+      <PageHeading eyebrow="BUENA COMIDA, BIEN PENSADA" title="Tu semana está servida" description="Un menú a tu medida. Elige un plato para ver la receta y cocinar paso a paso." icon="calendar" />
       {syncError ? (
         <Card tone="danger">
           <AppText style={{ color: colors.onErrorContainer }}>{syncError}</AppText>
@@ -166,9 +168,9 @@ function MealCard({ meal, recipe, people }: { meal: PlanMeal; recipe: Recipe; pe
       onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: recipe.id } })}
       style={({ pressed }) => [styles.meal, pressed && styles.mealPressed]}
     >
-      <IconTile name="restaurant" size={56} />
+      <IconTile name={meal.meal_type === "desayuno" ? "sunny" : meal.meal_type === "cena" ? "moon" : "restaurant"} tone={meal.meal_type === "desayuno" ? "warning" : "accent"} size={52} />
       <View style={styles.flex}>
-        <AppText variant="headlineSm" numberOfLines={1}>
+        <AppText variant="headlineSm" numberOfLines={2}>
           {recipe.name}
         </AppText>
         <View style={styles.metaRow}>
@@ -202,11 +204,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.md,
     padding: spacing.md,
-    borderRadius: radius.card,
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: colors.divider,
     backgroundColor: colors.surfaceContainerLowest,
   },
-  mealPressed: { backgroundColor: colors.surfaceContainerLow },
+  mealPressed: { backgroundColor: colors.primarySoft, transform: [{ scale: 0.99 }] },
   metaRow: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
 });

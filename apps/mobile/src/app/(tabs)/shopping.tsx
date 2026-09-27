@@ -3,7 +3,8 @@ import { planPantryDelta } from "@zumek/planner";
 import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "../../components/AppText";
-import { Badge } from "../../components/Badge";
+import { PageHeading } from "../../components/PageHeading";
+import { ProgressBar } from "../../components/ProgressBar";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { Icon } from "../../components/Icon";
@@ -42,13 +43,7 @@ export default function ShoppingScreen() {
 
   return (
     <Screen>
-      <View style={styles.heading}>
-        <Badge label="Ruta inteligente" tone="savings" icon="store" />
-        <AppText variant="headlineLg" accessibilityRole="header">
-          Lista de compras semanal
-        </AppText>
-        <AppText tone="muted">Optimizada por tienda para ahorrar tiempo y dinero.</AppText>
-      </View>
+      <PageHeading eyebrow="DEL PLAN A TU CARRITO" title="Vamos de compras" description="Todo lo que necesitas, organizado por tienda. Marca cada producto y listo." icon="shoppingCart" />
 
       <Card>
         <View style={styles.totalRow}>
@@ -77,6 +72,7 @@ export default function ShoppingScreen() {
             {pending} {pending === 1 ? "producto pendiente" : "productos pendientes"}
           </AppText>
         </View>
+        <ProgressBar value={allIds.length - pending} max={Math.max(allIds.length, 1)} label={`${allIds.length - pending} de ${allIds.length} productos comprados`} tone="savings" height={8} />
         <AppText variant="caption" tone="muted">
           Compras paquetes completos. Lo que sobre se guarda en tu despensa para la próxima semana.
         </AppText>
@@ -141,7 +137,7 @@ function ItemRow({
       accessibilityState={{ checked }}
       accessibilityLabel={`${row.packages} × ${row.product.package_label}, ${formatCents(row.subtotalCents)}`}
       onPress={onToggle}
-      style={styles.item}
+      style={[styles.item, checked && { backgroundColor: colors.primarySoft }]}
     >
       <View style={[styles.box, checked && styles.boxChecked]}>
         {checked ? <Icon name="check" size={16} color={colors.onSecondary} /> : null}

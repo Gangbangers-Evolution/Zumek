@@ -1,6 +1,8 @@
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, useFonts } from "@expo-google-fonts/inter";
 import { colors, typography } from "@zumek/design-tokens";
 import { Stack } from "expo-router";
+import { View } from "react-native";
+import { LoadingArtwork } from "../components/LoadingArtwork";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { LoadErrorCard, StartupScreen, SyncCard } from "../features/welcome/StartupScreen";
@@ -48,7 +50,13 @@ function CatalogGate() {
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold });
   // Si la fuente falla se sigue con la del sistema: no es motivo para bloquear la app.
-  if (!fontsLoaded && !fontError) return null;
+  if (!fontsLoaded && !fontError) return (
+    <SafeAreaProvider>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 24, backgroundColor: colors.background }}>
+        <LoadingArtwork label="Bienvenido a Zumek…" />
+      </View>
+    </SafeAreaProvider>
+  );
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />

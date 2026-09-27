@@ -6,6 +6,8 @@ import { AppText } from "../../components/AppText";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { IconTile } from "../../components/IconTile";
+import { Image } from "react-native";
+import { PageHeading } from "../../components/PageHeading";
 import { Screen } from "../../components/Screen";
 import { TextField } from "../../components/TextField";
 import { useStartPlanning } from "../../features/onboarding/use-start-planning";
@@ -25,18 +27,11 @@ export default function PantryScreen() {
 
   return (
     <Screen footer={bundle ? null : <Button label="Planear otra semana" trailingIcon="arrowForward" onPress={startPlanning} />}>
-      <View style={styles.heading}>
-        <AppText variant="headlineLg" accessibilityRole="header">
-          Mi despensa
-        </AppText>
-        <AppText tone="muted">
-          Lo que te sobra de semanas anteriores. Lo usamos primero al armar tu siguiente plan.
-        </AppText>
-      </View>
+      <PageHeading eyebrow="CADA INGREDIENTE CUENTA" title="Tu despensa, con vida" description="Lo que ya tienes es el comienzo de algo rico. Lo aprovechamos primero en tu siguiente semana." icon="kitchen" />
 
       {inventory.length === 0 ? (
         <Card tone="muted" style={styles.empty}>
-          <IconTile name="kitchen" tone="neutral" size={64} />
+          <Image source={require("../../../assets/images/brand/pantry-empty-transparent.png")} style={{ width: 208, height: 208, maxWidth: "100%", marginBottom: 12 }} resizeMode="contain" accessible={false} />
           <AppText variant="headlineSm">Tu despensa está vacía</AppText>
           <AppText tone="muted" style={styles.center}>
             Cuando termines una semana, aquí verás lo que te sobró de cada paquete.

@@ -29,7 +29,7 @@ export function SelectCard({
       accessibilityHint={subtitle}
       accessibilityState={{ checked: selected }}
       onPress={onPress}
-      style={[styles.card, selected && styles.selected]}
+      style={({ pressed }) => [styles.card, selected && styles.selected, pressed && { transform: [{ scale: 0.99 }] }]}
     >
       {icon ? <IconTile name={icon} tone={selected ? "accent" : "neutral"} /> : null}
       <View style={styles.text}>
@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.md,
     padding: spacing.md,
-    borderRadius: radius.card,
+    borderRadius: 20,
     borderWidth: 1.5,
     borderColor: colors.divider,
     backgroundColor: colors.surfaceContainerLowest,
   },
-  selected: { borderColor: colors.primaryContainer, backgroundColor: colors.primaryFixed },
+  selected: { borderColor: colors.primaryContainer, backgroundColor: colors.primarySoft },
   text: { flex: 1, gap: spacing.xxs },
   check: {
     width: 24,

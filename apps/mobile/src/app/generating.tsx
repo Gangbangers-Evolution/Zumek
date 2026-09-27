@@ -1,7 +1,7 @@
 import { colors, layout, radius, spacing } from "@zumek/design-tokens";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "../components/AppText";
 import { ErrorState } from "../components/AsyncStates";
@@ -10,6 +10,8 @@ import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Icon } from "../components/Icon";
 import { IconTile } from "../components/IconTile";
+import { LoadingArtwork } from "../components/LoadingArtwork";
+import { BrandLockup } from "../components/BrandLockup";
 import { ProgressBar } from "../components/ProgressBar";
 import { generatePlan } from "../data/plan-source";
 import { EXAMPLES } from "../features/examples";
@@ -71,14 +73,12 @@ export default function Generating() {
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.column}>
+          <BrandLockup compact />
           <View style={styles.hero}>
-            <View style={styles.mascotHalo}>
-              <View style={styles.mascot}>
-                <Icon name="restaurant" size={44} color={colors.primary} />
-              </View>
-              {/* El presupuesto va encimado en la base de la mascota, como en el mockup */}
-              <Badge label={budget} tone="savings" icon="savings" style={styles.budgetBadge} />
-            </View>
+            {done ? (
+              <Image source={require("../../assets/images/brand/chef-logo-transparent.png")} style={styles.mascot} resizeMode="contain" accessible={false} />
+            ) : <LoadingArtwork label="Cocinando ideas para tu semana…" />}
+            <Badge label={budget} tone="savings" icon="savings" />
             <AppText variant="headlineLg" style={styles.center} accessibilityRole="header">
               {done ? "¡Tu plan está listo!" : "Creando tu plan a la medida…"}
             </AppText>
@@ -96,7 +96,7 @@ export default function Generating() {
                 {done ? "100%" : "…"}
               </AppText>
             </View>
-            <ProgressBar value={done ? 1 : 0.3} max={1} label={done ? "Plan listo" : "Generando plan"} height={8} />
+            {done ? <ProgressBar value={1} max={1} label="Plan listo" height={8} /> : <AppText variant="caption" tone="muted">Calculando tu plan. El tiempo depende de tus preferencias y tiendas.</AppText>}
           </Card>
 
           <Card>
@@ -167,22 +167,7 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1, padding: spacing.md },
   column: { width: "100%", maxWidth: layout.maxContentWidth, alignSelf: "center", gap: spacing.md },
   hero: { alignItems: "center", gap: spacing.sm, paddingVertical: spacing.md },
-  mascotHalo: {
-    padding: spacing.md,
-    borderRadius: radius.pill,
-    backgroundColor: colors.primaryFixed,
-    alignItems: "center",
-    marginBottom: spacing.sm,
-  },
-  mascot: {
-    width: 104,
-    height: 104,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surfaceContainerLowest,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  budgetBadge: { position: "absolute", bottom: -spacing.xs, alignSelf: "center" },
+  mascot: { width: 172, height: 172 },
   progressRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   tip: { borderColor: colors.primaryContainer, backgroundColor: colors.primaryFixed },
   tipRow: { flexDirection: "row", gap: spacing.md },
